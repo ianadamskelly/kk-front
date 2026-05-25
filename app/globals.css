@@ -1,26 +1,211 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-cream: #faf8f5;
+  --color-ink: #18181b;
+
+  --color-brand-50: #fff3ee;
+  --color-brand-100: #ffe2d6;
+  --color-brand-200: #ffc4ab;
+  --color-brand-300: #ff9f7a;
+  --color-brand-400: #fa7d4f;
+  --color-brand-500: #ef5a28;
+  --color-brand-600: #d6431a;
+  --color-brand-700: #b23415;
+  --color-brand-800: #8f2c14;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+/* Smooth anchor scrolling for in-page section links. */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ----- kk-prose -----
+   A lightweight typographic style used for both the TipTap editor surface
+   and HTML content rendered on public pages. */
+.kk-prose {
+  color: rgb(24 24 27 / 0.85);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+.kk-prose p {
+  margin: 0.75rem 0;
+}
+.kk-prose p:first-child {
+  margin-top: 0;
+}
+.kk-prose p:last-child {
+  margin-bottom: 0;
+}
+.kk-prose h1,
+.kk-prose h2,
+.kk-prose h3,
+.kk-prose h4 {
+  color: rgb(24 24 27);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 1.5rem 0 0.75rem;
+}
+.kk-prose h2 {
+  font-size: 1.5rem;
+}
+.kk-prose h3 {
+  font-size: 1.25rem;
+}
+.kk-prose h4 {
+  font-size: 1.1rem;
+}
+.kk-prose ul,
+.kk-prose ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+.kk-prose ul {
+  list-style: disc;
+}
+.kk-prose ol {
+  list-style: decimal;
+}
+.kk-prose li {
+  margin: 0.25rem 0;
+}
+.kk-prose li > p {
+  margin: 0.25rem 0;
+}
+.kk-prose blockquote {
+  border-left: 3px solid var(--color-brand-500);
+  margin: 1rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  color: rgb(24 24 27 / 0.7);
+  font-style: italic;
+}
+.kk-prose a {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.kk-prose a:hover {
+  color: var(--color-brand-700);
+}
+.kk-prose strong {
+  font-weight: 600;
+  color: rgb(24 24 27);
+}
+.kk-prose em {
+  font-style: italic;
+}
+.kk-prose code {
+  background: rgb(24 24 27 / 0.06);
+  padding: 0.1em 0.35em;
+  border-radius: 0.25rem;
+  font-size: 0.92em;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+.kk-prose hr {
+  border: 0;
+  border-top: 1px solid rgb(24 24 27 / 0.1);
+  margin: 1.5rem 0;
+}
+
+/* ----- Animations -----
+   Small, subtle motions used by loading states, empty states, and scroll
+   reveals. Everything respects prefers-reduced-motion at the bottom of
+   this block. */
+
+/* Spinner: continuous rotation. */
+@keyframes kk-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Skeleton shimmer: sweep a soft gradient left → right. */
+@keyframes kk-shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+/* Soft fade-up used for scroll-reveal and initial-mount entrances. */
+@keyframes kk-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Three bouncing dots used for inline "thinking" states. */
+@keyframes kk-dot-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40%           { transform: translateY(-4px); opacity: 1; }
+}
+
+.kk-spin {
+  animation: kk-spin 0.7s linear infinite;
+}
+
+.kk-fade-up {
+  animation: kk-fade-up 0.5s ease-out both;
+}
+
+.kk-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(24 24 27 / 0.05) 0%,
+    rgb(24 24 27 / 0.10) 40%,
+    rgb(24 24 27 / 0.05) 80%
+  );
+  background-size: 200% 100%;
+  animation: kk-shimmer 1.4s ease-in-out infinite;
+}
+
+/* FadeIn observer hook: element starts invisible, becomes visible when
+   `data-visible="true"` is set by the IntersectionObserver wrapper. */
+.kk-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition-delay: var(--kk-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.kk-reveal[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Honour accessibility settings: no movement when the user asked for none. */
+@media (prefers-reduced-motion: reduce) {
+  .kk-spin,
+  .kk-fade-up,
+  .kk-skeleton {
+    animation: none !important;
+  }
+  .kk-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ----- TipTap editor surface ----- */
+.kk-editor .ProseMirror {
+  outline: none;
+  min-height: 280px;
+  padding: 1rem 1.1rem;
+}
+.kk-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: rgb(24 24 27 / 0.35);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

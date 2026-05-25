@@ -1,0 +1,394 @@
+// Shared API client and types for the Kuza Kizazi frontend.
+
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:8080";
+
+export const SITE_NAME = "Kuza Kizazi";
+
+// --- Types ---
+
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  status: "draft" | "published";
+  categoryId: number | null;
+  categoryName: string;
+  categorySlug: string;
+  authorId: number | null;
+  authorName: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string | null;
+}
+
+export interface PostList {
+  posts: Post[];
+  total: number;
+  page: number;
+  perPage: number;
+  pages: number;
+}
+
+export interface Comment {
+  id: number;
+  postId: number;
+  authorName: string;
+  body: string;
+  createdAt: string;
+  postTitle?: string;
+  postSlug?: string;
+}
+
+export interface Service {
+  id: number;
+  slug: string;
+  title: string;
+  summary: string;
+  body: string;
+  icon: string;
+  sortOrder: number;
+  status: "draft" | "published";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Project {
+  id: number;
+  slug: string;
+  client: string;
+  title: string;
+  summary: string;
+  body: string;
+  coverImage: string;
+  results: string;
+  category: string;
+  sortOrder: number;
+  status: "draft" | "published";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+  photo: string;
+  bio: string;
+  socials: Record<string, string>;
+  sortOrder: number;
+}
+
+export interface Testimonial {
+  id: number;
+  author: string;
+  role: string;
+  company: string;
+  quote: string;
+  avatar: string;
+  sortOrder: number;
+  status: "draft" | "published";
+}
+
+export interface Stat {
+  id: number;
+  label: string;
+  value: string;
+  sortOrder: number;
+}
+
+export interface ContactSubmission {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  subject: string;
+  message: string;
+  status: "new" | "read" | "archived";
+  createdAt: string;
+}
+
+export interface Product {
+  id: number;
+  slug: string;
+  name: string;
+  description: string;
+  body: string;
+  priceCents: number;
+  image: string;
+  category: string;
+  status: "draft" | "published";
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OrderItem {
+  id: number;
+  orderId: number;
+  productId: number | null;
+  productName: string;
+  unitPriceCents: number;
+  quantity: number;
+}
+
+export interface Order {
+  id: number;
+  kind: "shop" | "course" | "membership";
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  note: string;
+  totalCents: number;
+  status: "pending" | "confirmed" | "fulfilled" | "cancelled";
+  createdAt: string;
+  items: OrderItem[];
+}
+
+export interface Lesson {
+  id: number;
+  courseId: number;
+  module: string;
+  slug: string;
+  title: string;
+  content: string;
+  videoUrl: string;
+  duration: string;
+  isPreview: boolean;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Course {
+  id: number;
+  slug: string;
+  title: string;
+  summary: string;
+  description: string;
+  coverImage: string;
+  level: string;
+  duration: string;
+  instructor: string;
+  category: string;
+  language: string;
+  promoVideo: string;
+  prerequisites: string;
+  outcomes: string;
+  priceCents: number;
+  status: "draft" | "published";
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+  lessons: Lesson[];
+  // Set by /api/courses/{slug}: `locked` means the course is paid and access
+  // is gated; `entitled` means this requester has access (free, member, or
+  // bought the course). When locked && !entitled, lesson.content/videoUrl
+  // come back empty.
+  entitled?: boolean;
+  locked?: boolean;
+}
+
+export interface LibraryResource {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  type: string;
+  category: string;
+  url: string;
+  image: string;
+  status: "draft" | "published";
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type SiteSettings = Record<string, string>;
+
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+  createdAt: string;
+}
+
+// --- Helpers ---
+
+// imageUrl turns a stored "/uploads/..." path into an absolute URL.
+export function imageUrl(path: string): string {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `${API_URL}${path}`;
+}
+
+// formatPrice renders an integer cent amount as Kenyan shillings.
+export function formatPrice(cents: number): string {
+  return "KSh " + Math.round(cents / 100).toLocaleString("en-US");
+}
+
+export function formatDate(iso: string | null): string {
+  if (!iso) return "";
+  return new Date(iso).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+// getJSON fetches a public endpoint, returning a fallback on any failure so
+// Server Components never crash when the API is unavailable.
+async function getJSON<T>(path: string, fallback: T): Promise<T> {
+  try {
+    const res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
+    if (!res.ok) return fallback;
+    return (await res.json()) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+// --- Public data fetching (safe to call from Server Components) ---
+
+export async function fetchPosts(
+  query: Record<string, string | number | undefined>,
+): Promise<PostList> {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined && value !== "") params.set(key, String(value));
+  }
+  return getJSON<PostList>(`/api/posts?${params}`, {
+    posts: [],
+    total: 0,
+    page: 1,
+    perPage: 6,
+    pages: 0,
+  });
+}
+
+export async function fetchPost(slug: string): Promise<Post | null> {
+  return getJSON<Post | null>(`/api/posts/${encodeURIComponent(slug)}`, null);
+}
+
+export async function fetchCategories(): Promise<Category[]> {
+  return getJSON<Category[]>(`/api/categories`, []);
+}
+
+export async function fetchServices(): Promise<Service[]> {
+  return getJSON<Service[]>(`/api/services`, []);
+}
+
+export async function fetchService(slug: string): Promise<Service | null> {
+  return getJSON<Service | null>(
+    `/api/services/${encodeURIComponent(slug)}`,
+    null,
+  );
+}
+
+export async function fetchProjects(): Promise<Project[]> {
+  return getJSON<Project[]>(`/api/projects`, []);
+}
+
+export async function fetchProject(slug: string): Promise<Project | null> {
+  return getJSON<Project | null>(
+    `/api/projects/${encodeURIComponent(slug)}`,
+    null,
+  );
+}
+
+export async function fetchTeam(): Promise<TeamMember[]> {
+  return getJSON<TeamMember[]>(`/api/team`, []);
+}
+
+export async function fetchTestimonials(): Promise<Testimonial[]> {
+  return getJSON<Testimonial[]>(`/api/testimonials`, []);
+}
+
+export async function fetchStats(): Promise<Stat[]> {
+  return getJSON<Stat[]>(`/api/stats`, []);
+}
+
+export async function fetchSettings(): Promise<SiteSettings> {
+  return getJSON<SiteSettings>(`/api/settings`, {});
+}
+
+export async function fetchProducts(
+  query: Record<string, string | undefined> = {},
+): Promise<Product[]> {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined && value !== "") params.set(key, String(value));
+  }
+  return getJSON<Product[]>(`/api/products?${params}`, []);
+}
+
+export async function fetchProduct(slug: string): Promise<Product | null> {
+  return getJSON<Product | null>(
+    `/api/products/${encodeURIComponent(slug)}`,
+    null,
+  );
+}
+
+export async function fetchCourses(): Promise<Course[]> {
+  return getJSON<Course[]>(`/api/courses`, []);
+}
+
+export async function fetchCourse(slug: string): Promise<Course | null> {
+  return getJSON<Course | null>(
+    `/api/courses/${encodeURIComponent(slug)}`,
+    null,
+  );
+}
+
+// LibraryListing is the gated wrapper returned by /api/library: when the
+// requester isn't an active member, `entitled` is false and each
+// resource's `url` is blanked server-side so the download links can't be
+// scraped from the client.
+export interface LibraryListing {
+  entitled: boolean;
+  resources: LibraryResource[];
+}
+
+// fetchLibrary supports an optional bearer token so an authenticated
+// browser fetch can prove membership and unlock the URLs in the response.
+export async function fetchLibrary(token?: string): Promise<LibraryListing> {
+  try {
+    const headers: Record<string, string> = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    const res = await fetch(`${API_URL}/api/library`, {
+      cache: "no-store",
+      headers,
+    });
+    if (!res.ok) return { entitled: false, resources: [] };
+    return (await res.json()) as LibraryListing;
+  } catch {
+    return { entitled: false, resources: [] };
+  }
+}
+
+// adminFetch performs an authenticated request to the admin API.
+export async function adminFetch(
+  path: string,
+  token: string,
+  options: RequestInit = {},
+): Promise<Response> {
+  const headers: Record<string, string> = {
+    ...(options.headers as Record<string, string>),
+  };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (options.body && !(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+  return fetch(`${API_URL}${path}`, { ...options, headers });
+}
