@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCustomer } from "@/lib/customer";
@@ -22,7 +22,7 @@ function FieldIcon({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get("next") || "/account";
@@ -197,5 +197,13 @@ export default function RegisterPage() {
         </Link>
       </p>
     </AuthLayout>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
   );
 }

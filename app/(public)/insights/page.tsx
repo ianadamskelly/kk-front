@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { fetchPosts, fetchCategories } from "@/lib/api";
@@ -65,7 +66,9 @@ export default async function InsightsPage({
         />
 
         <div className="mt-8 flex flex-col gap-4">
-          <InsightsSearch />
+          <Suspense fallback={null}>
+            <InsightsSearch />
+          </Suspense>
 
           <div className="flex flex-wrap gap-2">
             <Link

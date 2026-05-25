@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCustomer } from "@/lib/customer";
@@ -25,7 +25,7 @@ function FieldIcon({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get("next") || "/account";
@@ -152,5 +152,13 @@ export default function SignInPage() {
         </Link>
       </p>
     </AuthLayout>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignInForm />
+    </Suspense>
   );
 }
