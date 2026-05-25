@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kuza Kizazi — Frontend
 
-## Getting Started
+Next.js 16 (App Router, React 19, Tailwind v4) frontend for the Kuza Kizazi site. Pairs with the Go API at [kk-back](https://github.com/ianadamskelly/kk-back).
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js 16 with the App Router and Turbopack
+- React 19
+- Tailwind CSS v4
+- TipTap (rich-text editor in the admin area)
+
+## Layout
+
+```
+app/
+  (public)/       # marketing site, store, courses, account area
+  admin/          # admin dashboard
+components/       # shared UI
+lib/              # API client, auth/cart/customer contexts, helpers
+public/           # static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Prerequisites
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js 22+
+- npm
+- A running [kk-back](https://github.com/ianadamskelly/kk-back) API (locally on `:8080`, or any reachable URL)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local development
 
-## Learn More
+```bash
+npm install
+cp .env.local.example .env.local   # if a sample exists; otherwise create .env.local
+echo "NEXT_PUBLIC_API_URL=http://localhost:8080" > .env.local
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open <http://localhost:3000>. The dev server reloads on save.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Environment variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Purpose | Example |
+| --- | --- | --- |
+| `NEXT_PUBLIC_API_URL` | Base URL of the backend API. Baked into the bundle at build time. | `https://api.kuzakizazi.com` |
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Start the dev server on `:3000`. |
+| `npm run build` | Production build. Emits `.next/standalone/` (used by Docker). |
+| `npm start` | Run the production build (`next start`). |
+| `npm run lint` | ESLint. |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Docker
+
+The Dockerfile is multi-stage and uses Next.js standalone output, so the final image is small.
+
+```bash
+docker build \
+  --build-arg NEXT_PUBLIC_API_URL=https://api.kuzakizazi.com \
+  -t kk-front .
+docker run --rm -p 3000:3000 kk-front
+```
+
+`NEXT_PUBLIC_API_URL` **must** be passed as a build arg — `NEXT_PUBLIC_*` values are inlined at build time, not read at runtime.
+
+## Deploy on Coolify
+
+1. Create a new **Application** from this repo, branch `main`, build pack **Dockerfile**.
+2. Under **Build Variables**, set `NEXT_PUBLIC_API_URL` to the backend's public URL (e.g. `https://api.kuzakizazi.com`).
+3. Assign a domain (e.g. `kuzakizazi.com`); Coolify/Traefik handles TLS via Let's Encrypt.
+4. Deploy. Health check the home page.
+
+Whenever the backend URL changes, you must **rebuild** (not just restart) the frontend.
