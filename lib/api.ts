@@ -118,6 +118,15 @@ export interface ContactSubmission {
   createdAt: string;
 }
 
+export interface ProductImage {
+  id: number;
+  productId: number;
+  url: string;
+  position: number;
+  isCover: boolean;
+  createdAt: string;
+}
+
 export interface Product {
   id: number;
   slug: string;
@@ -125,12 +134,15 @@ export interface Product {
   description: string;
   body: string;
   priceCents: number;
+  /** Denormalised cover URL — same URL as the cover row in `images`. */
   image: string;
   category: string;
   status: "draft" | "published";
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
+  /** Full gallery. Empty on list endpoints; populated on detail endpoints. */
+  images?: ProductImage[];
 }
 
 export interface OrderItem {

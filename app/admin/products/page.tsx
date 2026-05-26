@@ -1,22 +1,25 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { adminFetch, imageUrl, formatPrice, Product } from "@/lib/api";
+import { adminFetch, formatPrice, Product } from "@/lib/api";
 import { getToken } from "@/lib/auth";
 import RichTextEditor from "@/components/RichTextEditor";
 import EmptyState from "@/components/EmptyState";
 import Spinner from "@/components/Spinner";
 import { SkeletonTableRows } from "@/components/Skeleton";
+import ProductImages from "@/components/admin/ProductImages";
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500";
 
+// `image` lives on Product but is owned by the gallery (it mirrors the
+// cover image). The form just sends "" on create and the gallery sets
+// it once the first image is uploaded.
 const EMPTY = {
   name: "",
   description: "",
   body: "",
   price: "0",
-  image: "",
   category: "",
   sortOrder: "0",
   status: "published",
@@ -30,7 +33,6 @@ export default function AdminProductsPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -64,32 +66,12 @@ export default function AdminProductsPage() {
       description: p.description,
       body: p.body,
       price: String(p.priceCents / 100),
-      image: p.image,
       category: p.category,
       sortOrder: String(p.sortOrder),
       status: p.status,
     });
     setEditingId(p.id);
     setShowForm(true);
-  };
-
-  const upload = async (file: File) => {
-    setUploading(true);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await adminFetch("/api/admin/upload", getToken() || "", {
-        method: "POST",
-        body: fd,
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-      set("image", data.url);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Upload error");
-    } finally {
-      setUploading(false);
-    }
   };
 
   const save = async (e: React.FormEvent) => {
@@ -102,7 +84,11 @@ export default function AdminProductsPage() {
         description: form.description,
         body: form.body,
         priceCents: Math.round(Number(form.price || 0) * 100),
-        image: form.image,
+        // image is owned by the gallery; preserve the existing cover URL
+        // (if any) on update, send "" on create.
+        image: editingId
+          ? products.find((p) => p.id === editingId)?.image ?? ""
+          : "",
         category: form.category,
         sortOrder: Number(form.sortOrder || 0),
         status: form.status,
@@ -114,8 +100,11 @@ export default function AdminProductsPage() {
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Save failed");
-      setShowForm(false);
-      setEditingId(null);
+      // After creating a new product, switch the form into edit mode so
+      // the gallery becomes available without an extra click.
+      if (!editingId && data?.id) {
+        setEditingId(data.id);
+      }
       await load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Save error");
@@ -227,33 +216,6 @@ export default function AdminProductsPage() {
                 />
               </div>
             </div>
-            <div className="sm:col-span-2">
-              <label className="text-sm font-medium text-ink/70">Image</label>
-              <div className="mt-1">
-                {form.image && (
-                  <img
-                    src={imageUrl(form.image)}
-                    alt="preview"
-                    className="mb-2 h-32 w-32 rounded-lg object-cover"
-                  />
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) upload(file);
-                  }}
-                  className="text-sm"
-                />
-                {uploading && (
-                  <span className="ml-2 inline-flex items-center gap-1.5 text-xs text-ink/50">
-                    <Spinner size="sm" className="text-brand-500" />
-                    Uploading…
-                  </span>
-                )}
-              </div>
-            </div>
             <div>
               <label className="text-sm font-medium text-ink/70">Status</label>
               <select
@@ -270,7 +232,7 @@ export default function AdminProductsPage() {
           <div className="mt-5 flex gap-3">
             <button
               type="submit"
-              disabled={saving || uploading}
+              disabled={saving}
               className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2 text-sm font-semibold text-white hover:bg-ink/85 disabled:opacity-50"
             >
               {saving && <Spinner size="sm" />}
@@ -285,9 +247,19 @@ export default function AdminProductsPage() {
               }}
               className="rounded-full border border-ink/15 px-5 py-2 text-sm text-ink/70 hover:bg-ink/5"
             >
-              Cancel
+              Close
             </button>
           </div>
+          {editingId ? (
+            <div className="mt-6">
+              <ProductImages productId={editingId} onChange={load} />
+            </div>
+          ) : (
+            <p className="mt-6 rounded-lg border border-dashed border-ink/15 bg-ink/[0.02] p-4 text-sm text-ink/55">
+              Save the product first — the gallery uploader appears here
+              once it has an id.
+            </p>
+          )}
         </form>
       )}
 

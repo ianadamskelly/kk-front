@@ -5,13 +5,13 @@ import {
   fetchProduct,
   fetchProducts,
   fetchPosts,
-  imageUrl,
   formatPrice,
 } from "@/lib/api";
 import AddToCartButton from "@/components/AddToCartButton";
 import ContentHTML from "@/components/ContentHTML";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedRail from "@/components/RelatedRail";
+import ProductGallery from "@/components/ProductGallery";
 
 export async function generateMetadata({
   params,
@@ -68,23 +68,8 @@ export default async function ProductDetailPage({
         />
 
         <div className="mt-6 grid gap-10 lg:grid-cols-2">
-          <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white">
-            <div className="aspect-square w-full bg-ink/5">
-              {product.image ? (
-                <img
-                  src={imageUrl(product.image)}
-                  alt={product.name}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-100 to-brand-50">
-                  <span className="text-6xl font-semibold text-brand-300">
-                    {product.name.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
+          <ProductGallery product={product} />
+
 
           <div>
             {product.category && (
