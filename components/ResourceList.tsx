@@ -1,4 +1,4 @@
-import { API_URL, type CourseResource } from "@/lib/api";
+import { resolveFileURL, type CourseResource } from "@/lib/api";
 
 interface Props {
   resources: CourseResource[];
@@ -7,13 +7,12 @@ interface Props {
   className?: string;
 }
 
-// resourceHref turns the stored URL into something the browser can open.
-// External links go through as-is; uploaded files have a "/uploads/…"
-// path that lives on the backend.
+// resourceHref turns the stored URL into something the browser can
+// open. External links go through as-is; uploaded files come back as
+// signed /api/files/<token> paths (or legacy /uploads/...) on the
+// backend host.
 function resourceHref(url: string): string {
-  if (!url) return "#";
-  if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  return `${API_URL}${url}`;
+  return resolveFileURL(url) || "#";
 }
 
 // ResourceList renders a tidy list of attached resources on either the

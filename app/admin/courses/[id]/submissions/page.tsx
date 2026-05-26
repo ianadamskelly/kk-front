@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { adminFetch, API_URL } from "@/lib/api";
+import { adminFetch, resolveFileURL } from "@/lib/api";
 import { getToken } from "@/lib/auth";
 import EmptyState from "@/components/EmptyState";
 import { SkeletonTableRows } from "@/components/Skeleton";
@@ -185,7 +185,7 @@ export default function CourseSubmissionsPage() {
               )}
               {s.fileUrl && (
                 <a
-                  href={`${API_URL}${s.fileUrl}`}
+                  href={resolveFileURL(s.fileUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-2 inline-block text-xs font-semibold text-brand-600 hover:underline"

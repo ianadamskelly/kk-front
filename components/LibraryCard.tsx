@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LibraryResource, imageUrl } from "@/lib/api";
+import { LibraryResource, imageUrl, resolveFileURL } from "@/lib/api";
 
 // LibraryCard renders one resource. `locked=true` (i.e. the requester is
 // not an active member) replaces the "Open resource" link with a soft
@@ -49,7 +49,7 @@ export default function LibraryCard({
         <div className="mt-auto pt-3">
           {hasLink ? (
             <a
-              href={resource.url}
+              href={resolveFileURL(resource.url)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-semibold text-brand-600 hover:underline"

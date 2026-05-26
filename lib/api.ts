@@ -13,6 +13,20 @@ export const SITE_URL =
 
 export const SITE_NAME = "Kuza Kizazi";
 
+// resolveFileURL turns a stored URL into something a browser can
+// fetch. Three cases:
+//   - "" → "" (caller decides whether to render)
+//   - "http(s)://..." → returned unchanged (external link)
+//   - "/anything"     → prefixed with the API base URL
+// The server-side handlers already tokenise protected paths into
+// "/api/files/<token>" before returning them, so this client-side
+// helper just needs to prepend the API host.
+export function resolveFileURL(url: string | null | undefined): string {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${API_URL}${url}`;
+}
+
 // --- Types ---
 
 export interface Category {

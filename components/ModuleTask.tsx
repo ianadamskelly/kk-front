@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
   API_URL,
+  resolveFileURL,
   type CourseTask,
   type CourseTaskSubmission,
 } from "@/lib/api";
@@ -21,7 +22,13 @@ interface Props {
 export default function ModuleTask({ task, existing, onSaved }: Props) {
   const { token } = useCustomer();
   const [body, setBody] = useState(existing?.body || "");
+  // fileUrl is the raw stored value we POST back on submit; fileViewUrl
+  // is the browser-fetchable URL (signed token or external link) used
+  // for the "View attachment" anchor.
   const [fileUrl, setFileUrl] = useState(existing?.fileUrl || "");
+  const [fileViewUrl, setFileViewUrl] = useState(
+    existing ? resolveFileURL(existing.fileUrl) : "",
+  );
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -34,7 +41,10 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const up = await fetch(`${API_URL}/api/admin/upload-file`, {
+      // Customer-side endpoint (not the admin one). Stores the file
+      // in the protected uploads dir; reads are gated through
+      // /api/files/{token} when the response comes back.
+      const up = await fetch(`${API_URL}/api/account/upload-file`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: fd,
@@ -42,6 +52,9 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
       const upData = await up.json();
       if (!up.ok) throw new Error(upData.error || "Upload failed");
       setFileUrl(upData.url);
+      // The server hands back a signed view URL for protected uploads
+      // so the student can preview the attachment immediately.
+      setFileViewUrl(resolveFileURL(upData.viewUrl || upData.url));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload error");
     } finally {
@@ -156,9 +169,9 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
               className="sr-only"
             />
           </label>
-          {fileUrl && (
+          {fileUrl && fileViewUrl && (
             <a
-              href={`${API_URL}${fileUrl}`}
+              href={fileViewUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-ink/60 hover:text-brand-600"
