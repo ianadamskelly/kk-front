@@ -24,6 +24,7 @@ const NAV_GROUPS: { label: string; links: NavLink[] }[] = [
       { href: "/admin/posts", label: "Insights / Posts", perm: "posts.view" },
       { href: "/admin/categories", label: "Categories", perm: "categories.manage" },
       { href: "/admin/comments", label: "Comments", perm: "comments.view" },
+      { href: "/admin/reviews", label: "Reviews", perm: "comments.view" },
     ],
   },
   {

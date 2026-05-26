@@ -12,6 +12,7 @@ import ContentHTML from "@/components/ContentHTML";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedRail from "@/components/RelatedRail";
 import ProductGallery from "@/components/ProductGallery";
+import Reviews from "@/components/Reviews";
 
 export async function generateMetadata({
   params,
@@ -109,6 +110,14 @@ export default async function ProductDetailPage({
             </p>
           </div>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-4">
+        <Reviews
+          entityType="product"
+          entitySlug={product.slug}
+          entityId={product.id}
+        />
       </section>
 
       <RelatedRail

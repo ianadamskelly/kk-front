@@ -13,6 +13,7 @@ import CTASection from "@/components/CTASection";
 import ContentHTML from "@/components/ContentHTML";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedRail from "@/components/RelatedRail";
+import Reviews from "@/components/Reviews";
 
 export async function generateMetadata({
   params,
@@ -128,6 +129,14 @@ export default async function CourseDetailPage({
 
         <div className="mt-12 max-w-3xl">
           <CurriculumGate initialCourse={course} />
+        </div>
+
+        <div className="mt-16">
+          <Reviews
+            entityType="course"
+            entitySlug={course.slug}
+            entityId={course.id}
+          />
         </div>
       </section>
 

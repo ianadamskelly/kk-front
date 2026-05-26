@@ -240,6 +240,34 @@ export interface LibraryResource {
   updatedAt: string;
 }
 
+export interface Review {
+  id: number;
+  userId: number;
+  entityType: "product" | "course";
+  entityId: number;
+  rating: number;
+  body: string;
+  status: "pending" | "published" | "rejected";
+  createdAt: string;
+  updatedAt: string;
+  /** Filled in on public list responses; empty on admin/own responses. */
+  authorName?: string;
+}
+
+export interface ReviewSummary {
+  averageRating: number;
+  count: number;
+}
+
+export interface ReviewsResponse {
+  summary: ReviewSummary;
+  reviews: Review[];
+  /** Present only when the caller is signed in: whether they can post a review. */
+  canReview?: boolean;
+  /** Present only when the caller is signed in and has already reviewed. */
+  mine?: Review;
+}
+
 export type SiteSettings = Record<string, string>;
 
 export interface User {
