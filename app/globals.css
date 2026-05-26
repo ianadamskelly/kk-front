@@ -15,6 +15,35 @@
   --color-brand-800: #8f2c14;
 }
 
+/* ----- Dark theme — scoped via the `.kk-dark` class -----
+   Applied on the AdminShell root and the lesson runner so the
+   public marketing site stays light. Redefining the Tailwind 4
+   color variables inside this scope flips `bg-cream`, `text-ink`,
+   `bg-white`, etc. automatically without touching components. */
+.kk-dark {
+  /* Page surface goes near-black; cards lift to a slightly lighter slate. */
+  --color-cream: #0d0e12;
+  --color-white: #16181d;
+  --color-ink: #f1f0ec;
+
+  /* Brand tints get darker/lighter counterparts so badges and chips
+     remain readable on the new surfaces. */
+  --color-brand-50: #2a1812;
+  --color-brand-100: #3a2017;
+  --color-brand-200: #5a2e1f;
+}
+/* Tone down borders that were tuned for light surfaces. */
+.kk-dark *, .kk-dark *::before, .kk-dark *::after {
+  border-color: rgb(255 255 255 / 0.08);
+}
+/* The .kk-prose article surface uses a few hard-coded color
+   references via the cream/ink tokens which already flip; this
+   nudges the inline-code chip to remain legible. */
+.kk-dark .kk-prose code {
+  background: rgb(255 255 255 / 0.07);
+  color: var(--color-ink);
+}
+
 html,
 body {
   height: 100%;

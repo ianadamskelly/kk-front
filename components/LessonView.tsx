@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { Course, Lesson } from "@/lib/api";
 import { useCourseProgress } from "@/lib/progress";
+import { useTheme } from "@/lib/theme";
 import ContentHTML from "@/components/ContentHTML";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function LessonView({
   course,
@@ -14,6 +16,7 @@ export default function LessonView({
 }) {
   const lessons = course.lessons || [];
   const { isComplete, setComplete, loaded } = useCourseProgress(course.slug);
+  const { theme, toggle: toggleTheme } = useTheme();
 
   const index = lessons.findIndex((l) => l.id === lesson.id);
   const prev = index > 0 ? lessons[index - 1] : null;
@@ -21,7 +24,13 @@ export default function LessonView({
   const complete = loaded && isComplete(lesson.slug);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    // Scope dark mode to the lesson surface; the rest of the public
+    // site stays light. The min-h is so the kk-dark surface fills
+    // the viewport even on short lessons.
+    <div
+      className={`min-h-[calc(100vh-4rem)] bg-cream text-ink ${theme === "dark" ? "kk-dark" : ""}`}
+    >
+      <div className="mx-auto max-w-6xl px-4 py-10">
       <Link
         href={`/courses/${course.slug}`}
         className="text-sm text-ink/50 hover:text-brand-600"
@@ -138,6 +147,12 @@ export default function LessonView({
             )}
           </nav>
         </article>
+      </div>
+      {/* Floating theme toggle so a student can flip dark mode while
+          reading without bouncing back to the admin. */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      </div>
       </div>
     </div>
   );

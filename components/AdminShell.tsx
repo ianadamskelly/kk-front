@@ -5,6 +5,8 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { SITE_NAME } from "@/lib/api";
 import { useAdminSession } from "@/lib/adminSession";
+import { useTheme } from "@/lib/theme";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type NavLink = {
   href: string;
@@ -92,6 +94,7 @@ export default function AdminShell({
   const router = useRouter();
   const pathname = usePathname();
   const { user, loading, signOut } = useAdminSession();
+  const { theme, toggle: toggleTheme } = useTheme();
 
   useEffect(() => {
     if (!loading && !user) router.replace("/admin/login");
@@ -139,7 +142,7 @@ export default function AdminShell({
     // main pane can scroll independently. The page wrapper (in
     // app/admin/layout.tsx → root layout) gives us the full height to
     // work with; h-screen pins us there.
-    <div className="grid h-screen grid-rows-[auto_1fr] grid-cols-[15rem_1fr] bg-cream">
+    <div className={`grid h-screen grid-rows-[auto_1fr] grid-cols-[15rem_1fr] bg-cream text-ink ${theme === "dark" ? "kk-dark" : ""}`}>
       {/* Top bar — full width, sticky by virtue of being grid row 0. */}
       <header className="col-span-2 flex items-center justify-between border-b border-ink/10 bg-white px-4 py-3">
         <Link href="/admin" className="flex items-center gap-2 font-semibold">
@@ -153,6 +156,7 @@ export default function AdminShell({
           </span>
         </Link>
         <div className="flex items-center gap-2">
+          <ThemeToggle theme={theme} onToggle={toggleTheme} />
           <Link
             href="/"
             target="_blank"
