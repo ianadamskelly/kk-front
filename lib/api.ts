@@ -127,6 +127,16 @@ export interface ProductImage {
   createdAt: string;
 }
 
+export interface ProductDownload {
+  id: number;
+  productId: number;
+  url: string;
+  label: string;
+  sizeBytes: number;
+  position: number;
+  createdAt: string;
+}
+
 export interface Product {
   id: number;
   slug: string;
@@ -139,6 +149,10 @@ export interface Product {
   category: string;
   status: "draft" | "published";
   sortOrder: number;
+  /** "physical" (default; ships) or "digital" (downloadable files attached). */
+  kind: "physical" | "digital";
+  /** null = unlimited downloads per customer; integer = per-customer cap. */
+  maxDownloads: number | null;
   createdAt: string;
   updatedAt: string;
   /** Full gallery. Empty on list endpoints; populated on detail endpoints. */

@@ -8,6 +8,7 @@ import EmptyState from "@/components/EmptyState";
 import Spinner from "@/components/Spinner";
 import { SkeletonTableRows } from "@/components/Skeleton";
 import ProductImages from "@/components/admin/ProductImages";
+import ProductDownloads from "@/components/admin/ProductDownloads";
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500";
@@ -23,6 +24,9 @@ const EMPTY = {
   category: "",
   sortOrder: "0",
   status: "published",
+  kind: "physical" as "physical" | "digital",
+  /** Empty string = unlimited (NULL on the server). */
+  maxDownloads: "",
 };
 
 export default function AdminProductsPage() {
@@ -69,6 +73,8 @@ export default function AdminProductsPage() {
       category: p.category,
       sortOrder: String(p.sortOrder),
       status: p.status,
+      kind: p.kind ?? "physical",
+      maxDownloads: p.maxDownloads == null ? "" : String(p.maxDownloads),
     });
     setEditingId(p.id);
     setShowForm(true);
@@ -92,6 +98,12 @@ export default function AdminProductsPage() {
         category: form.category,
         sortOrder: Number(form.sortOrder || 0),
         status: form.status,
+        kind: form.kind,
+        // Empty input -> null (unlimited); any value -> integer cap.
+        maxDownloads:
+          form.kind === "digital" && form.maxDownloads.trim() !== ""
+            ? Number(form.maxDownloads)
+            : null,
       };
       const res = await adminFetch(
         editingId ? `/api/admin/products/${editingId}` : "/api/admin/products",
@@ -227,6 +239,39 @@ export default function AdminProductsPage() {
                 <option value="draft">Draft</option>
               </select>
             </div>
+            <div>
+              <label className="text-sm font-medium text-ink/70">Type</label>
+              <select
+                value={form.kind}
+                onChange={(e) =>
+                  set("kind", e.target.value as "physical" | "digital")
+                }
+                className={inputClass}
+              >
+                <option value="physical">Physical (ships)</option>
+                <option value="digital">Digital (downloadable)</option>
+              </select>
+            </div>
+            {form.kind === "digital" && (
+              <div>
+                <label className="text-sm font-medium text-ink/70">
+                  Max downloads per customer
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="Leave blank for unlimited"
+                  value={form.maxDownloads}
+                  onChange={(e) => set("maxDownloads", e.target.value)}
+                  className={inputClass}
+                />
+                <p className="mt-1 text-xs text-ink/45">
+                  Empty = unlimited. Otherwise the buyer can download each
+                  file at most this many times.
+                </p>
+              </div>
+            )}
           </div>
           {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
           <div className="mt-5 flex gap-3">
@@ -251,13 +296,16 @@ export default function AdminProductsPage() {
             </button>
           </div>
           {editingId ? (
-            <div className="mt-6">
+            <div className="mt-6 space-y-4">
               <ProductImages productId={editingId} onChange={load} />
+              {form.kind === "digital" && (
+                <ProductDownloads productId={editingId} />
+              )}
             </div>
           ) : (
             <p className="mt-6 rounded-lg border border-dashed border-ink/15 bg-ink/[0.02] p-4 text-sm text-ink/55">
-              Save the product first — the gallery uploader appears here
-              once it has an id.
+              Save the product first — the gallery and download files
+              appear here once it has an id.
             </p>
           )}
         </form>

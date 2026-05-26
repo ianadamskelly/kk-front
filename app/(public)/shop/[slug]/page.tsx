@@ -72,11 +72,18 @@ export default async function ProductDetailPage({
 
 
           <div>
-            {product.category && (
-              <span className="text-xs font-semibold uppercase tracking-widest text-brand-500">
-                {product.category}
-              </span>
-            )}
+            <div className="flex flex-wrap items-center gap-2">
+              {product.category && (
+                <span className="text-xs font-semibold uppercase tracking-widest text-brand-500">
+                  {product.category}
+                </span>
+              )}
+              {product.kind === "digital" && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-brand-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-brand-700">
+                  ⬇ Digital download
+                </span>
+              )}
+            </div>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
               {product.name}
             </h1>
