@@ -10,7 +10,7 @@ import {
 import SectionHeading from "@/components/SectionHeading";
 import ServiceCard from "@/components/ServiceCard";
 import ProjectCard from "@/components/ProjectCard";
-import TestimonialCard from "@/components/TestimonialCard";
+import TestimonialsMarquee from "@/components/TestimonialsMarquee";
 import StatsBand from "@/components/StatsBand";
 import PostCard from "@/components/PostCard";
 import CTASection from "@/components/CTASection";
@@ -168,12 +168,8 @@ export default async function HomePage() {
             eyebrow="Kind words"
             title="What our clients say"
           />
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {testimonials.slice(0, 3).map((t, i) => (
-              <FadeIn key={t.id} delay={i * 80}>
-                <TestimonialCard testimonial={t} />
-              </FadeIn>
-            ))}
+          <div className="mt-10">
+            <TestimonialsMarquee testimonials={testimonials} />
           </div>
         </FadeIn>
       )}
