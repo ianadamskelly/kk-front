@@ -50,13 +50,20 @@ async function loadFlutterwaveScript(): Promise<void> {
 
 export default function CheckoutPage() {
   const { items, totalCents, clear } = useCart();
-  const { user, token } = useCustomer();
+  const { user, token, register } = useCustomer();
   const [form, setForm] = useState({
     customerName: "",
     customerEmail: "",
     customerPhone: "",
     note: "",
+    // Used only when there's no session — we create the account
+    // inline as part of the checkout submit so the flow stays
+    // single-page and the resulting order is linked to a real user.
+    password: "",
   });
+  // True when the inline submit hit "email already exists". We swap
+  // the error for a friendlier CTA pointing the buyer at /signin.
+  const [emailTaken, setEmailTaken] = useState(false);
   const [gateway, setGateway] = useState<Gateway>("flutterwave");
   const [currency, setCurrency] = useState<Currency>("USD");
 
@@ -114,11 +121,43 @@ export default function CheckoutPage() {
     e.preventDefault();
     setStatus("loading");
     setError("");
+    setEmailTaken(false);
     try {
+      // 0. If no session, create the account inline first so the
+      //    resulting order is owned by a real user (and digital
+      //    downloads, order emails, etc. are linkable).
+      let effectiveToken = token;
+      if (!effectiveToken) {
+        if (form.password.length < 8) {
+          throw new Error("Please choose a password of at least 8 characters.");
+        }
+        try {
+          const result = await register(
+            form.customerName,
+            form.customerEmail,
+            form.password,
+            undefined,
+            "checkout",
+          );
+          effectiveToken = result.token;
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : "Could not create your account";
+          // The backend returns "an account with that email already exists"
+          // on duplicate emails — swap our error for a sign-in CTA.
+          if (msg.toLowerCase().includes("already exists")) {
+            setEmailTaken(true);
+            throw new Error(
+              "An account with that email already exists. Please sign in to continue.",
+            );
+          }
+          throw new Error(msg);
+        }
+      }
+
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };
-      if (token) headers["Authorization"] = `Bearer ${token}`;
+      if (effectiveToken) headers["Authorization"] = `Bearer ${effectiveToken}`;
 
       // 1. Create the order.
       const res = await fetch(`${API_URL}/api/orders`, {
@@ -275,6 +314,35 @@ export default function CheckoutPage() {
                 className={inputClass}
               />
             </div>
+            {!user && (
+              <div>
+                <label className="text-sm font-medium text-ink/70">
+                  Choose a password
+                </label>
+                <input
+                  type="password"
+                  required
+                  minLength={8}
+                  autoComplete="new-password"
+                  placeholder="At least 8 characters"
+                  value={form.password}
+                  onChange={(e) => set("password", e.target.value)}
+                  className={inputClass}
+                />
+                <p className="mt-1 text-xs text-ink/55">
+                  We&apos;ll create an account so you can track your order,
+                  download digital purchases, and check out faster next time.
+                  Already have one?{" "}
+                  <Link
+                    href={`/signin?next=/checkout`}
+                    className="font-semibold text-brand-600 hover:underline"
+                  >
+                    Sign in instead
+                  </Link>
+                  .
+                </p>
+              </div>
+            )}
             <div>
               <label className="text-sm font-medium text-ink/70">
                 Order note (optional)
@@ -355,7 +423,19 @@ export default function CheckoutPage() {
           )}
 
           {status === "error" && (
-            <p className="mt-3 text-sm text-red-600">{error}</p>
+            <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              <p>{error}</p>
+              {emailTaken && (
+                <p className="mt-1">
+                  <Link
+                    href={`/signin?next=/checkout`}
+                    className="font-semibold underline"
+                  >
+                    Sign in →
+                  </Link>
+                </p>
+              )}
+            </div>
           )}
           <button
             type="submit"

@@ -12,18 +12,23 @@ import { API_URL, User } from "@/lib/api";
 
 const TOKEN_KEY = "kk_customer_token";
 
+interface AuthResult {
+  token: string;
+  user: User;
+}
+
 interface CustomerContextValue {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<AuthResult>;
   register: (
     name: string,
     email: string,
     password: string,
     referralCode?: string,
     source?: string,
-  ) => Promise<void>;
+  ) => Promise<AuthResult>;
   logout: () => void;
 }
 
@@ -61,23 +66,27 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    const res = await fetch(`${API_URL}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Login failed");
-    if (data.user && data.user.role !== "customer") {
-      throw new Error(
-        "Admin accounts sign in via /admin. Use a customer account here.",
-      );
-    }
-    localStorage.setItem(TOKEN_KEY, data.token);
-    setToken(data.token);
-    setUser(data.user);
-  }, []);
+  const login = useCallback(
+    async (email: string, password: string): Promise<AuthResult> => {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Login failed");
+      if (data.user && data.user.role !== "customer") {
+        throw new Error(
+          "Admin accounts sign in via /admin. Use a customer account here.",
+        );
+      }
+      localStorage.setItem(TOKEN_KEY, data.token);
+      setToken(data.token);
+      setUser(data.user);
+      return { token: data.token, user: data.user };
+    },
+    [],
+  );
 
   const register = useCallback(
     async (
@@ -86,7 +95,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
       password: string,
       referralCode?: string,
       source?: string,
-    ) => {
+    ): Promise<AuthResult> => {
       const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,6 +106,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(TOKEN_KEY, data.token);
       setToken(data.token);
       setUser(data.user);
+      return { token: data.token, user: data.user };
     },
     [],
   );
