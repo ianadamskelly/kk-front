@@ -9,6 +9,7 @@ import Spinner from "@/components/Spinner";
 import { SkeletonTableRows } from "@/components/Skeleton";
 import ProductImages from "@/components/admin/ProductImages";
 import ProductDownloads from "@/components/admin/ProductDownloads";
+import StatusToggle from "@/components/StatusToggle";
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500";
@@ -230,14 +231,12 @@ export default function AdminProductsPage() {
             </div>
             <div>
               <label className="text-sm font-medium text-ink/70">Status</label>
-              <select
-                value={form.status}
-                onChange={(e) => set("status", e.target.value)}
-                className={inputClass}
-              >
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-              </select>
+              <div className="mt-1">
+                <StatusToggle
+                  value={form.status}
+                  onChange={(v) => set("status", v)}
+                />
+              </div>
             </div>
             <div>
               <label className="text-sm font-medium text-ink/70">Type</label>

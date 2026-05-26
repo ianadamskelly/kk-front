@@ -7,6 +7,7 @@ import RichTextEditor from "@/components/RichTextEditor";
 import EmptyState from "@/components/EmptyState";
 import Spinner from "@/components/Spinner";
 import { SkeletonTableRows } from "@/components/Skeleton";
+import StatusToggle from "@/components/StatusToggle";
 
 export type ResourceFieldType =
   | "text"
@@ -14,7 +15,8 @@ export type ResourceFieldType =
   | "richtext"
   | "number"
   | "select"
-  | "image";
+  | "image"
+  | "status";
 
 export interface ResourceField {
   name: string;
@@ -52,7 +54,9 @@ function emptyForm(fields: ResourceField[]): Record<string, string> {
         ? field.options[0].value
         : field.type === "number"
           ? "0"
-          : "";
+          : field.type === "status"
+            ? "published"
+            : "";
   }
   return f;
 }
@@ -258,6 +262,13 @@ export default function AdminResource({
                       </option>
                     ))}
                   </select>
+                ) : field.type === "status" ? (
+                  <div className="mt-1">
+                    <StatusToggle
+                      value={form[field.name]}
+                      onChange={(v) => setField(field.name, v)}
+                    />
+                  </div>
                 ) : field.type === "image" ? (
                   <div className="mt-1">
                     {form[field.name] && (

@@ -6,6 +6,7 @@ import { adminFetch, API_URL, Category, Post, imageUrl } from "@/lib/api";
 import { getToken } from "@/lib/auth";
 import RichTextEditor from "@/components/RichTextEditor";
 import Spinner, { LoadingBlock } from "@/components/Spinner";
+import StatusToggle from "@/components/StatusToggle";
 
 const inputClass =
   "w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500";
@@ -194,16 +195,9 @@ export default function PostForm({ postId }: { postId?: number }) {
                 <label className="text-xs font-medium text-ink/60">
                   Status
                 </label>
-                <select
-                  value={status}
-                  onChange={(e) =>
-                    setStatus(e.target.value as "draft" | "published")
-                  }
-                  className={`mt-1 ${inputClass}`}
-                >
-                  <option value="draft">Draft (hidden)</option>
-                  <option value="published">Published</option>
-                </select>
+                <div className="mt-1">
+                  <StatusToggle value={status} onChange={setStatus} />
+                </div>
               </div>
               <div>
                 <label className="text-xs font-medium text-ink/60">

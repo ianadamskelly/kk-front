@@ -1,10 +1,5 @@
 import AdminResource from "@/components/AdminResource";
 
-const STATUS = [
-  { value: "published", label: "Published" },
-  { value: "draft", label: "Draft" },
-];
-
 export default function AdminTestimonialsPage() {
   return (
     <AdminResource
@@ -18,7 +13,7 @@ export default function AdminTestimonialsPage() {
         { name: "company", label: "Company" },
         { name: "quote", label: "Quote", type: "textarea", required: true },
         { name: "sortOrder", label: "Sort order", type: "number" },
-        { name: "status", label: "Status", type: "select", options: STATUS },
+        { name: "status", label: "Status", type: "status" },
       ]}
       columns={[
         { name: "author", label: "Author" },

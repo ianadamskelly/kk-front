@@ -1,10 +1,5 @@
 import AdminResource from "@/components/AdminResource";
 
-const STATUS = [
-  { value: "published", label: "Published" },
-  { value: "draft", label: "Draft" },
-];
-
 export default function AdminProjectsPage() {
   return (
     <AdminResource
@@ -21,7 +16,7 @@ export default function AdminProjectsPage() {
         { name: "results", label: "Results", type: "textarea" },
         { name: "coverImage", label: "Cover image", type: "image" },
         { name: "sortOrder", label: "Sort order", type: "number" },
-        { name: "status", label: "Status", type: "select", options: STATUS },
+        { name: "status", label: "Status", type: "status" },
       ]}
       columns={[
         { name: "title", label: "Title" },

@@ -5,11 +5,6 @@ const TYPES = ["Guide", "Template", "E-book", "Video", "Tool"].map((t) => ({
   label: t,
 }));
 
-const STATUS = [
-  { value: "published", label: "Published" },
-  { value: "draft", label: "Draft" },
-];
-
 export default function AdminLibraryPage() {
   return (
     <AdminResource
@@ -25,7 +20,7 @@ export default function AdminLibraryPage() {
         { name: "url", label: "Resource URL", full: true },
         { name: "image", label: "Cover image", type: "image" },
         { name: "sortOrder", label: "Sort order", type: "number" },
-        { name: "status", label: "Status", type: "select", options: STATUS },
+        { name: "status", label: "Status", type: "status" },
       ]}
       columns={[
         { name: "title", label: "Title" },
