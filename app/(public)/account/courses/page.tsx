@@ -18,9 +18,19 @@ export default function AccountCoursesPage() {
   );
 }
 
+interface CertificateRow {
+  id: number;
+  code: string;
+  userId: number;
+  courseId: number;
+  issuedAt: string;
+}
+
 function Body() {
   const { token } = useCustomer();
   const [courses, setCourses] = useState<Course[] | null>(null);
+  // Certs keyed by courseId so we can badge each card in the loop.
+  const [certs, setCerts] = useState<Record<number, CertificateRow>>({});
 
   useEffect(() => {
     if (!token) return;
@@ -29,6 +39,15 @@ function Body() {
     })
       .then(async (r) => (r.ok ? ((await r.json()) as Course[]) : []))
       .then(setCourses);
+    fetch(`${API_URL}/api/account/certificates`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(async (r) => (r.ok ? ((await r.json()) as CertificateRow[]) : []))
+      .then((rows) => {
+        const map: Record<number, CertificateRow> = {};
+        for (const c of rows) map[c.courseId] = c;
+        setCerts(map);
+      });
   }, [token]);
 
   return (
@@ -89,6 +108,25 @@ function Body() {
                   )}
                 </div>
               </Link>
+              {certs[c.id] && (
+                <div className="border-t border-ink/[0.06] bg-brand-50/40 px-4 py-2 text-xs">
+                  <span className="mr-2 inline-flex items-center gap-1 font-semibold text-brand-700">
+                    🎓 Certificate earned
+                  </span>
+                  <a
+                    href={`${API_URL}/api/cert/${certs[c.id].code}/download`}
+                    className="font-semibold text-brand-700 hover:underline"
+                  >
+                    Download PDF
+                  </a>
+                  <Link
+                    href={`/cert/${certs[c.id].code}`}
+                    className="ml-3 text-ink/60 hover:text-brand-700"
+                  >
+                    View / share
+                  </Link>
+                </div>
+              )}
             </li>
           ))}
         </ul>
