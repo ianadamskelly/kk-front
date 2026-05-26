@@ -135,60 +135,70 @@ export default function AdminShell({
   };
 
   return (
-    <div className="flex flex-1">
-      <aside className="w-60 shrink-0 border-r border-ink/10 bg-white">
-        <div className="flex h-full flex-col px-4 py-5">
-          <Link href="/admin" className="flex items-center gap-2 font-semibold">
-            <span className="inline-block h-2.5 w-2.5 rounded-full bg-brand-500" />
-            {SITE_NAME} CMS
-          </Link>
-          <p className="mt-1 text-xs text-ink/45">
+    // Lock the shell to the viewport height so the header, nav and
+    // main pane can scroll independently. The page wrapper (in
+    // app/admin/layout.tsx → root layout) gives us the full height to
+    // work with; h-screen pins us there.
+    <div className="grid h-screen grid-rows-[auto_1fr] grid-cols-[15rem_1fr] bg-cream">
+      {/* Top bar — full width, sticky by virtue of being grid row 0. */}
+      <header className="col-span-2 flex items-center justify-between border-b border-ink/10 bg-white px-4 py-3">
+        <Link href="/admin" className="flex items-center gap-2 font-semibold">
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-brand-500" />
+          <span>{SITE_NAME} CMS</span>
+          <span className="ml-2 hidden text-xs font-normal text-ink/45 sm:inline">
             {user.name}{" "}
-            <span className="rounded-full bg-brand-50 px-1.5 py-0.5 text-[10px] font-semibold text-brand-700">
+            <span className="ml-1 rounded-full bg-brand-50 px-1.5 py-0.5 text-[10px] font-semibold text-brand-700">
               {user.roleName || user.role}
             </span>
-          </p>
-          <nav className="mt-6 flex flex-1 flex-col gap-5 overflow-y-auto">
-            {visibleGroups.map((group) => (
-              <div key={group.label}>
-                <p className="px-3 text-xs font-semibold uppercase tracking-widest text-ink/35">
-                  {group.label}
-                </p>
-                <div className="mt-1 flex flex-col gap-0.5">
-                  {group.links.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={`block rounded-md px-3 py-1.5 text-sm font-medium ${
-                        isActive(link.href)
-                          ? "bg-brand-500 text-white"
-                          : "text-ink/60 hover:bg-ink/5"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </nav>
-          <div className="mt-4 border-t border-ink/10 pt-3">
-            <Link
-              href="/"
-              className="block rounded-md px-3 py-1.5 text-sm text-ink/60 hover:bg-ink/5"
-            >
-              View site ↗
-            </Link>
-            <button
-              onClick={logout}
-              className="block w-full rounded-md px-3 py-1.5 text-left text-sm font-medium text-red-700 hover:bg-red-50"
-            >
-              Log out
-            </button>
-          </div>
+          </span>
+        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/"
+            target="_blank"
+            className="rounded-full border border-ink/15 px-3 py-1.5 text-sm text-ink/70 hover:border-brand-400 hover:text-ink"
+          >
+            View site ↗
+          </Link>
+          <button
+            onClick={logout}
+            className="rounded-full px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50"
+          >
+            Log out
+          </button>
         </div>
+      </header>
+
+      {/* Left rail — independent scroll. */}
+      <aside className="overflow-y-auto border-r border-ink/10 bg-white">
+        <nav className="flex flex-col gap-5 px-4 py-5">
+          {visibleGroups.map((group) => (
+            <div key={group.label}>
+              <p className="px-3 text-xs font-semibold uppercase tracking-widest text-ink/35">
+                {group.label}
+              </p>
+              <div className="mt-1 flex flex-col gap-0.5">
+                {group.links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`block rounded-md px-3 py-1.5 text-sm font-medium ${
+                      isActive(link.href)
+                        ? "bg-brand-500 text-white"
+                        : "text-ink/60 hover:bg-ink/5"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </nav>
       </aside>
-      <div className="flex-1 overflow-x-hidden">
+
+      {/* Main pane — independent scroll. */}
+      <main className="overflow-y-auto overflow-x-hidden">
         {pathAllowed ? (
           children
         ) : (
@@ -215,7 +225,7 @@ export default function AdminShell({
             </Link>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }
