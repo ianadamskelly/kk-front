@@ -16,7 +16,8 @@ export type ResourceFieldType =
   | "number"
   | "select"
   | "image"
-  | "status";
+  | "status"
+  | "urlOrFile";
 
 export interface ResourceField {
   name: string;
@@ -132,12 +133,24 @@ export default function AdminResource({
   const setField = (name: string, value: string) =>
     setForm((f) => ({ ...f, [name]: value }));
 
-  const upload = async (name: string, file: File) => {
+  // upload pushes a file at the given endpoint (image vs arbitrary
+  // file) and stashes the resulting URL on form[name]. Image uploads
+  // go through /admin/upload (re-encoded as WebP); urlOrFile fields
+  // use /admin/upload-file (stored verbatim).
+  const upload = async (
+    name: string,
+    file: File,
+    endpoint: "image" | "file",
+  ) => {
     setUploading(name);
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await adminFetch("/api/admin/upload", getToken() || "", {
+      const url =
+        endpoint === "image"
+          ? "/api/admin/upload"
+          : "/api/admin/upload-file";
+      const res = await adminFetch(url, getToken() || "", {
         method: "POST",
         body: fd,
       });
@@ -269,10 +282,50 @@ export default function AdminResource({
                       onChange={(v) => setField(field.name, v)}
                     />
                   </div>
+                ) : field.type === "urlOrFile" ? (
+                  <div className="mt-1 space-y-2">
+                    <input
+                      type="url"
+                      value={form[field.name]}
+                      onChange={(e) => setField(field.name, e.target.value)}
+                      placeholder="https://example.com/resource.pdf"
+                      className={inputClass}
+                    />
+                    <div className="flex flex-wrap items-center gap-3 text-xs">
+                      <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-ink/70 hover:border-brand-400 hover:text-ink">
+                        <span>📎 Upload a file instead</span>
+                        <input
+                          type="file"
+                          accept=".pdf,.zip,.epub,.mobi,.docx,.xlsx,.pptx,.txt,.csv,.mp3,.mp4,.m4a,.wav"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) upload(field.name, file, "file");
+                            e.target.value = "";
+                          }}
+                          className="sr-only"
+                        />
+                      </label>
+                      {uploading === field.name && (
+                        <span className="inline-flex items-center gap-1.5 text-ink/55">
+                          <Spinner size="sm" className="text-brand-500" />
+                          Uploading…
+                        </span>
+                      )}
+                      {form[field.name] && (
+                        <button
+                          type="button"
+                          onClick={() => setField(field.name, "")}
+                          className="text-ink/45 hover:text-red-600"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 ) : field.type === "image" ? (
                   <div className="mt-1">
                     {form[field.name] && (
-                       
+
                       <img
                         src={imageUrl(form[field.name])}
                         alt="preview"
@@ -284,7 +337,7 @@ export default function AdminResource({
                       accept="image/*"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (file) upload(field.name, file);
+                        if (file) upload(field.name, file, "image");
                       }}
                       className="text-sm"
                     />

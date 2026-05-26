@@ -17,7 +17,7 @@ export default function AdminLibraryPage() {
         { name: "type", label: "Type", type: "select", options: TYPES },
         { name: "category", label: "Category" },
         { name: "description", label: "Description", type: "richtext" },
-        { name: "url", label: "Resource URL", full: true },
+        { name: "url", label: "Resource URL or file", type: "urlOrFile", full: true },
         { name: "image", label: "Cover image", type: "image" },
         { name: "sortOrder", label: "Sort order", type: "number" },
         { name: "status", label: "Status", type: "status" },
