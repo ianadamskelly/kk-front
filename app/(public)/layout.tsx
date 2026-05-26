@@ -1,5 +1,6 @@
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import ScrollToTop from "@/components/ScrollToTop";
 import { CartProvider } from "@/lib/cart";
 import { CustomerProvider } from "@/lib/customer";
 import { fetchSettings, fetchServices } from "@/lib/api";
@@ -20,6 +21,7 @@ export default async function PublicLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter settings={settings} services={services} />
+        <ScrollToTop />
       </CartProvider>
     </CustomerProvider>
   );
