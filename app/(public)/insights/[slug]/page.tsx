@@ -7,6 +7,8 @@ import {
   fetchProducts,
   imageUrl,
   formatDate,
+  SITE_NAME,
+  SITE_URL,
 } from "@/lib/api";
 import { estimateReadTime } from "@/lib/readtime";
 import ShareButtons from "@/components/ShareButtons";
@@ -15,6 +17,7 @@ import ContentHTML from "@/components/ContentHTML";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
 import RelatedRail from "@/components/RelatedRail";
+import JsonLd from "@/components/JsonLd";
 import {
   CalendarIcon,
   ClockIcon,
@@ -28,9 +31,30 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await fetchPost(slug);
+  if (!post) {
+    return { title: "Insight not found" };
+  }
+  const canonical = `/insights/${post.slug}`;
+  const og = post.coverImage ? imageUrl(post.coverImage) : undefined;
   return {
-    title: post?.title ?? "Insight not found",
-    description: post?.excerpt,
+    title: post.title,
+    description: post.excerpt,
+    alternates: { canonical },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      url: canonical,
+      images: og ? [{ url: og }] : undefined,
+      publishedTime: post.publishedAt || post.createdAt,
+      modifiedTime: post.updatedAt,
+    },
+    twitter: {
+      card: og ? "summary_large_image" : "summary",
+      title: post.title,
+      description: post.excerpt,
+      images: og ? [og] : undefined,
+    },
   };
 }
 
@@ -68,8 +92,28 @@ export default async function InsightPage({
         .slice(0, 4)
     : [];
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/insights/${post.slug}` },
+    headline: post.title,
+    description: post.excerpt || undefined,
+    image: post.coverImage ? imageUrl(post.coverImage) : undefined,
+    datePublished: post.publishedAt || post.createdAt,
+    dateModified: post.updatedAt,
+    author: post.authorName
+      ? { "@type": "Person", name: post.authorName }
+      : { "@type": "Organization", name: SITE_NAME },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/icon.svg` },
+    },
+  };
+
   return (
     <>
+      <JsonLd data={articleJsonLd} />
       <ReadingProgressBar />
 
       <article className="mx-auto max-w-3xl px-4 py-12">

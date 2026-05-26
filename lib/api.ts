@@ -3,6 +3,14 @@
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:8080";
 
+// SITE_URL is the public base URL for the frontend (the place this app
+// is reachable from). Used to build absolute URLs in sitemap.xml,
+// robots.txt, OG tags, and canonical links. Set NEXT_PUBLIC_SITE_URL at
+// build time in production.
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+  "http://localhost:3000";
+
 export const SITE_NAME = "Kuza Kizazi";
 
 // --- Types ---

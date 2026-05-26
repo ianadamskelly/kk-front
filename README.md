@@ -42,6 +42,7 @@ Open <http://localhost:3000>. The dev server reloads on save.
 | Variable | Purpose | Example |
 | --- | --- | --- |
 | `NEXT_PUBLIC_API_URL` | Base URL of the backend API. Baked into the bundle at build time. | `https://api.kuzakizazi.com` |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL (this frontend). Used for absolute URLs in `sitemap.xml`, `robots.txt`, canonical links, and OG tags. | `https://kuzakizazi.com` |
 
 ## Scripts
 

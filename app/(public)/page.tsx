@@ -6,6 +6,8 @@ import {
   fetchTestimonials,
   fetchStats,
   fetchPosts,
+  SITE_NAME,
+  SITE_URL,
 } from "@/lib/api";
 import SectionHeading from "@/components/SectionHeading";
 import ServiceCard from "@/components/ServiceCard";
@@ -16,6 +18,7 @@ import PostCard from "@/components/PostCard";
 import CTASection from "@/components/CTASection";
 import FadeIn from "@/components/FadeIn";
 import TrustLogoStrip from "@/components/TrustLogoStrip";
+import JsonLd from "@/components/JsonLd";
 
 export default async function HomePage() {
   const [settings, services, projects, testimonials, stats, postList] =
@@ -28,8 +31,33 @@ export default async function HomePage() {
       fetchPosts({ perPage: 3 }),
     ]);
 
+  // Organization + WebSite JSON-LD so the brand has a proper
+  // knowledge-panel candidate and the site supports the sitelinks
+  // search box if Google ever decides to render one.
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: `${SITE_URL}/icon.svg`,
+        description: settings.description || undefined,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: SITE_NAME,
+        publisher: { "@id": `${SITE_URL}/#organization` },
+      },
+    ],
+  };
+
   return (
     <div className="space-y-24 pb-8">
+      <JsonLd data={orgJsonLd} />
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
         <span className="text-sm font-semibold uppercase tracking-widest text-brand-500">

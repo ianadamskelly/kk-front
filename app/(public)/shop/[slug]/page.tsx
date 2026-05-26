@@ -12,6 +12,8 @@ import ContentHTML from "@/components/ContentHTML";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedRail from "@/components/RelatedRail";
 import ProductGallery from "@/components/ProductGallery";
+import JsonLd from "@/components/JsonLd";
+import { SITE_NAME, SITE_URL } from "@/lib/api";
 import Reviews from "@/components/Reviews";
 
 export async function generateMetadata({
@@ -50,8 +52,45 @@ export default async function ProductDetailPage({
     ? posts.posts.filter((p) => p.categoryName?.toLowerCase() === cat).slice(0, 3)
     : [];
 
+  // Product JSON-LD: a single Offer in KES with the product's
+  // gallery (or single image) attached. Skipped when the product is
+  // draft / has no price, since search engines reject Offers with
+  // zero or missing price.
+  const productImages = (product.images || [])
+    .map((i) => i.url)
+    .filter(Boolean);
+  if (product.image && !productImages.includes(product.image)) {
+    productImages.unshift(product.image);
+  }
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description || undefined,
+    image: productImages.map((u) =>
+      u.startsWith("http") ? u : `${process.env.NEXT_PUBLIC_API_URL || ""}${u}`,
+    ),
+    sku: String(product.id),
+    category: product.category || undefined,
+    brand: { "@type": "Brand", name: SITE_NAME },
+    offers:
+      product.priceCents > 0
+        ? {
+            "@type": "Offer",
+            url: `${SITE_URL}/shop/${product.slug}`,
+            priceCurrency: "KES",
+            price: (product.priceCents / 100).toFixed(2),
+            availability:
+              product.status === "published"
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+          }
+        : undefined,
+  };
+
   return (
     <div className="space-y-20 pb-8">
+      <JsonLd data={productJsonLd} />
       <section className="mx-auto max-w-5xl px-4 pt-16 sm:pt-20">
         <Breadcrumbs
           items={[

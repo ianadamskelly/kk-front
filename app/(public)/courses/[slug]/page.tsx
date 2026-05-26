@@ -15,6 +15,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedRail from "@/components/RelatedRail";
 import Reviews from "@/components/Reviews";
 import ResourceList from "@/components/ResourceList";
+import JsonLd from "@/components/JsonLd";
+import { SITE_NAME, SITE_URL } from "@/lib/api";
 
 export async function generateMetadata({
   params,
@@ -55,8 +57,34 @@ export default async function CourseDetailPage({
     ? allPosts.posts.filter((p) => p.categoryName?.toLowerCase() === cat).slice(0, 3)
     : [];
 
+  // Course JSON-LD — provider tells Google "this is a Kuza Kizazi
+  // course"; offers carries the price for the schema rich result.
+  const courseJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: course.title,
+    description: course.summary || course.description || undefined,
+    url: `${SITE_URL}/courses/${course.slug}`,
+    provider: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      sameAs: SITE_URL,
+    },
+    offers:
+      course.priceCents >= 0
+        ? {
+            "@type": "Offer",
+            url: `${SITE_URL}/courses/${course.slug}`,
+            priceCurrency: "KES",
+            price: (course.priceCents / 100).toFixed(2),
+            category: course.priceCents > 0 ? "Paid" : "Free",
+          }
+        : undefined,
+  };
+
   return (
     <div className="space-y-20 pb-8">
+      <JsonLd data={courseJsonLd} />
       <section className="mx-auto max-w-6xl px-4 pt-16 sm:pt-20">
         <Breadcrumbs
           items={[
