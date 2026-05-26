@@ -14,6 +14,7 @@ import { getToken } from "@/lib/auth";
 import RichTextEditor from "./RichTextEditor";
 import Spinner from "./Spinner";
 import CourseResources from "./admin/CourseResources";
+import CourseTasks from "./admin/CourseTasks";
 
 // One coherent step-driven course builder. The component takes a course
 // that already exists in the database (created as a draft by /admin/courses/new)
@@ -704,6 +705,16 @@ function CurriculumStep({
       {/* Course-wide resources — shown on the course landing page. */}
       <div className="mt-6">
         <CourseResources courseId={course.id} />
+      </div>
+
+      {/* Module-end tasks. The knownModules list comes from the
+          curriculum so the dropdown nudges the admin toward existing
+          module names — but free text is still allowed. */}
+      <div className="mt-6">
+        <CourseTasks
+          courseId={course.id}
+          knownModules={[...new Set(lessons.map((l) => l.module).filter(Boolean))]}
+        />
       </div>
 
       <div className="mt-6 space-y-6">

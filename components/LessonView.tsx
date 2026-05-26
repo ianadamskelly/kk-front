@@ -1,12 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Course, Lesson } from "@/lib/api";
+import {
+  API_URL,
+  type Course,
+  type CourseTask,
+  type CourseTaskSubmission,
+  type Lesson,
+} from "@/lib/api";
 import { useCourseProgress } from "@/lib/progress";
+import { useCustomer } from "@/lib/customer";
 import { useTheme } from "@/lib/theme";
 import ContentHTML from "@/components/ContentHTML";
 import ThemeToggle from "@/components/ThemeToggle";
 import ResourceList from "@/components/ResourceList";
+import ModuleTask from "@/components/ModuleTask";
 
 export default function LessonView({
   course,
@@ -18,11 +27,47 @@ export default function LessonView({
   const lessons = course.lessons || [];
   const { isComplete, setComplete, loaded } = useCourseProgress(course.slug);
   const { theme, toggle: toggleTheme } = useTheme();
+  const { token } = useCustomer();
 
   const index = lessons.findIndex((l) => l.id === lesson.id);
   const prev = index > 0 ? lessons[index - 1] : null;
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const complete = loaded && isComplete(lesson.slug);
+
+  // Is this the last lesson of its module? Used to decide whether
+  // the end-of-module task widget should appear at the bottom.
+  const isLastInModule =
+    !next || next.module !== lesson.module;
+
+  // Pull tasks + my submissions for this course once on mount so the
+  // end-of-module section can render synchronously when reached.
+  const [tasks, setTasks] = useState<CourseTask[]>([]);
+  const [subs, setSubs] = useState<Record<number, CourseTaskSubmission>>({});
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    fetch(`${API_URL}/api/account/courses/${course.slug}/tasks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(async (r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        setTasks((data.tasks || []) as CourseTask[]);
+        const byTask: Record<number, CourseTaskSubmission> = {};
+        for (const s of (data.submissions || []) as CourseTaskSubmission[]) {
+          byTask[s.taskId] = s;
+        }
+        setSubs(byTask);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [course.slug, token]);
+
+  const moduleTasks = isLastInModule
+    ? tasks.filter((t) => t.module === lesson.module)
+    : [];
 
   return (
     // Scope dark mode to the lesson surface; the rest of the public
@@ -112,6 +157,19 @@ export default function LessonView({
               title="Lesson resources"
               resources={lesson.resources}
             />
+          )}
+
+          {moduleTasks.length > 0 && (
+            <div className="mt-8 space-y-4">
+              {moduleTasks.map((t) => (
+                <ModuleTask
+                  key={t.id}
+                  task={t}
+                  existing={subs[t.id]}
+                  onSaved={(s) => setSubs((m) => ({ ...m, [s.taskId]: s }))}
+                />
+              ))}
+            </div>
           )}
 
           <div className="mt-8 border-t border-ink/10 pt-6">

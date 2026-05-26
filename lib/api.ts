@@ -181,6 +181,30 @@ export interface Order {
   items: OrderItem[];
 }
 
+export interface CourseTask {
+  id: number;
+  courseId: number;
+  module: string;
+  prompt: string;
+  requiredPass: boolean;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CourseTaskSubmission {
+  id: number;
+  taskId: number;
+  userId: number;
+  body: string;
+  fileUrl: string;
+  grade: "" | "passed" | "failed";
+  feedback: string;
+  submittedAt: string;
+  gradedAt: string | null;
+  graderId: number | null;
+}
+
 export interface CourseResource {
   id: number;
   courseId: number;
