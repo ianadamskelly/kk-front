@@ -4,7 +4,14 @@ import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useEffect } from "react";
+import Image from "@tiptap/extension-image";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { useEffect, useRef, useState } from "react";
+import { adminFetch } from "@/lib/api";
+import { getToken } from "@/lib/auth";
 
 interface RichTextEditorProps {
   value: string;
@@ -48,7 +55,18 @@ function ToolbarButton({
   );
 }
 
-function Toolbar({ editor }: { editor: Editor }) {
+function Toolbar({
+  editor,
+  showSource,
+  onToggleSource,
+}: {
+  editor: Editor;
+  showSource: boolean;
+  onToggleSource: () => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
   const setLink = () => {
     const previous = editor.getAttributes("link").href as string | undefined;
     const url = window.prompt("Link URL", previous || "https://");
@@ -59,6 +77,38 @@ function Toolbar({ editor }: { editor: Editor }) {
     }
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
   };
+
+  // Image upload: post to the admin image endpoint (which re-encodes to
+  // WebP), then insert <img src> at the cursor. Requires the user to
+  // be signed in as admin — same as every other admin form on the site.
+  const uploadImage = async (file: File) => {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await adminFetch("/api/admin/upload", getToken() || "", {
+        method: "POST",
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      editor.chain().focus().setImage({ src: data.url }).run();
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : "Could not upload image");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const insertTable = () => {
+    editor
+      .chain()
+      .focus()
+      .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+      .run();
+  };
+
+  const inTable = editor.isActive("table");
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 border-b border-ink/10 bg-ink/[0.02] px-2 py-1.5">
@@ -143,6 +193,68 @@ function Toolbar({ editor }: { editor: Editor }) {
         ⨯
       </ToolbarButton>
       <span className="mx-1 h-5 w-px bg-ink/10" />
+
+      {/* Image upload */}
+      <ToolbarButton
+        title={uploading ? "Uploading…" : "Insert image"}
+        disabled={uploading}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        🖼
+      </ToolbarButton>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="sr-only"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) uploadImage(file);
+          e.target.value = "";
+        }}
+      />
+
+      {/* Tables: insert a 3x3 with header row; inside a table, expose
+          row/column add/remove + delete-table controls. */}
+      <ToolbarButton title="Insert table" onClick={insertTable}>
+        ⊞
+      </ToolbarButton>
+      {inTable && (
+        <>
+          <ToolbarButton
+            title="Add column"
+            onClick={() => editor.chain().focus().addColumnAfter().run()}
+          >
+            +↔
+          </ToolbarButton>
+          <ToolbarButton
+            title="Delete column"
+            onClick={() => editor.chain().focus().deleteColumn().run()}
+          >
+            −↔
+          </ToolbarButton>
+          <ToolbarButton
+            title="Add row"
+            onClick={() => editor.chain().focus().addRowAfter().run()}
+          >
+            +↕
+          </ToolbarButton>
+          <ToolbarButton
+            title="Delete row"
+            onClick={() => editor.chain().focus().deleteRow().run()}
+          >
+            −↕
+          </ToolbarButton>
+          <ToolbarButton
+            title="Delete table"
+            onClick={() => editor.chain().focus().deleteTable().run()}
+          >
+            ⊟
+          </ToolbarButton>
+        </>
+      )}
+
+      <span className="mx-1 h-5 w-px bg-ink/10" />
       <ToolbarButton
         title="Undo"
         disabled={!editor.can().undo()}
@@ -157,6 +269,14 @@ function Toolbar({ editor }: { editor: Editor }) {
       >
         ↷
       </ToolbarButton>
+      <span className="mx-1 h-5 w-px bg-ink/10" />
+      <ToolbarButton
+        title={showSource ? "Show rich text view" : "Edit raw HTML"}
+        active={showSource}
+        onClick={onToggleSource}
+      >
+        {"</>"}
+      </ToolbarButton>
     </div>
   );
 }
@@ -168,6 +288,8 @@ export default function RichTextEditor({
   placeholder = "Start writing…",
   minHeight,
 }: RichTextEditorProps) {
+  const [showSource, setShowSource] = useState(false);
+
   const editor = useEditor({
     // immediatelyRender=false avoids the SSR mismatch warning Next 16
     // produces when the editor would render before hydration.
@@ -188,6 +310,16 @@ export default function RichTextEditor({
           target: "_blank",
         },
       }),
+      Image.configure({
+        // Images come from /api/admin/upload (already re-encoded as
+        // WebP). Allow inline so admins can drop one mid-paragraph.
+        inline: false,
+        allowBase64: false,
+      }),
+      Table.configure({ resizable: true, allowTableNodeSelection: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
       Placeholder.configure({ placeholder }),
     ],
     content: value || "",
@@ -197,6 +329,18 @@ export default function RichTextEditor({
       onChange(html === "<p></p>" ? "" : html);
     },
   });
+
+  const toggleSource = () => {
+    if (!editor) return;
+    if (!showSource) {
+      // Switching to source: make sure the textarea opens with the
+      // current canonical HTML (in case other extensions normalised
+      // anything since the last onUpdate).
+      setShowSource(true);
+      return;
+    }
+    setShowSource(false);
+  };
 
   // If the parent resets value externally (e.g. when loading a record), sync.
   useEffect(() => {
@@ -214,8 +358,30 @@ export default function RichTextEditor({
       className="kk-editor overflow-hidden rounded-lg border border-ink/15 bg-white focus-within:border-brand-500"
       style={minHeight ? { minHeight } : undefined}
     >
-      {editor && <Toolbar editor={editor} />}
-      <EditorContent editor={editor} className="kk-prose" />
+      {editor && (
+        <Toolbar
+          editor={editor}
+          showSource={showSource}
+          onToggleSource={toggleSource}
+        />
+      )}
+      {showSource ? (
+        // Raw HTML edit mode. The textarea writes directly to the
+        // parent (and to the editor instance) so toggling back to
+        // rich-text view picks up whatever was typed.
+        <textarea
+          spellCheck={false}
+          value={value}
+          onChange={(e) => {
+            onChange(e.target.value);
+            editor?.commands.setContent(e.target.value, { emitUpdate: false });
+          }}
+          className="block w-full resize-y bg-ink/[0.02] p-3 font-mono text-xs text-ink/85 outline-none"
+          style={{ minHeight: 280 }}
+        />
+      ) : (
+        <EditorContent editor={editor} className="kk-prose" />
+      )}
     </div>
   );
 }
