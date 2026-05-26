@@ -14,6 +14,7 @@ import ContentHTML from "@/components/ContentHTML";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedRail from "@/components/RelatedRail";
 import Reviews from "@/components/Reviews";
+import ResourceList from "@/components/ResourceList";
 
 export async function generateMetadata({
   params,
@@ -130,6 +131,15 @@ export default async function CourseDetailPage({
         <div className="mt-12 max-w-3xl">
           <CurriculumGate initialCourse={course} />
         </div>
+
+        {course.resources && course.resources.length > 0 && (
+          <div className="mt-12 max-w-3xl">
+            <ResourceList
+              title="Course resources"
+              resources={course.resources}
+            />
+          </div>
+        )}
 
         <div className="mt-16">
           <Reviews

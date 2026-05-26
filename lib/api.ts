@@ -181,6 +181,18 @@ export interface Order {
   items: OrderItem[];
 }
 
+export interface CourseResource {
+  id: number;
+  courseId: number;
+  /** Null on course-wide resources; set on lesson-scoped ones. */
+  lessonId: number | null;
+  label: string;
+  url: string;
+  kind: "link" | "file";
+  sortOrder: number;
+  createdAt: string;
+}
+
 export interface Lesson {
   id: number;
   courseId: number;
@@ -194,6 +206,8 @@ export interface Lesson {
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
+  /** Resources attached to this lesson specifically. */
+  resources?: CourseResource[];
 }
 
 export interface Course {
@@ -217,6 +231,8 @@ export interface Course {
   createdAt: string;
   updatedAt: string;
   lessons: Lesson[];
+  /** Course-wide resources (resources whose lessonId is null). */
+  resources?: CourseResource[];
   // Set by /api/courses/{slug}: `locked` means the course is paid and access
   // is gated; `entitled` means this requester has access (free, member, or
   // bought the course). When locked && !entitled, lesson.content/videoUrl

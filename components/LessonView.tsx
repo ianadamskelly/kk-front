@@ -6,6 +6,7 @@ import { useCourseProgress } from "@/lib/progress";
 import { useTheme } from "@/lib/theme";
 import ContentHTML from "@/components/ContentHTML";
 import ThemeToggle from "@/components/ThemeToggle";
+import ResourceList from "@/components/ResourceList";
 
 export default function LessonView({
   course,
@@ -103,6 +104,14 @@ export default function LessonView({
 
           {lesson.content && (
             <ContentHTML html={lesson.content} className="mt-6" />
+          )}
+
+          {lesson.resources && lesson.resources.length > 0 && (
+            <ResourceList
+              className="mt-8"
+              title="Lesson resources"
+              resources={lesson.resources}
+            />
           )}
 
           <div className="mt-8 border-t border-ink/10 pt-6">

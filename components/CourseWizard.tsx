@@ -13,6 +13,7 @@ import {
 import { getToken } from "@/lib/auth";
 import RichTextEditor from "./RichTextEditor";
 import Spinner from "./Spinner";
+import CourseResources from "./admin/CourseResources";
 
 // One coherent step-driven course builder. The component takes a course
 // that already exists in the database (created as a draft by /admin/courses/new)
@@ -700,6 +701,11 @@ function CurriculumStep({
         description="Group lessons into modules. Drag any lesson to reorder it or move it between modules."
       />
 
+      {/* Course-wide resources — shown on the course landing page. */}
+      <div className="mt-6">
+        <CourseResources courseId={course.id} />
+      </div>
+
       <div className="mt-6 space-y-6">
         {modules.length === 0 ? (
           <EmptyCurriculum
@@ -1041,6 +1047,9 @@ function LessonEditor({
           Allow as free preview (visible to non-buyers)
         </label>
       </div>
+      {/* Lesson-scoped resources — shown alongside the lesson content
+          for enrolled students. */}
+      <CourseResources courseId={lesson.courseId} lessonId={lesson.id} />
       {err && <p className="text-sm text-red-600">{err}</p>}
       <div className="flex items-center justify-between">
         <button
