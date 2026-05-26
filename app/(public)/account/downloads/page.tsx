@@ -8,12 +8,36 @@ import AccountShell from "@/components/account/AccountShell";
 import EmptyState from "@/components/EmptyState";
 import { SkeletonTableRows } from "@/components/Skeleton";
 
+interface DownloadFile {
+  downloadId: number;
+  /** Server-signed path, e.g. "/api/downloads/<jwt>". Prefix with API_URL. */
+  url: string;
+  label: string;
+  sizeBytes: number;
+  downloadsUsed: number;
+  maxDownloads: number | null;
+  downloadsRemaining: number | null;
+}
+
 interface Download {
   orderId: number;
   productId: number | null;
   productName: string;
   quantity: number;
   purchasedAt: string;
+  files: DownloadFile[];
+}
+
+function formatBytes(n: number): string {
+  if (!n) return "—";
+  const units = ["B", "KB", "MB", "GB"];
+  let value = n;
+  let i = 0;
+  while (value >= 1024 && i < units.length - 1) {
+    value /= 1024;
+    i += 1;
+  }
+  return `${value.toFixed(value < 10 && i > 0 ? 1 : 0)} ${units[i]}`;
 }
 
 // "My Downloads" lists products from confirmed/fulfilled shop orders so
@@ -60,42 +84,78 @@ function Body() {
           action={{ href: "/shop", label: "Visit the shop" }}
         />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-ink/10 bg-ink/[0.03] text-xs uppercase tracking-wide text-ink/50">
-              <tr>
-                <th className="px-4 py-3">Item</th>
-                <th className="px-4 py-3">Purchased</th>
-                <th className="px-4 py-3 text-right">Order</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-ink/[0.06]">
-              {items.map((d, i) => (
-                <tr key={i}>
-                  <td className="px-4 py-3 font-medium text-ink">
+        <ul className="space-y-4">
+          {items.map((d, i) => (
+            <li
+              key={i}
+              className="overflow-hidden rounded-2xl border border-ink/10 bg-white"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-ink/[0.06] px-5 py-4">
+                <div>
+                  <p className="font-semibold text-ink">
                     {d.productName}
                     {d.quantity > 1 && (
-                      <span className="ml-1 text-xs text-ink/45">
+                      <span className="ml-1 text-xs font-normal text-ink/45">
                         × {d.quantity}
                       </span>
                     )}
-                  </td>
-                  <td className="px-4 py-3 text-ink/55">
-                    {formatDate(d.purchasedAt)}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Link
-                      href="/account/orders"
-                      className="text-sm font-semibold text-brand-600 hover:underline"
+                  </p>
+                  <p className="mt-0.5 text-xs text-ink/55">
+                    Purchased {formatDate(d.purchasedAt)}
+                  </p>
+                </div>
+                <Link
+                  href="/account/orders"
+                  className="text-sm font-semibold text-brand-600 hover:underline"
+                >
+                  Order #{d.orderId} →
+                </Link>
+              </div>
+              {d.files.length === 0 ? (
+                <p className="px-5 py-4 text-sm text-ink/45">
+                  No downloadable files attached. If you expected files
+                  here, contact support.
+                </p>
+              ) : (
+                <ul className="divide-y divide-ink/[0.06]">
+                  {d.files.map((f) => (
+                    <li
+                      key={f.downloadId}
+                      className="flex flex-wrap items-center justify-between gap-3 px-5 py-3"
                     >
-                      Order #{d.orderId} →
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-ink">
+                          {f.label}
+                        </p>
+                        <p className="text-xs text-ink/55">
+                          {formatBytes(f.sizeBytes)}
+                          {f.maxDownloads != null && (
+                            <span className="ml-2">
+                              · {f.downloadsRemaining} of {f.maxDownloads}{" "}
+                              download{f.maxDownloads === 1 ? "" : "s"} left
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                      {f.maxDownloads != null && f.downloadsRemaining === 0 ? (
+                        <span className="rounded-full bg-ink/5 px-3 py-1.5 text-xs text-ink/45">
+                          Limit reached
+                        </span>
+                      ) : (
+                        <a
+                          href={`${API_URL}${f.url}`}
+                          className="rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600"
+                        >
+                          ⬇ Download
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
