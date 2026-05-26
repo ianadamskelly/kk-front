@@ -175,6 +175,10 @@ export default function RichTextEditor({
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3, 4] },
+        // StarterKit v3 bundles Link; disable it so our standalone
+        // Link.configure() below is the single source of truth and
+        // we don't get "Duplicate extension names found: ['link']".
+        link: false,
       }),
       Link.configure({
         openOnClick: false,
