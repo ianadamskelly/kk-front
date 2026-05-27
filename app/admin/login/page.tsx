@@ -88,10 +88,6 @@ export default function LoginPage() {
             {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
-        <p className="mt-4 text-xs text-ink/40">
-          Default seed login: admin@kuzakizazi.com / admin123 — change these in
-          the backend .env file.
-        </p>
       </div>
     </div>
   );
