@@ -21,8 +21,18 @@ export default function CourseTasks({ courseId, knownModules = [] }: Props) {
 
   // New-task form state.
   const [module, setModule] = useState(knownModules[0] || "");
+  const [showModuleSuggestions, setShowModuleSuggestions] = useState(false);
+  const [highlightedModule, setHighlightedModule] = useState(-1);
   const [prompt, setPrompt] = useState("");
   const [requiredPass, setRequiredPass] = useState(false);
+  const matchingModules = knownModules.filter((knownModule) =>
+    knownModule.toLowerCase().includes(module.trim().toLowerCase()),
+  );
+  const chooseModule = (knownModule: string) => {
+    setModule(knownModule);
+    setShowModuleSuggestions(false);
+    setHighlightedModule(-1);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -167,18 +177,85 @@ export default function CourseTasks({ courseId, knownModules = [] }: Props) {
 
       <div className="mt-4 space-y-2 border-t border-ink/10 pt-3">
         <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
-          <input
-            list="kk-modules-list"
-            value={module}
-            onChange={(e) => setModule(e.target.value)}
-            placeholder="Module name (matches a lesson group)"
-            className="w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
-          />
-          <datalist id="kk-modules-list">
-            {knownModules.map((m) => (
-              <option key={m} value={m} />
-            ))}
-          </datalist>
+          <div className="relative">
+            <input
+              value={module}
+              onChange={(e) => {
+                setModule(e.target.value);
+                setShowModuleSuggestions(true);
+                setHighlightedModule(-1);
+              }}
+              onFocus={() => {
+                setShowModuleSuggestions(true);
+                setHighlightedModule(-1);
+              }}
+              onBlur={() => {
+                setShowModuleSuggestions(false);
+                setHighlightedModule(-1);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setShowModuleSuggestions(false);
+                  setHighlightedModule(-1);
+                  return;
+                }
+                if (matchingModules.length === 0) return;
+                if (event.key === "ArrowDown") {
+                  event.preventDefault();
+                  setShowModuleSuggestions(true);
+                  setHighlightedModule((current) =>
+                    Math.min(current + 1, matchingModules.length - 1),
+                  );
+                } else if (event.key === "ArrowUp") {
+                  event.preventDefault();
+                  setShowModuleSuggestions(true);
+                  setHighlightedModule((current) =>
+                    current <= 0 ? matchingModules.length - 1 : current - 1,
+                  );
+                } else if (event.key === "Enter" && showModuleSuggestions && highlightedModule >= 0) {
+                  event.preventDefault();
+                  chooseModule(matchingModules[highlightedModule]);
+                }
+              }}
+              placeholder="Module name (matches a lesson group)"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="kk-modules-list"
+              aria-expanded={showModuleSuggestions && matchingModules.length > 0}
+              aria-activedescendant={
+                highlightedModule >= 0 ? `kk-module-option-${highlightedModule}` : undefined
+              }
+              className="w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm text-ink placeholder:text-ink/40 outline-none focus:border-brand-500"
+            />
+            {showModuleSuggestions && matchingModules.length > 0 && (
+              <ul
+                id="kk-modules-list"
+                role="listbox"
+                className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-ink/15 bg-white py-1 text-sm text-ink shadow-lg"
+              >
+                {matchingModules.map((knownModule, index) => (
+                  <li key={knownModule}>
+                    <button
+                      id={`kk-module-option-${index}`}
+                      type="button"
+                      role="option"
+                      aria-selected={index === highlightedModule}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onMouseEnter={() => setHighlightedModule(index)}
+                      onClick={() => chooseModule(knownModule)}
+                      className={`block w-full px-3 py-2 text-left text-ink ${
+                        index === highlightedModule
+                          ? "bg-brand-50 text-brand-700"
+                          : "hover:bg-brand-50 hover:text-brand-700"
+                      }`}
+                    >
+                      {knownModule}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <label className="inline-flex items-center gap-1.5 px-1 text-xs text-ink/65">
             <input
               type="checkbox"

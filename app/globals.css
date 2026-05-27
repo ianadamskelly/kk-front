@@ -31,17 +31,23 @@
   --color-brand-50: #2a1812;
   --color-brand-100: #3a2017;
   --color-brand-200: #5a2e1f;
+  --color-brand-600: #ff855d;
+  --color-brand-700: #ffa485;
 }
 /* Tone down borders that were tuned for light surfaces. */
 .kk-dark *, .kk-dark *::before, .kk-dark *::after {
   border-color: rgb(255 255 255 / 0.08);
 }
-/* The .kk-prose article surface uses a few hard-coded color
-   references via the cream/ink tokens which already flip; this
-   nudges the inline-code chip to remain legible. */
-.kk-dark .kk-prose code {
-  background: rgb(255 255 255 / 0.07);
-  color: var(--color-ink);
+/* Rich content and editor text needs its own contrast scale because
+   it is rendered in both the light public site and dark scoped views. */
+.kk-dark .kk-prose {
+  --kk-prose-body: rgb(241 240 236 / 0.86);
+  --kk-prose-heading: rgb(241 240 236);
+  --kk-prose-muted: rgb(241 240 236 / 0.7);
+  --kk-prose-placeholder: rgb(241 240 236 / 0.42);
+  --kk-prose-rule: rgb(255 255 255 / 0.12);
+  --kk-prose-cell: rgb(255 255 255 / 0.05);
+  --kk-prose-code-bg: rgb(255 255 255 / 0.07);
 }
 
 html,
@@ -63,7 +69,14 @@ html {
    A lightweight typographic style used for both the TipTap editor surface
    and HTML content rendered on public pages. */
 .kk-prose {
-  color: rgb(24 24 27 / 0.85);
+  --kk-prose-body: rgb(24 24 27 / 0.85);
+  --kk-prose-heading: rgb(24 24 27);
+  --kk-prose-muted: rgb(24 24 27 / 0.7);
+  --kk-prose-placeholder: rgb(24 24 27 / 0.35);
+  --kk-prose-rule: rgb(24 24 27 / 0.12);
+  --kk-prose-cell: rgb(24 24 27 / 0.03);
+  --kk-prose-code-bg: rgb(24 24 27 / 0.06);
+  color: var(--kk-prose-body);
   line-height: 1.7;
   font-size: 1rem;
 }
@@ -80,7 +93,7 @@ html {
 .kk-prose h2,
 .kk-prose h3,
 .kk-prose h4 {
-  color: rgb(24 24 27);
+  color: var(--kk-prose-heading);
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.25;
@@ -116,7 +129,7 @@ html {
   border-left: 3px solid var(--color-brand-500);
   margin: 1rem 0;
   padding: 0.25rem 0 0.25rem 1rem;
-  color: rgb(24 24 27 / 0.7);
+  color: var(--kk-prose-muted);
   font-style: italic;
 }
 .kk-prose a {
@@ -129,13 +142,14 @@ html {
 }
 .kk-prose strong {
   font-weight: 600;
-  color: rgb(24 24 27);
+  color: var(--kk-prose-heading);
 }
 .kk-prose em {
   font-style: italic;
 }
 .kk-prose code {
-  background: rgb(24 24 27 / 0.06);
+  background: var(--kk-prose-code-bg);
+  color: var(--kk-prose-heading);
   padding: 0.1em 0.35em;
   border-radius: 0.25rem;
   font-size: 0.92em;
@@ -143,7 +157,7 @@ html {
 }
 .kk-prose hr {
   border: 0;
-  border-top: 1px solid rgb(24 24 27 / 0.1);
+  border-top: 1px solid var(--kk-prose-rule);
   margin: 1.5rem 0;
 }
 
@@ -233,7 +247,7 @@ html {
 }
 .kk-editor .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  color: rgb(24 24 27 / 0.35);
+  color: var(--kk-prose-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
@@ -253,14 +267,14 @@ html {
 .kk-editor .ProseMirror td,
 .kk-prose th,
 .kk-prose td {
-  border: 1px solid rgb(24 24 27 / 0.12);
+  border: 1px solid var(--kk-prose-rule);
   padding: 0.5rem 0.75rem;
   vertical-align: top;
   position: relative;
 }
 .kk-editor .ProseMirror th,
 .kk-prose th {
-  background: rgb(24 24 27 / 0.03);
+  background: var(--kk-prose-cell);
   font-weight: 600;
   text-align: left;
 }
