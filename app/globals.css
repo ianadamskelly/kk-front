@@ -189,6 +189,12 @@ html {
   40%           { transform: translateY(-4px); opacity: 1; }
 }
 
+/* Seamless horizontal loop for the testimonial cards. */
+@keyframes kk-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 .kk-spin {
   animation: kk-spin 0.7s linear infinite;
 }
@@ -222,11 +228,22 @@ html {
   transform: translateY(0);
 }
 
+.kk-marquee {
+  display: flex;
+  width: max-content;
+  animation: kk-marquee var(--kk-marquee-duration, 60s) linear infinite;
+}
+.kk-marquee-pause:hover .kk-marquee,
+.kk-marquee-pause:focus-within .kk-marquee {
+  animation-play-state: paused;
+}
+
 /* Honour accessibility settings: no movement when the user asked for none. */
 @media (prefers-reduced-motion: reduce) {
   .kk-spin,
   .kk-fade-up,
-  .kk-skeleton {
+  .kk-skeleton,
+  .kk-marquee {
     animation: none !important;
   }
   .kk-reveal {

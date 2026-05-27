@@ -10,7 +10,7 @@ import {
 } from "@/lib/api";
 import SectionHeading from "@/components/SectionHeading";
 import ProjectCard from "@/components/ProjectCard";
-import TestimonialCard from "@/components/TestimonialCard";
+import TestimonialsMarquee from "@/components/TestimonialsMarquee";
 import StatsBand from "@/components/StatsBand";
 import PostCard from "@/components/PostCard";
 import CTASection from "@/components/CTASection";
@@ -216,11 +216,7 @@ export default async function HomePage() {
             title="What our clients say"
           />
           <div className="mt-10">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((testimonial) => (
-                <TestimonialCard key={testimonial.id} testimonial={testimonial} />
-              ))}
-            </div>
+            <TestimonialsMarquee testimonials={testimonials} />
           </div>
         </FadeIn>
       )}
