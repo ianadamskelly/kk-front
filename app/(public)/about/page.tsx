@@ -82,7 +82,7 @@ export default async function AboutPage() {
               Who we are
             </span>
             <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
-              Unleashing creativity, empowering possibilities
+              Creative work that helps brands grow
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-ink/60">
               Based in Nairobi, Kuza Kizazi is a collective of designers,

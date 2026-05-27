@@ -71,6 +71,24 @@ export interface Comment {
   postSlug?: string;
 }
 
+export type ServicePillar =
+  | "brand_identity"
+  | "digital_platforms"
+  | "content_growth"
+  | "";
+
+export interface ServiceSubservice {
+  id: number;
+  serviceId: number;
+  title: string;
+  summary: string;
+  body: string;
+  sortOrder: number;
+  status: "draft" | "published";
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Service {
   id: number;
   slug: string;
@@ -78,10 +96,12 @@ export interface Service {
   summary: string;
   body: string;
   icon: string;
+  pillar: ServicePillar;
   sortOrder: number;
   status: "draft" | "published";
   createdAt: string;
   updatedAt: string;
+  subservices?: ServiceSubservice[];
 }
 
 export interface Project {

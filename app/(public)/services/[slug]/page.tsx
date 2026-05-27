@@ -101,6 +101,40 @@ export default async function ServiceDetailPage({
         </article>
       )}
 
+      {service.subservices && service.subservices.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4">
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-widest text-brand-500">
+              What we can help with
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink">
+              Capabilities within {service.title}
+            </h2>
+          </div>
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            {service.subservices.map((subservice) => (
+              <article
+                key={subservice.id}
+                className="rounded-2xl border border-ink/10 bg-white p-6"
+              >
+                <h3 className="text-lg font-semibold text-ink">
+                  {subservice.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink/65">
+                  {subservice.summary}
+                </p>
+                {subservice.body && (
+                  <ContentHTML
+                    html={subservice.body}
+                    className="mt-4 text-sm text-ink/65"
+                  />
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Sibling services rail */}
       {others.length > 0 && (
         <section className="mx-auto max-w-3xl px-4">

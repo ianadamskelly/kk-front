@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   fetchSettings,
-  fetchServices,
   fetchProjects,
   fetchTestimonials,
   fetchStats,
@@ -10,9 +9,8 @@ import {
   SITE_URL,
 } from "@/lib/api";
 import SectionHeading from "@/components/SectionHeading";
-import ServiceCard from "@/components/ServiceCard";
 import ProjectCard from "@/components/ProjectCard";
-import TestimonialsMarquee from "@/components/TestimonialsMarquee";
+import TestimonialCard from "@/components/TestimonialCard";
 import StatsBand from "@/components/StatsBand";
 import PostCard from "@/components/PostCard";
 import CTASection from "@/components/CTASection";
@@ -20,12 +18,12 @@ import FadeIn from "@/components/FadeIn";
 import TrustLogoStrip from "@/components/TrustLogoStrip";
 import JsonLd from "@/components/JsonLd";
 import { HeroGraphic, PartnershipGraphic } from "@/components/LandingGraphics";
+import { SERVICE_PILLARS } from "@/lib/service-pillars";
 
 export default async function HomePage() {
-  const [settings, services, projects, testimonials, stats, postList] =
+  const [settings, projects, testimonials, stats, postList] =
     await Promise.all([
       fetchSettings(),
-      fetchServices(),
       fetchProjects(),
       fetchTestimonials(),
       fetchStats(),
@@ -101,7 +99,7 @@ export default async function HomePage() {
           <SectionHeading
             eyebrow="Who we are"
             title="A creative partner, not just a vendor"
-            description="From a boutique design studio to a full-service creative agency, we help brands find their voice through design, animation, and web development."
+            description="Kuza Kizazi helps growing African brands shape their identity, build digital platforms, and create content that moves people and drives growth."
           />
           <div className="space-y-7">
             <PartnershipGraphic className="aspect-[500/244] w-full" />
@@ -131,20 +129,32 @@ export default async function HomePage() {
       <FadeIn as="section" className="mx-auto max-w-6xl px-4">
         <SectionHeading
           eyebrow="What we do"
-          title="Services that empower"
-          description="We combine strategy and creative excellence to deliver work that drives real growth."
+          title="Three ways we help brands grow"
+          description="Identity, digital platforms, and ongoing content work together to give your brand clarity and momentum."
         />
-        {services.length > 0 ? (
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.slice(0, 6).map((s, i) => (
-              <FadeIn key={s.id} delay={Math.min(i, 5) * 60}>
-                <ServiceCard service={s} />
-              </FadeIn>
-            ))}
-          </div>
-        ) : (
-          <p className="mt-8 text-ink/50">Services are being prepared.</p>
-        )}
+        <div className="mt-10 grid gap-5 lg:grid-cols-3">
+          {SERVICE_PILLARS.map((pillar, i) => (
+            <FadeIn key={pillar.key} delay={i * 60}>
+              <Link
+                href={`/services#${pillar.anchor}`}
+                className="group flex h-full flex-col rounded-2xl border border-ink/10 bg-white p-7 transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg"
+              >
+                <span className="text-xs font-semibold uppercase tracking-widest text-brand-500">
+                  0{i + 1}
+                </span>
+                <h3 className="mt-5 text-xl font-semibold text-ink">
+                  {pillar.title}
+                </h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-ink/60">
+                  {pillar.description}
+                </p>
+                <span className="mt-6 text-sm font-semibold text-brand-600">
+                  Explore capabilities →
+                </span>
+              </Link>
+            </FadeIn>
+          ))}
+        </div>
         <div className="mt-8">
           <Link
             href="/services"
@@ -206,7 +216,11 @@ export default async function HomePage() {
             title="What our clients say"
           />
           <div className="mt-10">
-            <TestimonialsMarquee testimonials={testimonials} />
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {testimonials.map((testimonial) => (
+                <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+              ))}
+            </div>
           </div>
         </FadeIn>
       )}

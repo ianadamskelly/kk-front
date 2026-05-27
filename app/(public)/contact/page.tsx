@@ -7,7 +7,7 @@ import ContactIllustration from "@/components/illustrations/ContactIllustration"
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with Kuza Kizazi — let's turn your idea into a digital reality.",
+    "Whether you need a brand identity, website, campaign, content system, or long-term creative partner, tell Kuza Kizazi what you are building.",
 };
 
 // Tiny inline icons for the contact-method tiles. Kept here rather than
@@ -96,7 +96,7 @@ export default async function ContactPage() {
         <SectionHeading
           eyebrow="Get in touch"
           title="Let's build something together"
-          description="Whether you have a fully-formed idea or just a spark of inspiration, we're here to help you turn it into a digital reality."
+          description="Whether you need a brand identity, website, campaign, content system, or long-term creative partner, tell us what you are building."
         />
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_1.4fr]">

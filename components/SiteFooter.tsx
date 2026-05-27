@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { SITE_NAME, type Service, type SiteSettings } from "@/lib/api";
+import { SITE_NAME, type SiteSettings } from "@/lib/api";
+import { SERVICE_PILLARS } from "@/lib/service-pillars";
 
 // Small inline SVGs so the footer doesn't pull in an icon library for
 // the half-dozen glyphs it needs. All sized to 16px and inherit
@@ -110,19 +111,14 @@ const QUICK_LINKS = [
 
 export default function SiteFooter({
   settings,
-  services,
 }: {
   settings: SiteSettings;
-  services: Service[];
 }) {
   const year = new Date().getFullYear();
   const description =
     settings.footer_description ||
     settings.tagline ||
-    "Unleashing creativity, empowering possibilities.";
-  // Take up to 4 services for the column. The admin can re-order them
-  // via /admin/services if a different set should bubble up.
-  const featured = services.slice(0, 4);
+    "Helping growing African brands build their identity, digital presence, and content systems.";
 
   return (
     <footer className="mt-24 bg-[#0b1530] text-white">
@@ -159,20 +155,14 @@ export default function SiteFooter({
 
           {/* Services */}
           <FooterColumn title="Services">
-            {featured.length > 0 ? (
-              featured.map((s) => (
-                <FooterLink key={s.id} href={`/services/${s.slug}`}>
-                  {s.title}
-                </FooterLink>
-              ))
-            ) : (
-              <>
-                <FooterLink href="/services">Graphic Design</FooterLink>
-                <FooterLink href="/services">Web Development</FooterLink>
-                <FooterLink href="/services">Animation &amp; Video</FooterLink>
-                <FooterLink href="/services">Digital Marketing</FooterLink>
-              </>
-            )}
+            {SERVICE_PILLARS.map((pillar) => (
+              <FooterLink key={pillar.key} href={`/services#${pillar.anchor}`}>
+                {pillar.title}
+              </FooterLink>
+            ))}
+            <FooterLink href="/services#learning-and-resources">
+              Learning and resources
+            </FooterLink>
           </FooterColumn>
 
           {/* Quick links — secondary destinations not in the top nav */}

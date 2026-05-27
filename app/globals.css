@@ -305,26 +305,3 @@ html {
   height: auto;
   border-radius: 0.5rem;
 }
-
-/* ----- Horizontal marquee (testimonials carousel) -----
-   The track holds two copies of the children laid out in a single
-   row; translating by -50% scrolls one full copy off-screen, after
-   which the second copy is in the exact same visual position and
-   the animation can restart seamlessly. Pause on hover so a reader
-   can focus on a quote. */
-@keyframes kk-marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.kk-marquee {
-  display: flex;
-  width: max-content;
-  animation: kk-marquee var(--kk-marquee-duration, 60s) linear infinite;
-}
-.kk-marquee-pause:hover .kk-marquee,
-.kk-marquee-pause:focus-within .kk-marquee {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .kk-marquee { animation: none; }
-}

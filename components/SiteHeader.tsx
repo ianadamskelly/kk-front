@@ -18,7 +18,7 @@ const WORK_ITEMS: DropdownItem[] = [
   {
     href: "/services",
     label: "Services",
-    description: "Branding, web, animation, marketing",
+    description: "Identity, platforms, content and growth",
   },
   {
     href: "/portfolio",
