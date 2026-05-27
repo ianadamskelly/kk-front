@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { adminFetch, Post, PostList, formatDate } from "@/lib/api";
+import {
+  adminFetch,
+  formatDate,
+  formatDateTime,
+  Post,
+  PostList,
+} from "@/lib/api";
 import { getToken } from "@/lib/auth";
 import EmptyState from "@/components/EmptyState";
 import { SkeletonTableRows } from "@/components/Skeleton";
@@ -43,6 +49,26 @@ export default function AdminPostsPage() {
     } else {
       alert("Could not delete the post.");
     }
+  };
+
+  const statusClass = (status: Post["status"]) => {
+    switch (status) {
+      case "published":
+        return "rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800";
+      case "scheduled":
+        return "rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800";
+      default:
+        return "rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800";
+    }
+  };
+
+  const dateLabel = (post: Post) => {
+    if (post.status === "scheduled") {
+      return post.scheduledAt
+        ? `Scheduled for ${formatDateTime(post.scheduledAt)}`
+        : "Scheduled";
+    }
+    return formatDate(post.publishedAt || post.createdAt);
   };
 
   return (
@@ -101,18 +127,12 @@ export default function AdminPostsPage() {
                     {p.categoryName || "—"}
                   </td>
                   <td className="px-4 py-3">
-                    <span
-                      className={
-                        p.status === "published"
-                          ? "rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
-                          : "rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800"
-                      }
-                    >
+                    <span className={statusClass(p.status)}>
                       {p.status}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-ink/50">
-                    {formatDate(p.publishedAt || p.createdAt)}
+                    {dateLabel(p)}
                   </td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
                     <Link

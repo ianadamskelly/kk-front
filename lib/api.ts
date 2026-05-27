@@ -42,7 +42,7 @@ export interface Post {
   excerpt: string;
   content: string;
   coverImage: string;
-  status: "draft" | "published";
+  status: "draft" | "scheduled" | "published";
   categoryId: number | null;
   categoryName: string;
   categorySlug: string;
@@ -51,6 +51,7 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
+  scheduledAt: string | null;
 }
 
 export interface PostList {
@@ -220,6 +221,7 @@ export interface Order {
   totalCents: number;
   status: "pending" | "confirmed" | "fulfilled" | "cancelled" | "payment_review";
   createdAt: string;
+  autoCancelledAt: string | null;
   items: OrderItem[];
 }
 
@@ -380,6 +382,17 @@ export function formatDate(iso: string | null): string {
     year: "numeric",
     month: "long",
     day: "numeric",
+  });
+}
+
+export function formatDateTime(iso: string | null): string {
+  if (!iso) return "";
+  return new Date(iso).toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
   });
 }
 

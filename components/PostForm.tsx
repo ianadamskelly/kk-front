@@ -6,10 +6,26 @@ import { adminFetch, API_URL, Category, Post, imageUrl } from "@/lib/api";
 import { getToken } from "@/lib/auth";
 import RichTextEditor from "@/components/RichTextEditor";
 import Spinner, { LoadingBlock } from "@/components/Spinner";
-import StatusToggle from "@/components/StatusToggle";
 
 const inputClass =
   "w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500";
+type PostStatus = "draft" | "scheduled" | "published";
+
+const STATUS_OPTIONS: Array<{ value: PostStatus; label: string }> = [
+  { value: "draft", label: "Draft" },
+  { value: "scheduled", label: "Scheduled" },
+  { value: "published", label: "Published" },
+];
+
+function toLocalDateTimeInput(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
+    d.getHours(),
+  )}:${pad(d.getMinutes())}`;
+}
 
 // PostForm powers both the "new post" and "edit post" screens.
 export default function PostForm({ postId }: { postId?: number }) {
@@ -21,7 +37,8 @@ export default function PostForm({ postId }: { postId?: number }) {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState("");
-  const [status, setStatus] = useState<"draft" | "published">("draft");
+  const [status, setStatus] = useState<PostStatus>("draft");
+  const [scheduledAt, setScheduledAt] = useState("");
   const [categoryId, setCategoryId] = useState("");
 
   const [loading, setLoading] = useState(true);
@@ -47,6 +64,7 @@ export default function PostForm({ postId }: { postId?: number }) {
           setContent(post.content);
           setCoverImage(post.coverImage);
           setStatus(post.status);
+          setScheduledAt(toLocalDateTimeInput(post.scheduledAt));
           setCategoryId(post.categoryId ? String(post.categoryId) : "");
         }
       } catch (e) {
@@ -83,12 +101,17 @@ export default function PostForm({ postId }: { postId?: number }) {
     setSaving(true);
     setError("");
     try {
+      if (status === "scheduled" && !scheduledAt) {
+        throw new Error("Choose when this post should publish.");
+      }
       const body = JSON.stringify({
         title,
         excerpt,
         content,
         coverImage,
         status,
+        scheduledAt:
+          status === "scheduled" ? new Date(scheduledAt).toISOString() : null,
         categoryId: categoryId ? Number(categoryId) : null,
       });
       const res = isEdit
@@ -195,10 +218,50 @@ export default function PostForm({ postId }: { postId?: number }) {
                 <label className="text-xs font-medium text-ink/60">
                   Status
                 </label>
-                <div className="mt-1">
-                  <StatusToggle value={status} onChange={setStatus} />
+                <div
+                  role="radiogroup"
+                  aria-label="Post status"
+                  className="mt-1 inline-flex flex-wrap items-center gap-1 rounded-full border border-ink/15 bg-white p-1"
+                >
+                  {STATUS_OPTIONS.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      role="radio"
+                      aria-checked={status === option.value}
+                      onClick={() => setStatus(option.value)}
+                      className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
+                        status === option.value
+                          ? option.value === "published"
+                            ? "bg-brand-500 text-white"
+                            : option.value === "scheduled"
+                              ? "bg-blue-600 text-white"
+                              : "bg-ink text-white"
+                          : "text-ink/60 hover:text-ink"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
                 </div>
               </div>
+              {status === "scheduled" && (
+                <div>
+                  <label className="text-xs font-medium text-ink/60">
+                    Publish at
+                  </label>
+                  <input
+                    type="datetime-local"
+                    required
+                    value={scheduledAt}
+                    onChange={(e) => setScheduledAt(e.target.value)}
+                    className={`mt-1 ${inputClass}`}
+                  />
+                  <p className="mt-1 text-xs text-ink/45">
+                    Uses your local time and publishes automatically.
+                  </p>
+                </div>
+              )}
               <div>
                 <label className="text-xs font-medium text-ink/60">
                   Category
