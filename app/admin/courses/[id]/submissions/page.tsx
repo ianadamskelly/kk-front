@@ -85,6 +85,29 @@ export default function CourseSubmissionsPage() {
     load();
   };
 
+  // Manual certificate issuance for a single student. Auto-issue
+  // already covers courses with required-pass tasks, so this button
+  // is most useful for courses without required tasks where the
+  // admin still wants to award completion. The backend endpoint is
+  // idempotent — re-clicking just returns the existing cert.
+  const issueCert = async (userId: number) => {
+    if (!courseId) return;
+    if (!confirm("Issue a completion certificate to this student?")) return;
+    const res = await adminFetch(
+      `/api/admin/courses/${courseId}/certificates`,
+      getToken() || "",
+      {
+        method: "POST",
+        body: JSON.stringify({ userId }),
+      },
+    );
+    if (!res.ok) {
+      alert("Could not issue certificate");
+      return;
+    }
+    alert("Certificate issued — the student will get an email with the download link.");
+  };
+
   const filtered =
     filter === ""
       ? items
@@ -216,6 +239,13 @@ export default function CourseSubmissionsPage() {
                     className="rounded-full border border-ink/15 px-4 py-1.5 text-sm text-ink/70 hover:bg-ink/5"
                   >
                     Fail
+                  </button>
+                  <button
+                    onClick={() => issueCert(s.userId)}
+                    className="ml-auto rounded-full border border-brand-300 px-4 py-1.5 text-sm font-semibold text-brand-700 hover:bg-brand-50"
+                    title="Issue this student a completion certificate for the course"
+                  >
+                    🎓 Issue certificate
                   </button>
                 </div>
               </div>
