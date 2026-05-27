@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_URL, formatPrice } from "@/lib/api";
+import { formatPrice } from "@/lib/api";
+import { customerFetch } from "@/lib/customer";
 
 // AppliedCoupon is what the parent gets back after a successful validate.
 export interface AppliedCoupon {
@@ -16,7 +17,6 @@ interface Props {
   scope: "shop" | "courses" | "memberships";
   // Pre-discount subtotal in cents. Required for validation server-side.
   subtotalCents: number;
-  token?: string | null;
   applied: AppliedCoupon | null;
   onApply: (a: AppliedCoupon) => void;
   onRemove: () => void;
@@ -33,7 +33,6 @@ interface Props {
 export default function CheckoutExtras({
   scope,
   subtotalCents,
-  token,
   applied,
   onApply,
   onRemove,
@@ -56,13 +55,9 @@ export default function CheckoutExtras({
     setBusy(true);
     setErr("");
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-      if (token) headers.Authorization = `Bearer ${token}`;
-      const res = await fetch(`${API_URL}/api/coupons/validate`, {
+      const res = await customerFetch(`/api/coupons/validate`, {
         method: "POST",
-        headers,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code,
           scope,

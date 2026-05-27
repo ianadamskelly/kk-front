@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import {
-  API_URL,
   resolveFileURL,
   type CourseTask,
   type CourseTaskSubmission,
 } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import Spinner from "@/components/Spinner";
 
 interface Props {
@@ -20,7 +19,7 @@ interface Props {
 // ModuleTask renders the task prompt + the student's submission form.
 // Shown at the end of the last lesson of a module by LessonView.
 export default function ModuleTask({ task, existing, onSaved }: Props) {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [body, setBody] = useState(existing?.body || "");
   // fileUrl is the raw stored value we POST back on submit; fileViewUrl
   // is the browser-fetchable URL (signed token or external link) used
@@ -35,7 +34,7 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
   const [current, setCurrent] = useState<CourseTaskSubmission | undefined>(existing);
 
   const onUpload = async (file: File) => {
-    if (!token) return;
+    if (!user) return;
     setUploading(true);
     setError("");
     try {
@@ -44,9 +43,8 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
       // Customer-side endpoint (not the admin one). Stores the file
       // in the protected uploads dir; reads are gated through
       // /api/files/{token} when the response comes back.
-      const up = await fetch(`${API_URL}/api/account/upload-file`, {
+      const up = await customerFetch(`/api/account/upload-file`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
         body: fd,
       });
       const upData = await up.json();
@@ -64,7 +62,7 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!token) return;
+    if (!user) return;
     if (!body.trim() && !fileUrl) {
       setError("Write something or attach a file.");
       return;
@@ -72,14 +70,11 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch(
-        `${API_URL}/api/account/tasks/${task.id}/submit`,
+      const res = await customerFetch(
+        `/api/account/tasks/${task.id}/submit`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ body, fileUrl }),
         },
       );
@@ -94,7 +89,7 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
     }
   };
 
-  if (!token) {
+  if (!user) {
     return (
       <div className="rounded-2xl border border-ink/10 bg-white p-5 text-sm text-ink/60">
         Sign in to submit your response to this task.

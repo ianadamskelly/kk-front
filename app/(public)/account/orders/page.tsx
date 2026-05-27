@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useCustomer } from "@/lib/customer";
-import { API_URL, Order, formatPrice, formatDate } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
+import { Order, formatPrice, formatDate } from "@/lib/api";
 import EmptyState from "@/components/EmptyState";
 import { LoadingBlock } from "@/components/Spinner";
 import AccountShell from "@/components/account/AccountShell";
@@ -23,22 +23,20 @@ export default function AccountOrdersPage() {
 }
 
 function Body() {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    if (!token) return;
+    if (!user) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/account/orders`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await customerFetch(`/api/account/orders`);
       if (res.ok) setOrders(await res.json());
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [user]);
 
   useEffect(() => {
     load();

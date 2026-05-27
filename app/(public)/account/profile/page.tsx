@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_URL } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import AccountShell from "@/components/account/AccountShell";
 import Spinner, { LoadingBlock } from "@/components/Spinner";
 
@@ -32,7 +31,7 @@ export default function AccountProfilePage() {
 }
 
 function Body() {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -46,14 +45,12 @@ function Body() {
   const [pwMessage, setPwMessage] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
   useEffect(() => {
-    if (!token) return;
-    fetch(`${API_URL}/api/account/profile`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    if (!user) return;
+    customerFetch(`/api/account/profile`)
       .then(async (r) => (r.ok ? ((await r.json()) as Profile) : null))
       .then((p) => setProfile(p))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [user]);
 
   const set = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     if (!profile) return;
@@ -62,16 +59,13 @@ function Body() {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!profile || !token) return;
+    if (!profile || !user) return;
     setSaving(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/account/profile`, {
+      const res = await customerFetch(`/api/account/profile`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
       });
       const data = await res.json();
@@ -102,12 +96,9 @@ function Body() {
     }
     setPwSaving(true);
     try {
-      const res = await fetch(`${API_URL}/api/account/password`, {
+      const res = await customerFetch(`/api/account/password`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ current: pw.current, new: pw.next }),
       });
       if (res.ok) {

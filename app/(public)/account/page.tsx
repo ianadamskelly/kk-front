@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { API_URL, formatPrice, formatDate, imageUrl } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { formatPrice, formatDate, imageUrl } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import AccountShell from "@/components/account/AccountShell";
 import EmptyState from "@/components/EmptyState";
 import { LoadingBlock } from "@/components/Spinner";
@@ -44,19 +44,17 @@ export default function AccountDashboardPage() {
 }
 
 function Dashboard() {
-  const { user, token } = useCustomer();
+  const { user } = useCustomer();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) return;
-    fetch(`${API_URL}/api/account/dashboard`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    if (!user) return;
+    customerFetch(`/api/account/dashboard`)
       .then(async (r) => (r.ok ? ((await r.json()) as DashboardData) : null))
       .then((d) => setData(d))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [user]);
 
   if (loading) return <LoadingBlock label="Loading dashboard…" />;
   if (!data) return <p className="text-sm text-red-600">Couldn&apos;t load dashboard.</p>;

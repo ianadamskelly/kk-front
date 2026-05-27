@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { API_URL, imageUrl, type Course } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import AccountShell from "@/components/account/AccountShell";
 import EmptyState from "@/components/EmptyState";
 import { SkeletonCards } from "@/components/Skeleton";
@@ -27,28 +27,24 @@ interface CertificateRow {
 }
 
 function Body() {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [courses, setCourses] = useState<Course[] | null>(null);
   // Certs keyed by courseId so we can badge each card in the loop.
   const [certs, setCerts] = useState<Record<number, CertificateRow>>({});
 
   useEffect(() => {
-    if (!token) return;
-    fetch(`${API_URL}/api/account/courses`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    if (!user) return;
+    customerFetch(`/api/account/courses`)
       .then(async (r) => (r.ok ? ((await r.json()) as Course[]) : []))
       .then(setCourses);
-    fetch(`${API_URL}/api/account/certificates`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    customerFetch(`/api/account/certificates`)
       .then(async (r) => (r.ok ? ((await r.json()) as CertificateRow[]) : []))
       .then((rows) => {
         const map: Record<number, CertificateRow> = {};
         for (const c of rows) map[c.courseId] = c;
         setCerts(map);
       });
-  }, [token]);
+  }, [user]);
 
   return (
     <div className="space-y-6">

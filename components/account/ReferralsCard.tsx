@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_URL, formatPrice, formatDate } from "@/lib/api";
+import { formatPrice, formatDate } from "@/lib/api";
+import { customerFetch } from "@/lib/customer";
 
 interface Referee {
   userId: number;
@@ -24,20 +25,17 @@ interface ReferralData {
 // ReferralsCard shows the customer's referral link plus the people
 // they've referred. The list is read-only — backend handles the reward
 // flow when a referee makes their first paid order.
-export default function ReferralsCard({ token }: { token: string }) {
+export default function ReferralsCard() {
   const [data, setData] = useState<ReferralData | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
-    fetch(`${API_URL}/api/account/referrals`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    customerFetch(`/api/account/referrals`)
       .then(async (res) => (res.ok ? ((await res.json()) as ReferralData) : null))
       .then((d) => setData(d))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, []);
 
   const copy = () => {
     if (!data) return;

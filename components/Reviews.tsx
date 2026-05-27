@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { API_URL, type Review, type ReviewsResponse } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { type Review, type ReviewsResponse } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
 
 interface Props {
   entityType: "product" | "course";
@@ -59,7 +59,7 @@ export default function Reviews({
   entityId,
   noun = entityType === "product" ? "this product" : "this course",
 }: Props) {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [data, setData] = useState<ReviewsResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -76,9 +76,10 @@ export default function Reviews({
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}${path}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-      });
+      // customerFetch always includes credentials so a signed-in
+      // viewer's session cookie is sent and the server can attach
+      // `mine` (their own review) to the response.
+      const res = await customerFetch(path);
       const json = (await res.json()) as ReviewsResponse;
       setData(json);
       if (json.mine) {
@@ -88,7 +89,7 @@ export default function Reviews({
     } finally {
       setLoading(false);
     }
-  }, [path, token]);
+  }, [path]);
 
   useEffect(() => {
     load();
@@ -96,7 +97,7 @@ export default function Reviews({
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!token) return;
+    if (!user) return;
     if (rating < 1) {
       setError("Please pick a star rating.");
       return;
@@ -104,12 +105,9 @@ export default function Reviews({
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/account/reviews`, {
+      const res = await customerFetch(`/api/account/reviews`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           entityType,
           entityId,
@@ -129,11 +127,10 @@ export default function Reviews({
   };
 
   const removeOwn = async () => {
-    if (!data?.mine || !token) return;
+    if (!data?.mine || !user) return;
     if (!confirm("Delete your review?")) return;
-    await fetch(`${API_URL}/api/account/reviews/${data.mine.id}`, {
+    await customerFetch(`/api/account/reviews/${data.mine.id}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
     });
     setRating(0);
     setBody("");
@@ -150,7 +147,7 @@ export default function Reviews({
   if (!data) return null;
 
   const summary = data.summary;
-  const showForm = !!token && data.canReview;
+  const showForm = !!user && data.canReview;
 
   return (
     <section className="space-y-6">
@@ -220,12 +217,12 @@ export default function Reviews({
         </form>
       )}
 
-      {!showForm && !token && (
+      {!showForm && !user && (
         <p className="text-sm text-ink/55">
           Sign in and complete a purchase to leave a review.
         </p>
       )}
-      {!showForm && token && !data.canReview && !data.mine && (
+      {!showForm && user && !data.canReview && !data.mine && (
         <p className="text-sm text-ink/55">
           Verified buyers can leave a review. Reviews appear here once approved.
         </p>

@@ -44,6 +44,8 @@ Open <http://localhost:3000>. The dev server reloads on save.
 | `NEXT_PUBLIC_API_URL` | Base URL of the backend API. Baked into the bundle at build time. | `https://api.kuzakizazi.com` |
 | `NEXT_PUBLIC_SITE_URL` | Public site URL (this frontend). Used for absolute URLs in `sitemap.xml`, `robots.txt`, canonical links, and OG tags. | `https://kuzakizazi.com` |
 
+For the customer session cookie to span both subdomains in production, the backend must set `COOKIE_DOMAIN=.kuzakizazi.com` and `COOKIE_SECURE=true`, and its `CORS_ORIGIN` must be the exact frontend URL (no `*`).
+
 ## Scripts
 
 | Command | What it does |

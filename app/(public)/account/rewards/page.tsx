@@ -17,8 +17,8 @@ export default function AccountRewardsPage() {
 }
 
 function Body() {
-  const { token } = useCustomer();
-  if (!token) return null;
+  const { user } = useCustomer();
+  if (!user) return null;
   return (
     <div className="space-y-6">
       <header>
@@ -30,8 +30,8 @@ function Body() {
         </p>
       </header>
       <div className="grid gap-4 md:grid-cols-2">
-        <ReferralsCard token={token} />
-        <CreditCard token={token} />
+        <ReferralsCard />
+        <CreditCard />
       </div>
     </div>
   );

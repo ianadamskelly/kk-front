@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
-import { useCustomer } from "@/lib/customer";
-import { API_URL, formatPrice } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
+import { formatPrice } from "@/lib/api";
 import CheckoutExtras, { type AppliedCoupon } from "@/components/CheckoutExtras";
 import EmptyState from "@/components/EmptyState";
 import Spinner from "@/components/Spinner";
@@ -50,7 +50,7 @@ async function loadFlutterwaveScript(): Promise<void> {
 
 export default function CheckoutPage() {
   const { items, totalCents, clear } = useCart();
-  const { user, token, register } = useCustomer();
+  const { user, register } = useCustomer();
   const [form, setForm] = useState({
     customerName: "",
     customerEmail: "",
@@ -94,14 +94,12 @@ export default function CheckoutPage() {
 
   // Look up the user's store credit balance once their session resolves.
   useEffect(() => {
-    if (!token) return;
-    fetch(`${API_URL}/api/account/credit`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    if (!user) return;
+    customerFetch(`/api/account/credit`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => d && setCreditBalance(d.balanceCents))
       .catch(() => undefined);
-  }, [token]);
+  }, [user]);
 
   // If the cart subtotal changes after a coupon was applied, re-validate
   // by clearing it — easiest way to keep amounts honest.
@@ -126,20 +124,20 @@ export default function CheckoutPage() {
       // 0. If no session, create the account inline first so the
       //    resulting order is owned by a real user (and digital
       //    downloads, order emails, etc. are linkable).
-      let effectiveToken = token;
-      if (!effectiveToken) {
+      if (!user) {
         if (form.password.length < 8) {
           throw new Error("Please choose a password of at least 8 characters.");
         }
         try {
-          const result = await register(
+          await register(
             form.customerName,
             form.customerEmail,
             form.password,
             undefined,
             "checkout",
           );
-          effectiveToken = result.token;
+          // The HttpOnly cookie set on register is now in the jar;
+          // customerFetch sends it on subsequent calls.
         } catch (err) {
           const msg = err instanceof Error ? err.message : "Could not create your account";
           // The backend returns "an account with that email already exists"
@@ -154,15 +152,10 @@ export default function CheckoutPage() {
         }
       }
 
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-      if (effectiveToken) headers["Authorization"] = `Bearer ${effectiveToken}`;
-
       // 1. Create the order.
-      const res = await fetch(`${API_URL}/api/orders`, {
+      const res = await customerFetch(`/api/orders`, {
         method: "POST",
-        headers,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
           couponCode: coupon?.code || "",
@@ -178,9 +171,9 @@ export default function CheckoutPage() {
       setOrderId(data.id);
 
       // 2. Ask the backend to prepare a payment session.
-      const payRes = await fetch(
-        `${API_URL}/api/orders/${data.id}/pay?gateway=${gateway}&currency=${currency}`,
-        { method: "POST", headers },
+      const payRes = await customerFetch(
+        `/api/orders/${data.id}/pay?gateway=${gateway}&currency=${currency}`,
+        { method: "POST" },
       );
       const payData = await payRes.json();
       if (!payRes.ok) {
@@ -471,7 +464,6 @@ export default function CheckoutPage() {
           <CheckoutExtras
             scope="shop"
             subtotalCents={totalCents}
-            token={token}
             applied={coupon}
             onApply={setCoupon}
             onRemove={() => setCoupon(null)}

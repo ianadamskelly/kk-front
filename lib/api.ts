@@ -478,13 +478,13 @@ export interface LibraryListing {
 
 // fetchLibrary supports an optional bearer token so an authenticated
 // browser fetch can prove membership and unlock the URLs in the response.
-export async function fetchLibrary(token?: string): Promise<LibraryListing> {
+export async function fetchLibrary(): Promise<LibraryListing> {
   try {
-    const headers: Record<string, string> = {};
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    // credentials: 'include' sends the kk_session cookie so members
+    // get the unlocked URLs back; anonymous callers see redacted ones.
     const res = await fetch(`${API_URL}/api/library`, {
       cache: "no-store",
-      headers,
+      credentials: "include",
     });
     if (!res.ok) return { entitled: false, resources: [] };
     return (await res.json()) as LibraryListing;

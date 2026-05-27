@@ -2,8 +2,8 @@
 
 import { use, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { API_URL, formatDate } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { formatDate } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import AccountShell from "@/components/account/AccountShell";
 import Spinner, { LoadingBlock } from "@/components/Spinner";
 
@@ -47,7 +47,7 @@ export default function TicketThreadPage({
 }
 
 function Body({ id }: { id: string }) {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [thread, setThread] = useState<Thread | null>(null);
   const [loading, setLoading] = useState(true);
   const [reply, setReply] = useState("");
@@ -55,17 +55,15 @@ function Body({ id }: { id: string }) {
   const [closing, setClosing] = useState(false);
 
   const load = useCallback(async () => {
-    if (!token) return;
+    if (!user) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/account/tickets/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await customerFetch(`/api/account/tickets/${id}`);
       if (res.ok) setThread(await res.json());
     } finally {
       setLoading(false);
     }
-  }, [token, id]);
+  }, [user, id]);
 
   useEffect(() => {
     load();
@@ -76,17 +74,11 @@ function Body({ id }: { id: string }) {
     if (!reply.trim()) return;
     setSubmitting(true);
     try {
-      const res = await fetch(
-        `${API_URL}/api/account/tickets/${id}/messages`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ body: reply }),
-        },
-      );
+      const res = await customerFetch(`/api/account/tickets/${id}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: reply }),
+      });
       if (res.ok) {
         setReply("");
         await load();
@@ -100,13 +92,9 @@ function Body({ id }: { id: string }) {
     if (!confirm("Mark this ticket as resolved?")) return;
     setClosing(true);
     try {
-      const res = await fetch(
-        `${API_URL}/api/account/tickets/${id}/close`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const res = await customerFetch(`/api/account/tickets/${id}/close`, {
+        method: "POST",
+      });
       if (res.ok) await load();
     } finally {
       setClosing(false);

@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { API_URL, formatPrice, formatDate } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { formatPrice, formatDate } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import { payForOrder, type Gateway, type Currency } from "@/lib/payments";
 import { LoadingBlock } from "@/components/Spinner";
 import MembershipIllustration from "@/components/illustrations/MembershipIllustration";
@@ -95,7 +95,7 @@ type PerkKind = "courses" | "library" | "future" | "support" | "cancel";
 
 export default function MembershipPage() {
   const router = useRouter();
-  const { user, token, loading } = useCustomer();
+  const { user, loading } = useCustomer();
   const [state, setState] = useState<MembershipState | null>(null);
   const [stateLoading, setStateLoading] = useState(true);
   const [gateway, setGateway] = useState<Gateway>("flutterwave");
@@ -108,43 +108,38 @@ export default function MembershipPage() {
   }, [gateway, currency]);
 
   const load = useCallback(async () => {
-    if (!token) {
+    if (!user) {
       setStateLoading(false);
       return;
     }
     setStateLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/memberships/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await customerFetch(`/api/memberships/me`);
       if (res.ok) setState(await res.json());
     } finally {
       setStateLoading(false);
     }
-  }, [token]);
+  }, [user]);
 
   useEffect(() => {
     load();
   }, [load]);
 
   const subscribe = async () => {
-    if (!token) {
+    if (!user) {
       router.push("/signin?next=/membership");
       return;
     }
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/memberships/checkout`, {
+      const res = await customerFetch(`/api/memberships/checkout`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not start checkout");
-      await payForOrder(data.id, gateway, currency, token);
+      await payForOrder(data.id, gateway, currency);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setSubmitting(false);

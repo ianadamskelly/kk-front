@@ -2,7 +2,7 @@
 // checkout, and per-course checkout flows. All three create an order first
 // then call /api/orders/{id}/pay to hand off to Flutterwave or Sifalo.
 
-import { API_URL } from "./api";
+import { customerFetch } from "./customer";
 
 export type Gateway = "flutterwave" | "sifalo";
 export type Currency = "USD" | "KES";
@@ -29,20 +29,18 @@ async function loadFlutterwaveScript(): Promise<void> {
 // payForOrder kicks off the gateway flow for an already-created order. On
 // success the browser is navigated to the gateway page; control never
 // returns. On failure throws an Error with a user-readable message.
+// Auth rides the HttpOnly session cookie via customerFetch.
 export async function payForOrder(
   orderId: number,
   gateway: Gateway,
   currency: Currency,
-  token: string | null,
 ): Promise<void> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-
-  const res = await fetch(
-    `${API_URL}/api/orders/${orderId}/pay?gateway=${gateway}&currency=${currency}`,
-    { method: "POST", headers },
+  const res = await customerFetch(
+    `/api/orders/${orderId}/pay?gateway=${gateway}&currency=${currency}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    },
   );
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Could not start payment");

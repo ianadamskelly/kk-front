@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { API_URL, formatPrice, type Course } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { formatPrice, type Course } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import { payForOrder, type Gateway, type Currency } from "@/lib/payments";
 
 // CoursePaywall is shown on a paid course's detail/lesson page when the
@@ -12,33 +12,30 @@ import { payForOrder, type Gateway, type Currency } from "@/lib/payments";
 // course). It offers two paths: buy this course, or become a member.
 export default function CoursePaywall({ course }: { course: Course }) {
   const router = useRouter();
-  const { user, token } = useCustomer();
+  const { user } = useCustomer();
   const [gateway, setGateway] = useState<Gateway>("flutterwave");
   const [currency, setCurrency] = useState<Currency>("USD");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   const buy = async () => {
-    if (!user || !token) {
+    if (!user) {
       router.push(`/signin?next=/courses/${course.slug}`);
       return;
     }
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch(
-        `${API_URL}/api/courses/${course.id}/checkout`,
+      const res = await customerFetch(
+        `/api/courses/${course.id}/checkout`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "application/json" },
         },
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not start checkout");
-      await payForOrder(data.id, gateway, currency, token);
+      await payForOrder(data.id, gateway, currency);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setSubmitting(false);

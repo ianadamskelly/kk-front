@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  API_URL,
   type Course,
   type CourseTask,
   type CourseTaskSubmission,
   type Lesson,
 } from "@/lib/api";
 import { useCourseProgress } from "@/lib/progress";
-import { useCustomer } from "@/lib/customer";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import { useTheme } from "@/lib/theme";
 import ContentHTML from "@/components/ContentHTML";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -27,7 +26,7 @@ export default function LessonView({
   const lessons = course.lessons || [];
   const { isComplete, setComplete, loaded } = useCourseProgress(course.slug);
   const { theme, toggle: toggleTheme } = useTheme();
-  const { token } = useCustomer();
+  const { user } = useCustomer();
 
   const index = lessons.findIndex((l) => l.id === lesson.id);
   const prev = index > 0 ? lessons[index - 1] : null;
@@ -44,11 +43,9 @@ export default function LessonView({
   const [tasks, setTasks] = useState<CourseTask[]>([]);
   const [subs, setSubs] = useState<Record<number, CourseTaskSubmission>>({});
   useEffect(() => {
-    if (!token) return;
+    if (!user) return;
     let cancelled = false;
-    fetch(`${API_URL}/api/account/courses/${course.slug}/tasks`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    customerFetch(`/api/account/courses/${course.slug}/tasks`)
       .then(async (r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (cancelled || !data) return;
@@ -63,7 +60,7 @@ export default function LessonView({
     return () => {
       cancelled = true;
     };
-  }, [course.slug, token]);
+  }, [course.slug, user]);
 
   const moduleTasks = isLastInModule
     ? tasks.filter((t) => t.module === lesson.module)

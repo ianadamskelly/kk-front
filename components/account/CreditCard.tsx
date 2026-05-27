@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_URL, formatPrice, formatDate } from "@/lib/api";
+import { formatPrice, formatDate } from "@/lib/api";
+import { customerFetch } from "@/lib/customer";
 
 interface CreditTx {
   id: number;
@@ -26,19 +27,16 @@ const REASON_LABELS: Record<string, string> = {
 // CreditCard shows the customer's store-credit balance and recent ledger
 // entries. The balance is also applied at checkout — this is the
 // transparency surface.
-export default function CreditCard({ token }: { token: string }) {
+export default function CreditCard() {
   const [data, setData] = useState<CreditData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) return;
-    fetch(`${API_URL}/api/account/credit`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    customerFetch(`/api/account/credit`)
       .then(async (res) => (res.ok ? ((await res.json()) as CreditData) : null))
       .then((d) => setData(d))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, []);
 
   if (loading) {
     return (

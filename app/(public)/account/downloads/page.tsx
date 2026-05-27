@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { API_URL, formatDate } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import AccountShell from "@/components/account/AccountShell";
 import EmptyState from "@/components/EmptyState";
 import { SkeletonTableRows } from "@/components/Skeleton";
@@ -53,17 +53,15 @@ export default function AccountDownloadsPage() {
 }
 
 function Body() {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [items, setItems] = useState<Download[] | null>(null);
 
   useEffect(() => {
-    if (!token) return;
-    fetch(`${API_URL}/api/account/downloads`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    if (!user) return;
+    customerFetch(`/api/account/downloads`)
       .then(async (r) => (r.ok ? ((await r.json()) as Download[]) : []))
       .then(setItems);
-  }, [token]);
+  }, [user]);
 
   return (
     <div className="space-y-6">

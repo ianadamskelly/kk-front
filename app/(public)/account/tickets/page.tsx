@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { API_URL, formatDate } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { formatDate } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import AccountShell from "@/components/account/AccountShell";
 import EmptyState from "@/components/EmptyState";
 import Spinner, { LoadingBlock } from "@/components/Spinner";
@@ -44,7 +44,7 @@ export default function AccountTicketsPage() {
 }
 
 function Body() {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -57,17 +57,15 @@ function Body() {
   const [error, setError] = useState("");
 
   const load = useCallback(async () => {
-    if (!token) return;
+    if (!user) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/account/tickets`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await customerFetch(`/api/account/tickets`);
       if (res.ok) setTickets(await res.json());
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [user]);
 
   useEffect(() => {
     load();
@@ -78,12 +76,9 @@ function Body() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/account/tickets`, {
+      const res = await customerFetch(`/api/account/tickets`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       const data = await res.json();

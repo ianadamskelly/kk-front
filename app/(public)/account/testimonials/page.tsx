@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { API_URL, formatDate } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { formatDate } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import AccountShell from "@/components/account/AccountShell";
 import EmptyState from "@/components/EmptyState";
 import Spinner, { LoadingBlock } from "@/components/Spinner";
@@ -35,7 +35,7 @@ export default function AccountTestimonialsPage() {
 }
 
 function Body() {
-  const { token } = useCustomer();
+  const { user } = useCustomer();
   const [items, setItems] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ role: "", company: "", quote: "" });
@@ -44,17 +44,15 @@ function Body() {
   const [savedFlash, setSavedFlash] = useState(false);
 
   const load = useCallback(async () => {
-    if (!token) return;
+    if (!user) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/account/testimonials`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await customerFetch(`/api/account/testimonials`);
       if (res.ok) setItems(await res.json());
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [user]);
 
   useEffect(() => {
     load();
@@ -65,12 +63,9 @@ function Body() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/account/testimonials`, {
+      const res = await customerFetch(`/api/account/testimonials`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       const data = await res.json();

@@ -26,18 +26,18 @@ function chipClass(active: boolean): string {
 // library. Non-members see the full catalogue but with locked URLs; an
 // upgrade CTA sits at the top so the gate is impossible to miss.
 export default function LibraryGrid({ initialType }: { initialType: string }) {
-  const { token, loading: customerLoading } = useCustomer();
+  const { user, loading: customerLoading } = useCustomer();
   const [listing, setListing] = useState<LibraryListing | null>(null);
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState(initialType);
 
   useEffect(() => {
-    // Wait until the customer session has resolved so we know whether to
-    // include a bearer token. Otherwise the first paint runs anonymous
-    // and would lock the page for an actual member.
+    // Wait until the customer session has resolved so the request
+    // carries the user's cookie. Otherwise the first paint runs
+    // anonymous and would lock the page for an actual member.
     if (customerLoading) return;
     let cancelled = false;
-    fetchLibrary(token || undefined).then((data) => {
+    fetchLibrary().then((data) => {
       if (!cancelled) {
         setListing(data);
         setLoading(false);
@@ -46,7 +46,7 @@ export default function LibraryGrid({ initialType }: { initialType: string }) {
     return () => {
       cancelled = true;
     };
-  }, [token, customerLoading]);
+  }, [user, customerLoading]);
 
   const resources = listing?.resources ?? [];
   const entitled = listing?.entitled ?? false;

@@ -1,30 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_URL, type Course } from "@/lib/api";
-import { useCustomer } from "@/lib/customer";
+import { type Course } from "@/lib/api";
+import { useCustomer, customerFetch } from "@/lib/customer";
 import CourseCurriculum from "@/components/CourseCurriculum";
 import CoursePaywall from "@/components/CoursePaywall";
 import LessonView from "@/components/LessonView";
 
-// useUnlockedCourse re-fetches /api/courses/{slug} with the user's bearer
-// token so we can tell whether the requester is a member or owns the course.
-// For free courses the SSR copy is already unlocked; otherwise we wait for
-// the auth check to settle before deciding what to render.
+// useUnlockedCourse re-fetches /api/courses/{slug} with the user's
+// session cookie so we can tell whether the requester is a member or
+// owns the course. For free courses the SSR copy is already unlocked;
+// otherwise we wait for the auth check to settle before re-rendering.
 function useUnlockedCourse(initial: Course): Course {
-  const { token, loading } = useCustomer();
+  const { user, loading } = useCustomer();
   const [course, setCourse] = useState<Course>(initial);
 
   useEffect(() => {
     if (loading) return;
-    if (!token) return;
+    if (!user) return;
     if (!initial.locked) return;
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(
-          `${API_URL}/api/courses/${encodeURIComponent(initial.slug)}`,
-          { headers: { Authorization: `Bearer ${token}` } },
+        const res = await customerFetch(
+          `/api/courses/${encodeURIComponent(initial.slug)}`,
         );
         if (!res.ok) return;
         const fresh = (await res.json()) as Course;
@@ -36,7 +35,7 @@ function useUnlockedCourse(initial: Course): Course {
     return () => {
       cancelled = true;
     };
-  }, [token, loading, initial.locked, initial.slug]);
+  }, [user, loading, initial.locked, initial.slug]);
 
   return course;
 }
