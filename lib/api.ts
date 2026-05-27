@@ -198,7 +198,7 @@ export interface Order {
   customerPhone: string;
   note: string;
   totalCents: number;
-  status: "pending" | "confirmed" | "fulfilled" | "cancelled";
+  status: "pending" | "confirmed" | "fulfilled" | "cancelled" | "payment_review";
   createdAt: string;
   items: OrderItem[];
 }
@@ -281,8 +281,8 @@ export interface Course {
   resources?: CourseResource[];
   // Set by /api/courses/{slug}: `locked` means the course is paid and access
   // is gated; `entitled` means this requester has access (free, member, or
-  // bought the course). When locked && !entitled, lesson.content/videoUrl
-  // come back empty.
+  // bought the course). When locked && !entitled, lesson content/video URLs
+  // and attached resource URLs come back empty.
   entitled?: boolean;
   locked?: boolean;
 }

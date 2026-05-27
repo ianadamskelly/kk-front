@@ -8,13 +8,12 @@ import {
   imageUrl,
   formatPrice,
 } from "@/lib/api";
-import { CurriculumGate } from "@/components/CourseGate";
 import CTASection from "@/components/CTASection";
 import ContentHTML from "@/components/ContentHTML";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedRail from "@/components/RelatedRail";
 import Reviews from "@/components/Reviews";
-import ResourceList from "@/components/ResourceList";
+import { CourseResourceGate, CurriculumGate } from "@/components/CourseGate";
 import JsonLd from "@/components/JsonLd";
 import { SITE_NAME, SITE_URL } from "@/lib/api";
 
@@ -160,14 +159,7 @@ export default async function CourseDetailPage({
           <CurriculumGate initialCourse={course} />
         </div>
 
-        {course.resources && course.resources.length > 0 && (
-          <div className="mt-12 max-w-3xl">
-            <ResourceList
-              title="Course resources"
-              resources={course.resources}
-            />
-          </div>
-        )}
+        <CourseResourceGate initialCourse={course} />
 
         <div className="mt-16">
           <Reviews

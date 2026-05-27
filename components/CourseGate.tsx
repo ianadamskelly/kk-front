@@ -6,6 +6,7 @@ import { useCustomer, customerFetch } from "@/lib/customer";
 import CourseCurriculum from "@/components/CourseCurriculum";
 import CoursePaywall from "@/components/CoursePaywall";
 import LessonView from "@/components/LessonView";
+import ResourceList from "@/components/ResourceList";
 
 // useUnlockedCourse re-fetches /api/courses/{slug} with the user's
 // session cookie so we can tell whether the requester is a member or
@@ -51,6 +52,16 @@ export function CurriculumGate({ initialCourse }: { initialCourse: Course }) {
   }
   return (
     <CourseCurriculum courseSlug={course.slug} lessons={course.lessons} />
+  );
+}
+
+export function CourseResourceGate({ initialCourse }: { initialCourse: Course }) {
+  const course = useUnlockedCourse(initialCourse);
+  if (!course.resources || course.resources.length === 0) return null;
+  return (
+    <div className="mt-12 max-w-3xl">
+      <ResourceList title="Course resources" resources={course.resources} />
+    </div>
   );
 }
 

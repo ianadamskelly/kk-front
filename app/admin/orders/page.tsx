@@ -6,13 +6,14 @@ import { getToken } from "@/lib/auth";
 import EmptyState from "@/components/EmptyState";
 import { LoadingBlock } from "@/components/Spinner";
 
-const STATUSES = ["pending", "confirmed", "fulfilled", "cancelled"];
+const STATUSES = ["pending", "confirmed", "fulfilled", "cancelled", "payment_review"];
 
 const STATUS_TONE: Record<string, string> = {
   pending: "bg-brand-100 text-brand-700",
   confirmed: "bg-blue-100 text-blue-800",
   fulfilled: "bg-green-100 text-green-800",
   cancelled: "bg-ink/10 text-ink/50",
+  payment_review: "bg-red-100 text-red-800",
 };
 
 const KIND_FILTERS = [
@@ -33,6 +34,7 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [kindFilter, setKindFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -52,20 +54,24 @@ export default function AdminOrdersPage() {
   }, [load]);
 
   const setStatus = async (order: Order, status: string) => {
+    setError("");
     const res = await adminFetch(
       `/api/admin/orders/${order.id}`,
       getToken() || "",
       { method: "PUT", body: JSON.stringify({ status }) },
     );
-    if (res.ok) {
-      setOrders((list) =>
-        list.map((o) =>
-          o.id === order.id
-            ? { ...o, status: status as Order["status"] }
-            : o,
-        ),
-      );
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      setError(body.error || "Could not update order status");
+      return;
     }
+    setOrders((list) =>
+      list.map((o) =>
+        o.id === order.id
+          ? { ...o, status: status as Order["status"] }
+          : o,
+      ),
+    );
   };
 
   const remove = async (order: Order) => {
@@ -101,12 +107,26 @@ export default function AdminOrdersPage() {
           </button>
         ))}
       </div>
+      <select
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+        className="ml-3 rounded-full border border-ink/15 bg-white px-3 py-2 text-sm text-ink/70"
+      >
+        <option value="all">All statuses</option>
+        {STATUSES.map((s) => (
+          <option key={s} value={s}>
+            {s === "payment_review" ? "Payment review" : s}
+          </option>
+        ))}
+      </select>
 
       {loading && <LoadingBlock label="Loading orders…" />}
       {error && <p className="mt-8 text-red-600">{error}</p>}
       {(() => {
         const visible = orders.filter(
-          (o) => kindFilter === "all" || (o.kind || "shop") === kindFilter,
+          (o) =>
+            (kindFilter === "all" || (o.kind || "shop") === kindFilter) &&
+            (statusFilter === "all" || o.status === statusFilter),
         );
         if (!loading && !error && visible.length === 0) {
           return (
@@ -177,6 +197,11 @@ export default function AdminOrdersPage() {
                   Note: {order.note}
                 </p>
               )}
+              {order.status === "payment_review" && (
+                <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
+                  Payment settled without a valid discount reservation. Reconcile with the gateway before confirming or cancelling this order.
+                </p>
+              )}
 
               <div className="mt-3 flex items-center justify-between border-t border-ink/10 pt-3">
                 <span className="text-xs text-ink/40">
@@ -194,8 +219,8 @@ export default function AdminOrdersPage() {
                   className="rounded-lg border border-ink/15 bg-white px-2 py-1.5 text-sm outline-none focus:border-brand-500"
                 >
                   {STATUSES.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
+                    <option key={s} value={s} disabled={s === "payment_review"}>
+                      {s === "payment_review" ? "payment review" : s}
                     </option>
                   ))}
                 </select>
