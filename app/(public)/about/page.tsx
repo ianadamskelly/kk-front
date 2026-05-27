@@ -5,6 +5,7 @@ import StatsBand from "@/components/StatsBand";
 import TeamCard from "@/components/TeamCard";
 import CTASection from "@/components/CTASection";
 import FaqSection from "@/components/FaqSection";
+import { AboutGrowthGraphic } from "@/components/LandingGraphics";
 
 // FAQ entries shown at the bottom of /about. These intentionally cover
 // the cross-product questions a prospective customer is most likely to
@@ -75,16 +76,21 @@ export default async function AboutPage() {
     <div className="space-y-24 pb-8">
       {/* Intro */}
       <section className="mx-auto max-w-6xl px-4 pt-16 sm:pt-20">
-        <span className="text-sm font-semibold uppercase tracking-widest text-brand-500">
-          Who we are
-        </span>
-        <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
-          Unleashing creativity, empowering possibilities
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg text-ink/60">
-          Based in Nairobi, Kuza Kizazi is a collective of designers,
-          developers, and strategists focused on building brands that endure.
-        </p>
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,0.92fr)]">
+          <div>
+            <span className="text-sm font-semibold uppercase tracking-widest text-brand-500">
+              Who we are
+            </span>
+            <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
+              Unleashing creativity, empowering possibilities
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg text-ink/60">
+              Based in Nairobi, Kuza Kizazi is a collective of designers,
+              developers, and strategists focused on building brands that endure.
+            </p>
+          </div>
+          <AboutGrowthGraphic className="mx-auto aspect-[500/390] w-full max-w-md lg:max-w-none" />
+        </div>
       </section>
 
       {/* Story */}

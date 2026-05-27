@@ -19,6 +19,7 @@ import CTASection from "@/components/CTASection";
 import FadeIn from "@/components/FadeIn";
 import TrustLogoStrip from "@/components/TrustLogoStrip";
 import JsonLd from "@/components/JsonLd";
+import { HeroGraphic, PartnershipGraphic } from "@/components/LandingGraphics";
 
 export default async function HomePage() {
   const [settings, services, projects, testimonials, stats, postList] =
@@ -60,29 +61,34 @@ export default async function HomePage() {
       <JsonLd data={orgJsonLd} />
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
-        <span className="text-sm font-semibold uppercase tracking-widest text-brand-500">
-          {settings.tagline || "Creative agency · Nairobi"}
-        </span>
-        <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
-          {settings.hero_title || "We turn bold visions into digital reality."}
-        </h1>
-        <p className="mt-6 max-w-xl text-lg text-ink/60">
-          {settings.hero_subtitle ||
-            "Kuza Kizazi is a creative agency crafting brands, websites, and stories that move people."}
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href="/contact"
-            className="rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-600"
-          >
-            Start your project
-          </Link>
-          <Link
-            href="/services"
-            className="rounded-full border border-ink/15 px-6 py-3 text-sm font-semibold text-ink transition hover:bg-ink/5"
-          >
-            Explore services
-          </Link>
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(23rem,0.92fr)]">
+          <div>
+            <span className="text-sm font-semibold uppercase tracking-widest text-brand-500">
+              {settings.tagline || "Creative agency · Nairobi"}
+            </span>
+            <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
+              {settings.hero_title || "We turn bold visions into digital reality."}
+            </h1>
+            <p className="mt-6 max-w-xl text-lg text-ink/60">
+              {settings.hero_subtitle ||
+                "Kuza Kizazi is a creative agency crafting brands, websites, and stories that move people."}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/contact"
+                className="rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-600"
+              >
+                Start your project
+              </Link>
+              <Link
+                href="/services"
+                className="rounded-full border border-ink/15 px-6 py-3 text-sm font-semibold text-ink transition hover:bg-ink/5"
+              >
+                Explore services
+              </Link>
+            </div>
+          </div>
+          <HeroGraphic className="mx-auto aspect-[520/460] w-full max-w-md lg:max-w-none" />
         </div>
       </section>
 
@@ -97,22 +103,25 @@ export default async function HomePage() {
             title="A creative partner, not just a vendor"
             description="From a boutique design studio to a full-service creative agency, we help brands find their voice through design, animation, and web development."
           />
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div>
-              <h3 className="text-base font-semibold text-ink">
-                Innovative solutions
-              </h3>
-              <p className="mt-1 text-sm text-ink/60">
-                We pair strategic thinking with craft to solve real business
-                problems — not just make things look good.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-base font-semibold text-ink">Agile growth</h3>
-              <p className="mt-1 text-sm text-ink/60">
-                Built to scale with you, from first launch to long-term
-                partnership.
-              </p>
+          <div className="space-y-7">
+            <PartnershipGraphic className="aspect-[500/244] w-full" />
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <h3 className="text-base font-semibold text-ink">
+                  Innovative solutions
+                </h3>
+                <p className="mt-1 text-sm text-ink/60">
+                  We pair strategic thinking with craft to solve real business
+                  problems — not just make things look good.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-ink">Agile growth</h3>
+                <p className="mt-1 text-sm text-ink/60">
+                  Built to scale with you, from first launch to long-term
+                  partnership.
+                </p>
+              </div>
             </div>
           </div>
         </div>
