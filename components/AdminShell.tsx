@@ -133,8 +133,13 @@ export default function AdminShell({
     .sort((a, b) => b.href.length - a.href.length)[0];
   const pathAllowed = !matchedLink || canSee(matchedLink.perm);
 
-  const logout = () => {
-    signOut();
+  const logout = async () => {
+    // signOut now hits POST /api/auth/logout to clear the HttpOnly
+    // cookie. Await it so the user lands on /admin/login with a
+    // clean cookie state — otherwise the redirect could fire
+    // before the cookie is gone and an instant refresh would
+    // briefly look like they were still signed in.
+    await signOut();
     router.replace("/admin/login");
   };
 

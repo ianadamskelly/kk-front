@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { API_URL } from "./api";
-import { getToken, clearToken } from "./auth";
+import { clearToken } from "./auth";
 
 export interface AdminUser {
   id: number;
@@ -32,7 +32,7 @@ interface AdminSession {
   // special-case the role here.
   can: (perm: string | string[]) => boolean;
   refresh: () => Promise<void>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
 }
 
 const Ctx = createContext<AdminSession | null>(null);
@@ -42,20 +42,18 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    const token = getToken();
-    if (!token) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
     try {
+      // Auth rides the HttpOnly session cookie now — sent
+      // automatically when credentials: 'include' is set. No
+      // localStorage token check needed; the server's response
+      // tells us whether we're signed in.
       const res = await fetch(`${API_URL}/api/admin/me`, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       if (res.ok) {
         setUser(await res.json());
       } else {
-        clearToken();
+        clearToken(); // sweep any legacy localStorage entry
         setUser(null);
       }
     } catch {
@@ -79,7 +77,18 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
     [user],
   );
 
-  const signOut = useCallback(() => {
+  const signOut = useCallback(async () => {
+    // Tell the server to clear the HttpOnly cookie. Best-effort —
+    // even if the call fails, we still null the local user so the
+    // UI bounces to login.
+    try {
+      await fetch(`${API_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // Ignore — proceed with local clear.
+    }
     clearToken();
     setUser(null);
   }, []);

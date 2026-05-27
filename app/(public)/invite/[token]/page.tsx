@@ -64,17 +64,20 @@ export default function AcceptInvitePage({
     }
     setSubmitting(true);
     try {
+      // credentials: "include" so the kk_session cookie the backend
+      // sets in the response is actually stored by the browser. The
+      // setToken call below is a backward-compat no-op now.
       const res = await fetch(
         `${API_URL}/api/invitations/${encodeURIComponent(token)}/accept`,
         {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, password }),
         },
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not accept invite");
-      // Store the JWT under the admin token key so the user lands signed in.
       setToken(data.token);
       router.replace("/admin");
     } catch (e) {

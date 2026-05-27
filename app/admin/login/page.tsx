@@ -17,8 +17,14 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
+      // credentials: "include" is required so the browser actually
+      // stores the kk_session cookie the backend sets in the response.
+      // setToken below is a backward-compat no-op (the cookie carries
+      // auth from here on) — kept so this code path matches
+      // /invite/[token] which calls the same helper.
       const res = await fetch(`${API_URL}/api/admin/login`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });

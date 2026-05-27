@@ -494,6 +494,16 @@ export async function fetchLibrary(): Promise<LibraryListing> {
 }
 
 // adminFetch performs an authenticated request to the admin API.
+//
+// Admin auth rides the HttpOnly `kk_session` cookie now (set by the
+// backend on login), sent automatically by the browser when the
+// fetch uses `credentials: "include"`. The `token` argument is kept
+// in the signature for backward compatibility with the ~40 admin
+// pages that pass `getToken() || ""` — `getToken` is itself a
+// legacy-sweep no-op, so the parameter is effectively unused. If
+// any callers still hold a real token (mid-deploy, before reload),
+// we pass it through as a Bearer header so the server's
+// claimsFromRequest fallback still validates the session.
 export async function adminFetch(
   path: string,
   token: string,
@@ -506,5 +516,9 @@ export async function adminFetch(
   if (options.body && !(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
-  return fetch(`${API_URL}${path}`, { ...options, headers });
+  return fetch(`${API_URL}${path}`, {
+    ...options,
+    headers,
+    credentials: "include",
+  });
 }
