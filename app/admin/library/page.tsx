@@ -21,7 +21,6 @@ export default function AdminLibraryPage() {
           name: "url",
           label: "Resource link or file",
           type: "urlOrFile",
-          required: true,
           full: true,
         },
         { name: "image", label: "Cover image", type: "image" },

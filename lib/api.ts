@@ -532,6 +532,11 @@ export interface LibraryListing {
   resources: LibraryResource[];
 }
 
+export interface LibraryResourceDetail {
+  entitled: boolean;
+  resource: LibraryResource | null;
+}
+
 // fetchLibrary supports an optional bearer token so an authenticated
 // browser fetch can prove membership and unlock the URLs in the response.
 export async function fetchLibrary(): Promise<LibraryListing> {
@@ -546,6 +551,22 @@ export async function fetchLibrary(): Promise<LibraryListing> {
     return (await res.json()) as LibraryListing;
   } catch {
     return { entitled: false, resources: [] };
+  }
+}
+
+export async function fetchLibraryResource(
+  slug: string,
+  includeCredentials = false,
+): Promise<LibraryResourceDetail> {
+  try {
+    const res = await fetch(`${API_URL}/api/library/${encodeURIComponent(slug)}`, {
+      cache: "no-store",
+      credentials: includeCredentials ? "include" : "same-origin",
+    });
+    if (!res.ok) return { entitled: false, resource: null };
+    return (await res.json()) as LibraryResourceDetail;
+  } catch {
+    return { entitled: false, resource: null };
   }
 }
 
