@@ -257,6 +257,10 @@ html {
 }
 
 /* ----- TipTap editor surface ----- */
+.kk-editor-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 .kk-editor .ProseMirror {
   outline: none;
   min-height: 280px;

@@ -5,6 +5,8 @@
 // text content (seed posts, projects, etc.), if the value has no HTML tags
 // we fall back to `whitespace-pre-wrap` so paragraph breaks survive.
 
+import { resolveContentImageUrls } from "@/lib/api";
+
 const HTML_TAG_RE = /<[a-z][\s\S]*?>/i;
 
 export default function ContentHTML({
@@ -17,13 +19,14 @@ export default function ContentHTML({
   if (!html) return null;
   const isHTML = HTML_TAG_RE.test(html);
   if (isHTML) {
+    const resolvedHTML = resolveContentImageUrls(html);
     return (
       <div
         className={`kk-prose ${className}`}
         // The HTML comes from our own admin (TipTap) — XSS surface is limited
         // to whatever an admin types. If we ever accept content from
         // untrusted sources, run it through a sanitizer here first.
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: resolvedHTML }}
       />
     );
   }

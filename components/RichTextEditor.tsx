@@ -10,7 +10,12 @@ import { TableRow } from "@tiptap/extension-table-row";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { useEffect, useRef, useState } from "react";
-import { adminFetch } from "@/lib/api";
+import {
+  adminFetch,
+  resolveContentImageUrls,
+  resolveFileURL,
+  storeContentImageUrls,
+} from "@/lib/api";
 import { getToken } from "@/lib/auth";
 
 interface RichTextEditorProps {
@@ -18,6 +23,7 @@ interface RichTextEditorProps {
   onChange: (html: string) => void;
   placeholder?: string;
   minHeight?: number;
+  maxHeight?: number | string;
 }
 
 // ToolbarButton renders a single formatting control above the editor.
@@ -92,7 +98,7 @@ function Toolbar({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Upload failed");
-      editor.chain().focus().setImage({ src: data.url }).run();
+      editor.chain().focus().setImage({ src: resolveFileURL(data.url) }).run();
     } catch (e) {
       window.alert(e instanceof Error ? e.message : "Could not upload image");
     } finally {
@@ -286,7 +292,8 @@ export default function RichTextEditor({
   value,
   onChange,
   placeholder = "Start writing…",
-  minHeight,
+  minHeight = 280,
+  maxHeight = "min(560px, 62vh)",
 }: RichTextEditorProps) {
   const [showSource, setShowSource] = useState(false);
 
@@ -322,9 +329,9 @@ export default function RichTextEditor({
       TableCell,
       Placeholder.configure({ placeholder }),
     ],
-    content: value || "",
+    content: resolveContentImageUrls(value || ""),
     onUpdate: ({ editor }) => {
-      const html = editor.getHTML();
+      const html = storeContentImageUrls(editor.getHTML());
       // TipTap renders an empty doc as "<p></p>"; treat that as empty.
       onChange(html === "<p></p>" ? "" : html);
     },
@@ -345,18 +352,19 @@ export default function RichTextEditor({
   // If the parent resets value externally (e.g. when loading a record), sync.
   useEffect(() => {
     if (!editor) return;
-    const current = editor.getHTML();
+    const current = storeContentImageUrls(editor.getHTML());
     const next = value || "";
     if (current !== next && (current !== "<p></p>" || next !== "")) {
-      editor.commands.setContent(next, { emitUpdate: false });
+      editor.commands.setContent(resolveContentImageUrls(next), {
+        emitUpdate: false,
+      });
     }
-     
   }, [value, editor]);
 
   return (
     <div
       className="kk-editor overflow-hidden rounded-lg border border-ink/15 bg-white focus-within:border-brand-500"
-      style={minHeight ? { minHeight } : undefined}
+      style={{ minHeight }}
     >
       {editor && (
         <Toolbar
@@ -369,18 +377,25 @@ export default function RichTextEditor({
         // Raw HTML edit mode. The textarea writes directly to the
         // parent (and to the editor instance) so toggling back to
         // rich-text view picks up whatever was typed.
-        <textarea
-          spellCheck={false}
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-            editor?.commands.setContent(e.target.value, { emitUpdate: false });
-          }}
-          className="block w-full resize-y bg-ink/[0.02] p-3 font-mono text-xs text-ink/85 outline-none"
-          style={{ minHeight: 280 }}
-        />
+        <div className="kk-editor-scroll" style={{ maxHeight }}>
+          <textarea
+            spellCheck={false}
+            value={value}
+            onChange={(e) => {
+              onChange(e.target.value);
+              editor?.commands.setContent(
+                resolveContentImageUrls(e.target.value),
+                { emitUpdate: false },
+              );
+            }}
+            className="block w-full resize-none bg-ink/[0.02] p-3 font-mono text-xs text-ink/85 outline-none"
+            style={{ minHeight }}
+          />
+        </div>
       ) : (
-        <EditorContent editor={editor} className="kk-prose" />
+        <div className="kk-editor-scroll" style={{ maxHeight }}>
+          <EditorContent editor={editor} className="kk-prose" />
+        </div>
       )}
     </div>
   );

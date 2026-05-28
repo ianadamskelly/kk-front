@@ -27,6 +27,28 @@ export function resolveFileURL(url: string | null | undefined): string {
   return `${API_URL}${url}`;
 }
 
+const IMAGE_SRC_RE = /(<img\b[^>]*?\bsrc\s*=\s*)(["'])([^"']+)(\2)/gi;
+
+// TipTap stores admin-uploaded images as relative backend paths so content
+// stays portable across environments, but the frontend must resolve those
+// paths when rendering HTML from the API.
+export function resolveContentImageUrls(html: string): string {
+  if (!html) return "";
+  return html.replace(IMAGE_SRC_RE, (match, prefix, quote, src, endQuote) => {
+    if (typeof src !== "string" || !src.startsWith("/")) return match;
+    return `${prefix}${quote}${resolveFileURL(src)}${endQuote}`;
+  });
+}
+
+export function storeContentImageUrls(html: string): string {
+  if (!html) return "";
+  const apiPrefix = `${API_URL}/`;
+  return html.replace(IMAGE_SRC_RE, (match, prefix, quote, src, endQuote) => {
+    if (typeof src !== "string" || !src.startsWith(apiPrefix)) return match;
+    return `${prefix}${quote}/${src.slice(apiPrefix.length)}${endQuote}`;
+  });
+}
+
 // --- Types ---
 
 export interface Category {
