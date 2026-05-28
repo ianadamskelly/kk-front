@@ -1,6 +1,35 @@
 import Link from "next/link";
 import { LibraryResource, imageUrl, resolveFileURL } from "@/lib/api";
 
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&",
+  apos: "'",
+  gt: ">",
+  lt: "<",
+  nbsp: " ",
+  quot: '"',
+};
+
+function decodeEntity(entity: string): string {
+  const numeric = entity.match(/^#(\d+)$/);
+  if (numeric) return String.fromCodePoint(Number(numeric[1]));
+  const hex = entity.match(/^#x([\da-f]+)$/i);
+  if (hex) return String.fromCodePoint(Number.parseInt(hex[1], 16));
+  return NAMED_ENTITIES[entity] ?? `&${entity};`;
+}
+
+function plainTextExcerpt(html: string): string {
+  return html
+    .replace(/<\/(p|div|li|h[1-6]|blockquote)>/gi, " ")
+    .replace(/<br\s*\/?>/gi, " ")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&([^;\s]+);/g, (_match, entity: string) =>
+      decodeEntity(entity),
+    )
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 // LibraryCard renders one resource. `locked=true` (i.e. the requester is
 // not an active member) replaces the "Open resource" link with a soft
 // member-only badge + sign-in pointer, and dims the card image so the
@@ -13,6 +42,7 @@ export default function LibraryCard({
   locked?: boolean;
 }) {
   const hasLink = !locked && resource.url && resource.url !== "#";
+  const description = plainTextExcerpt(resource.description);
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white transition hover:-translate-y-1 hover:shadow-lg">
       {resource.image && (
@@ -41,9 +71,9 @@ export default function LibraryCard({
         <h3 className="text-base font-semibold leading-snug text-ink">
           {resource.title}
         </h3>
-        {resource.description && (
+        {description && (
           <p className="line-clamp-3 text-sm text-ink/60">
-            {resource.description}
+            {description}
           </p>
         )}
         <div className="mt-auto pt-3">
