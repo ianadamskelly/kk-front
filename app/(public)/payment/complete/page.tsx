@@ -9,6 +9,8 @@ import { LoadingBlock } from "@/components/Spinner";
 interface PaymentState {
   id: number;
   orderId: number;
+  orderKind: string;
+  membershipPlan: "full" | "library" | "";
   status: string;
   amountCents: number;
   currency: string;
@@ -49,6 +51,8 @@ function PaymentResult() {
         setPayment({
           id: data.id,
           orderId: data.orderId,
+          orderKind: data.orderKind || "",
+          membershipPlan: data.membershipPlan || "",
           status: data.status,
           amountCents: data.amountCents,
           currency: data.currency,
@@ -74,27 +78,60 @@ function PaymentResult() {
   }
 
   if (state === "success") {
+    const isMembership = payment?.orderKind === "membership";
+    const isFullMembership = isMembership && payment?.membershipPlan !== "library";
+    const title = isMembership
+      ? isFullMembership
+        ? "Full membership active"
+        : "Library membership active"
+      : "Payment received";
+    const message = isMembership
+      ? isFullMembership
+        ? "Your full membership is active now. You can open the resource library and start any paid course immediately."
+        : "Your library membership is active now. You can open the resource library immediately."
+      : `Thank you! Your payment of ${
+          payment ? formatPrice(payment.amountCents) : "your order"
+        } has been received and your order is now confirmed.`;
     return (
       <div className="rounded-2xl border border-brand-200 bg-brand-50 p-10">
-        <p className="text-2xl font-semibold text-brand-700">Payment received</p>
+        <p className="text-2xl font-semibold text-brand-700">{title}</p>
         <p className="mt-2 text-sm text-brand-700/80">
-          Thank you! Your payment of{" "}
-          {payment ? formatPrice(payment.amountCents) : "your order"} has been
-          received and your order is now confirmed.
+          {message}
         </p>
         <div className="mt-6 flex justify-center gap-3">
-          <Link
-            href="/account/orders"
-            className="rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-600"
-          >
-            View your orders
-          </Link>
-          <Link
-            href="/shop"
-            className="rounded-full border border-brand-300 px-6 py-3 text-sm font-semibold text-brand-700 hover:bg-brand-100"
-          >
-            Continue shopping
-          </Link>
+          {isMembership ? (
+            <>
+              <Link
+                href="/library"
+                className="rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-600"
+              >
+                Open library
+              </Link>
+              {isFullMembership && (
+                <Link
+                  href="/courses"
+                  className="rounded-full border border-brand-300 px-6 py-3 text-sm font-semibold text-brand-700 hover:bg-brand-100"
+                >
+                  Browse courses
+                </Link>
+              )}
+            </>
+          ) : (
+            <>
+              <Link
+                href="/account/orders"
+                className="rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-600"
+              >
+                View your orders
+              </Link>
+              <Link
+                href="/shop"
+                className="rounded-full border border-brand-300 px-6 py-3 text-sm font-semibold text-brand-700 hover:bg-brand-100"
+              >
+                Continue shopping
+              </Link>
+            </>
+          )}
         </div>
       </div>
     );

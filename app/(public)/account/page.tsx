@@ -16,6 +16,9 @@ interface DashboardData {
     creditCents: number;
     membershipStatus: "guest" | "member" | "expired";
     membershipActive: boolean;
+    membershipPlan?: "full" | "library" | "";
+    hasCourseAccess?: boolean;
+    hasLibraryAccess?: boolean;
     periodEnd: string | null;
   };
   continueLearning: {
@@ -60,9 +63,14 @@ function Dashboard() {
   if (!data) return <p className="text-sm text-red-600">Couldn&apos;t load dashboard.</p>;
 
   const s = data.stats;
+  const hasLibraryAccess = s.hasLibraryAccess ?? s.membershipActive;
+  const hasCourseAccess =
+    s.hasCourseAccess ?? (s.membershipActive && s.membershipPlan !== "library");
   const statusLabel =
     s.membershipStatus === "member"
-      ? "MEMBER"
+      ? hasCourseAccess
+        ? "FULL MEMBER"
+        : "LIBRARY MEMBER"
       : s.membershipStatus === "expired"
         ? "EXPIRED"
         : "BASIC";
@@ -205,9 +213,10 @@ function Dashboard() {
 
       {/* Sidebar: Library + Resource Center */}
       <aside className="space-y-4">
-        <LibraryCard membershipActive={s.membershipActive} />
+        <LibraryCard membershipActive={hasLibraryAccess} />
         <ResourceCenter
-          membershipActive={s.membershipActive}
+          membershipActive={hasLibraryAccess}
+          hasCourseAccess={hasCourseAccess}
           openTickets={s.openTicketsCount}
         />
       </aside>
@@ -276,9 +285,11 @@ function LibraryCard({ membershipActive }: { membershipActive: boolean }) {
 
 function ResourceCenter({
   membershipActive,
+  hasCourseAccess,
   openTickets,
 }: {
   membershipActive: boolean;
+  hasCourseAccess: boolean;
   openTickets: number;
 }) {
   return (
@@ -303,7 +314,7 @@ function ResourceCenter({
             Limited access
           </p>
           <p className="mt-0.5 text-base font-semibold">
-            Upgrade to Membership 🚀
+            Join membership
           </p>
         </Link>
       )}
@@ -324,6 +335,12 @@ function ResourceCenter({
           className="rounded-xl border border-ink/10 bg-white px-3 py-3 font-semibold text-ink/65 hover:border-brand-300"
         >
           📰 Guide
+        </Link>
+        <Link
+          href="/courses"
+          className="rounded-xl border border-ink/10 bg-white px-3 py-3 font-semibold text-ink/65 hover:border-brand-300"
+        >
+          🎓 {hasCourseAccess ? "Courses included" : "Courses separate"}
         </Link>
       </div>
       <Link
