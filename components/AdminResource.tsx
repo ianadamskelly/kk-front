@@ -43,9 +43,28 @@ interface AdminResourceProps {
 }
 
 type Row = Record<string, unknown> & { id: number };
+type UrlOrFileMode = "url" | "file";
 
 const inputClass =
   "w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500";
+
+const isStoredFilePath = (value: string) =>
+  value.startsWith("/files/") || value.startsWith("/uploads/");
+
+function initialUrlOrFileModes(
+  fields: ResourceField[],
+  form: Record<string, string>,
+): Record<string, UrlOrFileMode> {
+  const modes: Record<string, UrlOrFileMode> = {};
+  for (const field of fields) {
+    if (field.type === "urlOrFile") {
+      modes[field.name] = isStoredFilePath(form[field.name] || "")
+        ? "file"
+        : "url";
+    }
+  }
+  return modes;
+}
 
 function emptyForm(fields: ResourceField[]): Record<string, string> {
   const f: Record<string, string> = {};
@@ -94,6 +113,9 @@ export default function AdminResource({
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState("");
+  const [urlOrFileModes, setUrlOrFileModes] = useState<
+    Record<string, UrlOrFileMode>
+  >(() => initialUrlOrFileModes(fields, emptyForm(fields)));
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -114,7 +136,9 @@ export default function AdminResource({
   }, [load]);
 
   const startNew = () => {
-    setForm(emptyForm(fields));
+    const next = emptyForm(fields);
+    setForm(next);
+    setUrlOrFileModes(initialUrlOrFileModes(fields, next));
     setEditingId(null);
     setShowForm(true);
   };
@@ -126,12 +150,27 @@ export default function AdminResource({
       next[field.name] = v === null || v === undefined ? "" : String(v);
     }
     setForm(next);
+    setUrlOrFileModes(initialUrlOrFileModes(fields, next));
     setEditingId(row.id);
     setShowForm(true);
   };
 
   const setField = (name: string, value: string) =>
     setForm((f) => ({ ...f, [name]: value }));
+
+  const setUrlOrFileMode = (name: string, mode: UrlOrFileMode) => {
+    setUrlOrFileModes((m) => ({ ...m, [name]: mode }));
+    setForm((f) => {
+      const value = f[name] || "";
+      if (
+        (mode === "url" && isStoredFilePath(value)) ||
+        (mode === "file" && /^https?:\/\//i.test(value))
+      ) {
+        return { ...f, [name]: "" };
+      }
+      return f;
+    });
+  };
 
   // upload pushes a file at the given endpoint (image vs arbitrary
   // file) and stashes the resulting URL on form[name]. Image uploads
@@ -157,6 +196,9 @@ export default function AdminResource({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Upload failed");
       setField(name, data.url);
+      if (endpoint === "file") {
+        setUrlOrFileModes((m) => ({ ...m, [name]: "file" }));
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload error");
     } finally {
@@ -171,6 +213,9 @@ export default function AdminResource({
     try {
       const payload: Record<string, unknown> = {};
       for (const field of fields) {
+        if (field.required && !String(form[field.name] || "").trim()) {
+          throw new Error(`${field.label} is required`);
+        }
         payload[field.name] =
           field.type === "number"
             ? Number(form[field.name] || 0)
@@ -284,16 +329,60 @@ export default function AdminResource({
                   </div>
                 ) : field.type === "urlOrFile" ? (
                   <div className="mt-1 space-y-2">
-                    <input
-                      type="url"
-                      value={form[field.name]}
-                      onChange={(e) => setField(field.name, e.target.value)}
-                      placeholder="https://example.com/resource.pdf"
-                      className={inputClass}
-                    />
+                    <div className="inline-flex rounded-full border border-ink/15 bg-ink/[0.02] p-1 text-xs font-semibold">
+                      <button
+                        type="button"
+                        onClick={() => setUrlOrFileMode(field.name, "url")}
+                        className={`rounded-full px-3 py-1 transition ${
+                          (urlOrFileModes[field.name] || "url") === "url"
+                            ? "bg-white text-ink shadow-sm"
+                            : "text-ink/55 hover:text-ink"
+                        }`}
+                      >
+                        External URL
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUrlOrFileMode(field.name, "file")}
+                        className={`rounded-full px-3 py-1 transition ${
+                          urlOrFileModes[field.name] === "file"
+                            ? "bg-white text-ink shadow-sm"
+                            : "text-ink/55 hover:text-ink"
+                        }`}
+                      >
+                        Uploaded file
+                      </button>
+                    </div>
+                    {(urlOrFileModes[field.name] || "url") === "url" ? (
+                      <input
+                        type="url"
+                        required={field.required}
+                        value={form[field.name]}
+                        onChange={(e) => setField(field.name, e.target.value)}
+                        placeholder="https://example.com/resource.pdf"
+                        className={inputClass}
+                      />
+                    ) : (
+                      <div className="rounded-lg border border-ink/10 bg-ink/[0.02] p-3">
+                        {form[field.name] ? (
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <p className="min-w-0 break-all font-mono text-xs text-ink/70">
+                              {form[field.name]}
+                            </p>
+                            <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                              File uploaded
+                            </span>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-ink/45">
+                            No file uploaded yet.
+                          </p>
+                        )}
+                      </div>
+                    )}
                     <div className="flex flex-wrap items-center gap-3 text-xs">
                       <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-ink/70 hover:border-brand-400 hover:text-ink">
-                        <span>📎 Upload a file instead</span>
+                        <span>📎 Upload a file</span>
                         <input
                           type="file"
                           accept=".pdf,.zip,.epub,.mobi,.docx,.xlsx,.pptx,.txt,.csv,.mp3,.mp4,.m4a,.wav"
