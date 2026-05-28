@@ -9,7 +9,7 @@ import { payForOrder, type Gateway, type Currency } from "@/lib/payments";
 
 // CoursePaywall is shown on a paid course's detail/lesson page when the
 // viewer hasn't unlocked it (not signed in, not a member, didn't buy the
-// course). It offers two paths: buy this course, or become a member.
+// course). It offers two paths: buy this course, or choose full membership.
 export default function CoursePaywall({ course }: { course: Course }) {
   const router = useRouter();
   const { user } = useCustomer();
@@ -52,8 +52,8 @@ export default function CoursePaywall({ course }: { course: Course }) {
       </h2>
       <p className="mt-2 text-sm text-ink/65">
         This course is for members and course buyers. Pick whichever works for
-        you — single course access stays yours for life, or unlock everything
-        with a membership.
+        you — single course access stays yours for life, or unlock every course
+        with full membership.
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -85,7 +85,7 @@ export default function CoursePaywall({ course }: { course: Course }) {
         </div>
 
         <div className="rounded-2xl border border-ink/10 bg-white p-5">
-          <p className="text-sm font-semibold text-ink">Or join as a member</p>
+          <p className="text-sm font-semibold text-ink">Or choose full membership</p>
           <p className="mt-1 text-2xl font-semibold text-ink">
             $10
             <span className="text-base font-medium text-ink/55"> / month</span>

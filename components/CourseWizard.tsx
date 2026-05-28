@@ -1112,7 +1112,7 @@ function PricingStep({
       <SectionHeader
         eyebrow="Step 4"
         title="Pricing &amp; access"
-        description="Set a one-time purchase price. Free courses (price 0) are always accessible. Active members get every course included regardless of price."
+        description="Set a one-time purchase price. Free courses (price 0) are always accessible. Full members get every course included regardless of price."
       />
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
         <div>
@@ -1169,7 +1169,7 @@ function PricingStep({
               .
             </li>
             <li>
-              <strong>Members</strong> always have access to every course.
+              <strong>Full members</strong> always have access to every course.
             </li>
             <li>
               Any lessons you marked “Free preview” are visible to non-buyers

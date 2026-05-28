@@ -11,6 +11,7 @@ interface MembershipRow {
   userId: number;
   userName: string;
   userEmail: string;
+  plan: "full" | "library";
   status: "active" | "expired" | "cancelled";
   startedAt: string;
   currentPeriodEnd: string;
@@ -96,6 +97,7 @@ export default function AdminMembershipsPage() {
             <thead className="border-b border-ink/10 bg-ink/[0.03] text-left text-xs uppercase tracking-widest text-ink/45">
               <tr>
                 <th className="px-4 py-2.5">Member</th>
+                <th className="px-4 py-2.5">Plan</th>
                 <th className="px-4 py-2.5">Status</th>
                 <th className="px-4 py-2.5">Renews through</th>
                 <th className="px-4 py-2.5">Started</th>
@@ -121,6 +123,9 @@ export default function AdminMembershipsPage() {
                       >
                         {m.userEmail}
                       </a>
+                    </td>
+                    <td className="px-4 py-3 text-ink/70">
+                      {m.plan === "library" ? "Library" : "Full"}
                     </td>
                     <td className="px-4 py-3">
                       <span

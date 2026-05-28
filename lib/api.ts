@@ -236,6 +236,7 @@ export interface OrderItem {
 export interface Order {
   id: number;
   kind: "shop" | "course" | "membership";
+  membershipPlan: "full" | "library" | "";
   customerName: string;
   customerEmail: string;
   customerPhone: string;

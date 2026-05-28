@@ -12,6 +12,10 @@ import MembershipIllustration from "@/components/illustrations/MembershipIllustr
 interface MembershipState {
   status: "active" | "expired" | "cancelled" | "none";
   isActive?: boolean;
+  plan?: MembershipPlanKey | "";
+  plans?: MembershipPlan[];
+  hasCourseAccess?: boolean;
+  hasLibraryAccess?: boolean;
   currentPeriodEnd?: string | null;
   startedAt?: string | null;
   cancelledAt?: string | null;
@@ -19,18 +23,51 @@ interface MembershipState {
   priceKESCents: number;
 }
 
+type MembershipPlanKey = "full" | "library";
+
+interface MembershipPlan {
+  key: MembershipPlanKey;
+  name: string;
+  description: string;
+  priceUSD: number;
+  priceKESCents: number;
+  includesCourses: boolean;
+  includesLibrary: boolean;
+}
+
+const DEFAULT_PLANS: MembershipPlan[] = [
+  {
+    key: "full",
+    name: "Full membership",
+    description: "Courses plus the members-only resource library.",
+    priceUSD: 10,
+    priceKESCents: 10 * 130 * 100,
+    includesCourses: true,
+    includesLibrary: true,
+  },
+  {
+    key: "library",
+    name: "Library membership",
+    description: "Resource library access only. Courses are not included.",
+    priceUSD: 1.9,
+    priceKESCents: 1.9 * 130 * 100,
+    includesCourses: false,
+    includesLibrary: true,
+  },
+];
+
 // PERKS render as icon tiles in the membership page. Each row picks a
 // small SVG matching its theme so the list scans like a benefits poster
 // rather than a wall of bullet points.
 const PERKS: { title: string; description: string; icon: "courses" | "library" | "future" | "support" | "cancel" }[] = [
   {
-    title: "Every course unlocked",
-    description: "Unlimited access to the entire course catalog while your membership is active.",
+    title: "Every course unlocked on full",
+    description: "Choose full membership for unlimited access to the entire course catalog while active.",
     icon: "courses",
   },
   {
     title: "All future releases",
-    description: "New courses we publish are automatically included — no extra payment.",
+    description: "Full members automatically get new courses; all members get new library resources.",
     icon: "future",
   },
   {
@@ -100,6 +137,7 @@ export default function MembershipPage() {
   const [stateLoading, setStateLoading] = useState(true);
   const [gateway, setGateway] = useState<Gateway>("flutterwave");
   const [currency, setCurrency] = useState<Currency>("USD");
+  const [selectedPlan, setSelectedPlan] = useState<MembershipPlanKey>("full");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -115,7 +153,13 @@ export default function MembershipPage() {
     setStateLoading(true);
     try {
       const res = await customerFetch(`/api/memberships/me`);
-      if (res.ok) setState(await res.json());
+      if (res.ok) {
+        const next = (await res.json()) as MembershipState;
+        setState(next);
+        if (next.isActive && (next.plan === "full" || next.plan === "library")) {
+          setSelectedPlan(next.plan);
+        }
+      }
     } finally {
       setStateLoading(false);
     }
@@ -136,6 +180,7 @@ export default function MembershipPage() {
       const res = await customerFetch(`/api/memberships/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: selectedPlan }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not start checkout");
@@ -146,8 +191,10 @@ export default function MembershipPage() {
     }
   };
 
-  const priceUSD = state?.priceUSD ?? 10;
-  const priceKES = state?.priceKESCents ?? priceUSD * 130 * 100;
+  const plans = state?.plans?.length ? state.plans : DEFAULT_PLANS;
+  const activePlan = plans.find((p) => p.key === selectedPlan) ?? plans[0];
+  const priceUSD = activePlan.priceUSD;
+  const priceKES = activePlan.priceKESCents;
   const isActive = state?.isActive === true;
   const periodEnd = state?.currentPeriodEnd
     ? formatDate(state.currentPeriodEnd)
@@ -163,16 +210,15 @@ export default function MembershipPage() {
               Membership
             </p>
             <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-              One subscription, every course
+              Choose the access that fits your next step
             </h1>
             <p className="mt-4 max-w-xl text-lg text-ink/65">
-              Become a Kuza Kizazi member for{" "}
+              Become a Kuza Kizazi member from{" "}
               <span className="font-semibold text-ink">
-                ${priceUSD.toFixed(2)} USD
+                $1.90 USD
               </span>{" "}
-              per month and unlock the entire course catalog plus the
-              members-only Resource Library. Prefer to buy individual
-              courses?{" "}
+              per month for the resource library, or choose full membership
+              for every course plus the library. Prefer to buy individual courses?{" "}
               <Link href="/courses" className="text-brand-600 hover:underline">
                 That still works too.
               </Link>
@@ -200,10 +246,21 @@ export default function MembershipPage() {
           {loading || stateLoading ? (
             <LoadingBlock label="Loading your membership…" />
           ) : !user ? (
-            <SignedOutView priceUSD={priceUSD} priceKES={priceKES} />
+            <SignedOutView
+              plans={plans}
+              selectedPlan={selectedPlan}
+              setSelectedPlan={setSelectedPlan}
+              priceUSD={priceUSD}
+              priceKES={priceKES}
+            />
           ) : isActive ? (
             <ActiveView
               periodEnd={periodEnd}
+              currentPlan={state?.plan || ""}
+              hasCourseAccess={state?.hasCourseAccess === true}
+              plans={plans}
+              selectedPlan={selectedPlan}
+              setSelectedPlan={setSelectedPlan}
               priceUSD={priceUSD}
               priceKES={priceKES}
               gateway={gateway}
@@ -216,6 +273,9 @@ export default function MembershipPage() {
             />
           ) : (
             <JoinView
+              plans={plans}
+              selectedPlan={selectedPlan}
+              setSelectedPlan={setSelectedPlan}
               priceUSD={priceUSD}
               priceKES={priceKES}
               gateway={gateway}
@@ -236,7 +296,7 @@ export default function MembershipPage() {
           What you get
         </h2>
         <p className="mx-auto mt-2 max-w-xl text-center text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-          Everything included in one flat monthly fee
+          Two simple ways to unlock Kuza resources
         </p>
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {PERKS.map((perk) => (
@@ -277,9 +337,73 @@ function PriceTag({ priceUSD, priceKES }: { priceUSD: number; priceKES: number }
   );
 }
 
-function SignedOutView({ priceUSD, priceKES }: { priceUSD: number; priceKES: number }) {
+interface PlanChoiceProps {
+  plans: MembershipPlan[];
+  selectedPlan: MembershipPlanKey;
+  setSelectedPlan: (plan: MembershipPlanKey) => void;
+}
+
+function PlanChooser({ plans, selectedPlan, setSelectedPlan }: PlanChoiceProps) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {plans.map((plan) => {
+        const active = selectedPlan === plan.key;
+        return (
+          <button
+            key={plan.key}
+            type="button"
+            onClick={() => setSelectedPlan(plan.key)}
+            className={`rounded-2xl border p-4 text-left transition ${
+              active
+                ? "border-brand-500 bg-brand-50"
+                : "border-ink/15 hover:border-brand-300"
+            }`}
+          >
+            <span className="text-sm font-semibold text-ink">{plan.name}</span>
+            <span className="mt-1 block text-2xl font-semibold text-ink">
+              ${plan.priceUSD.toFixed(2)}
+              <span className="text-base font-medium text-ink/55"> / month</span>
+            </span>
+            <span className="mt-1 block text-xs leading-relaxed text-ink/55">
+              {plan.description}
+            </span>
+            <span className="mt-3 flex flex-wrap gap-1.5 text-[11px] font-semibold uppercase tracking-wide">
+              <span className="rounded-full bg-white px-2 py-0.5 text-brand-700">
+                Library
+              </span>
+              {plan.includesCourses ? (
+                <span className="rounded-full bg-white px-2 py-0.5 text-brand-700">
+                  Courses
+                </span>
+              ) : (
+                <span className="rounded-full bg-ink/5 px-2 py-0.5 text-ink/45">
+                  No courses
+                </span>
+              )}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function SignedOutView({
+  plans,
+  selectedPlan,
+  setSelectedPlan,
+  priceUSD,
+  priceKES,
+}: PlanChoiceProps & { priceUSD: number; priceKES: number }) {
   return (
     <div className="text-center">
+      <div className="mb-5 text-left">
+        <PlanChooser
+          plans={plans}
+          selectedPlan={selectedPlan}
+          setSelectedPlan={setSelectedPlan}
+        />
+      </div>
       <PriceTag priceUSD={priceUSD} priceKES={priceKES} />
       <p className="mt-4 text-sm text-ink/60">
         Sign in or create an account to subscribe.
@@ -303,6 +427,9 @@ function SignedOutView({ priceUSD, priceKES }: { priceUSD: number; priceKES: num
 }
 
 interface CheckoutProps {
+  plans: MembershipPlan[];
+  selectedPlan: MembershipPlanKey;
+  setSelectedPlan: (plan: MembershipPlanKey) => void;
   priceUSD: number;
   priceKES: number;
   gateway: Gateway;
@@ -318,6 +445,13 @@ function JoinView(props: CheckoutProps & { wasMember: boolean }) {
   return (
     <div>
       <div className="text-center">
+        <div className="mb-5 text-left">
+          <PlanChooser
+            plans={props.plans}
+            selectedPlan={props.selectedPlan}
+            setSelectedPlan={props.setSelectedPlan}
+          />
+        </div>
         <PriceTag priceUSD={props.priceUSD} priceKES={props.priceKES} />
         {props.wasMember && (
           <p className="mt-2 text-sm text-ink/55">
@@ -330,7 +464,13 @@ function JoinView(props: CheckoutProps & { wasMember: boolean }) {
   );
 }
 
-function ActiveView(props: CheckoutProps & { periodEnd: string }) {
+function ActiveView(
+  props: CheckoutProps & {
+    periodEnd: string;
+    currentPlan: MembershipPlanKey | "";
+    hasCourseAccess: boolean;
+  },
+) {
   return (
     <div>
       <div className="text-center">
@@ -341,17 +481,34 @@ function ActiveView(props: CheckoutProps & { periodEnd: string }) {
           Access renews through {props.periodEnd || "—"}
         </p>
         <p className="mt-2 text-sm text-ink/55">
-          Renew any time to add another 30 days. Renewing now extends from your
-          current end date — you won&apos;t lose unused time.
+          Your current plan is{" "}
+          <span className="font-semibold text-ink">
+            {props.hasCourseAccess ? "Full membership" : "Library membership"}
+          </span>
+          . Renew any time to add another 30 days; choosing full membership
+          upgrades library-only access to include courses.
         </p>
+      </div>
+      <div className="mt-6">
+        <PlanChooser
+          plans={
+            props.hasCourseAccess
+              ? props.plans.filter((plan) => plan.key === "full")
+              : props.plans
+          }
+          selectedPlan={props.selectedPlan}
+          setSelectedPlan={props.setSelectedPlan}
+        />
       </div>
       <CheckoutControls {...props} actionLabel="Renew for another month" />
       <div className="mt-6 text-center">
         <Link
-          href="/courses"
+          href={props.hasCourseAccess ? "/courses" : "/library"}
           className="text-sm font-semibold text-brand-600 hover:underline"
         >
-          Browse the full course library →
+          {props.hasCourseAccess
+            ? "Browse the full course library →"
+            : "Browse the resource library →"}
         </Link>
       </div>
     </div>

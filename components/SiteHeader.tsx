@@ -41,7 +41,7 @@ const LEARN_ITEMS: DropdownItem[] = [
   {
     href: "/membership",
     label: "Membership",
-    description: "All courses + library, $10/month",
+    description: "Library from $1.90, full access $10",
   },
 ];
 

@@ -21,7 +21,8 @@ export default function MemberGateCTA({
   description = "Templates, guides, and tools to grow your brand — included with every Kuza Kizazi membership.",
   perks = [
     "Download every template, worksheet, and guide",
-    "Full access to all paid courses",
+    "Library-only access from $1.90/month",
+    "Full membership also includes paid courses",
     "New resources added every month",
     "Cancel any time — no commitment",
   ],

@@ -20,7 +20,7 @@ const FAQS = [
   {
     question: "How does the monthly membership work?",
     answer:
-      "Membership is $10/month and unlocks every paid course in the catalogue plus the members-only Resource Library. Renewal is manual — each payment extends your membership by 30 days, nothing auto-charges your card. Cancel any time.",
+      "Library membership is $1.90/month for members-only resources. Full membership is $10/month and unlocks every paid course in the catalogue plus the Resource Library. Renewal is manual — each payment extends your membership by 30 days, nothing auto-charges your card. Cancel any time.",
   },
   {
     question: "Do I own my courses forever once I buy them?",
