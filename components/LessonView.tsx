@@ -11,6 +11,7 @@ import {
 import { useCourseProgress } from "@/lib/progress";
 import { useCustomer, customerFetch } from "@/lib/customer";
 import { useTheme } from "@/lib/theme";
+import { lessonVideo } from "@/lib/video";
 import ContentHTML from "@/components/ContentHTML";
 import ThemeToggle from "@/components/ThemeToggle";
 import ResourceList from "@/components/ResourceList";
@@ -32,6 +33,7 @@ export default function LessonView({
   const prev = index > 0 ? lessons[index - 1] : null;
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const complete = loaded && isComplete(lesson.slug);
+  const video = lessonVideo(lesson.videoUrl);
 
   // Is this the last lesson of its module? Used to decide whether
   // the end-of-module task widget should appear at the bottom.
@@ -133,14 +135,28 @@ export default function LessonView({
             {lesson.duration && ` · ${lesson.duration}`}
           </p>
 
-          {lesson.videoUrl && (
+          {video && (
             <div className="mt-6 aspect-video w-full overflow-hidden rounded-2xl border border-ink/10 bg-ink">
-              <iframe
-                src={lesson.videoUrl}
-                title={lesson.title}
-                allowFullScreen
-                className="h-full w-full"
-              />
+              {video.kind === "file" ? (
+                <video
+                  src={video.src}
+                  title={lesson.title}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  className="h-full w-full"
+                />
+              ) : (
+                <iframe
+                  src={video.src}
+                  title={lesson.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="h-full w-full"
+                />
+              )}
             </div>
           )}
 
