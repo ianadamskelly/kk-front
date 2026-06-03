@@ -218,6 +218,8 @@ export interface Product {
   kind: "physical" | "digital";
   /** null = unlimited downloads per customer; integer = per-customer cap. */
   maxDownloads: number | null;
+  /** Non-empty when this product unlocks an authenticated in-app asset. */
+  interactiveAssetSlug: string;
   createdAt: string;
   updatedAt: string;
   /** Full gallery. Empty on list endpoints; populated on detail endpoints. */

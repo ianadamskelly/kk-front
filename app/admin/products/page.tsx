@@ -28,6 +28,7 @@ const EMPTY = {
   kind: "physical" as "physical" | "digital",
   /** Empty string = unlimited (NULL on the server). */
   maxDownloads: "",
+  interactiveAssetSlug: "",
 };
 
 export default function AdminProductsPage() {
@@ -76,6 +77,7 @@ export default function AdminProductsPage() {
       status: p.status,
       kind: p.kind ?? "physical",
       maxDownloads: p.maxDownloads == null ? "" : String(p.maxDownloads),
+      interactiveAssetSlug: p.interactiveAssetSlug ?? "",
     });
     setEditingId(p.id);
     setShowForm(true);
@@ -105,6 +107,8 @@ export default function AdminProductsPage() {
           form.kind === "digital" && form.maxDownloads.trim() !== ""
             ? Number(form.maxDownloads)
             : null,
+        interactiveAssetSlug:
+          form.kind === "digital" ? form.interactiveAssetSlug.trim() : "",
       };
       const res = await adminFetch(
         editingId ? `/api/admin/products/${editingId}` : "/api/admin/products",
@@ -268,6 +272,27 @@ export default function AdminProductsPage() {
                 <p className="mt-1 text-xs text-ink/45">
                   Empty = unlimited. Otherwise the buyer can download each
                   file at most this many times.
+                </p>
+              </div>
+            )}
+            {form.kind === "digital" && (
+              <div>
+                <label className="text-sm font-medium text-ink/70">
+                  Interactive asset
+                </label>
+                <select
+                  value={form.interactiveAssetSlug}
+                  onChange={(e) => set("interactiveAssetSlug", e.target.value)}
+                  className={inputClass}
+                >
+                  <option value="">None</option>
+                  <option value="brand-clarity-worksheet">
+                    Brand Clarity Worksheet
+                  </option>
+                </select>
+                <p className="mt-1 text-xs text-ink/45">
+                  Grants authenticated in-app access instead of exposing a
+                  downloadable file.
                 </p>
               </div>
             )}
