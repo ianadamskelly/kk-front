@@ -6,6 +6,110 @@ interface WorksheetHTMLInput {
   watermarkText: string;
 }
 
+const WORKSHEET_TOOLBAR_CSS = `
+    .toolbar{
+      height:auto;
+      min-height:76px;
+      gap:24px;
+      padding:14px 30px;
+      flex-wrap:nowrap;
+    }
+    body{padding-top:76px;}
+    .toolbar .brand{
+      flex:1 1 390px;
+      max-width:min(560px,45vw);
+      overflow:hidden;
+    }
+    .toolbar .brand img{
+      max-width:220px;
+      object-fit:contain;
+    }
+    .toolbar .brand span{
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .toolbar .spacer{flex:.4 1 24px;}
+    .progress-wrap{
+      flex:0 0 auto;
+      min-width:260px;
+      justify-content:flex-end;
+    }
+    .progress-track{width:clamp(140px,16vw,220px);}
+    .save-state{
+      flex:0 0 62px;
+      text-align:center;
+    }
+    .btn{
+      flex:0 0 auto;
+      justify-content:center;
+      white-space:nowrap;
+      text-align:center;
+    }
+    .btn-ghost{min-width:92px;}
+    .btn-primary{min-width:148px;}
+
+    @media(max-width:1100px){
+      .toolbar{
+        min-height:126px;
+        align-content:center;
+        row-gap:12px;
+        flex-wrap:wrap;
+      }
+      body{padding-top:126px;}
+      .toolbar .brand{
+        flex:1 1 calc(100% - 280px);
+        max-width:none;
+      }
+      .toolbar .spacer{display:none;}
+      .progress-wrap{
+        order:5;
+        flex:1 1 100%;
+        min-width:0;
+        justify-content:flex-start;
+      }
+      .progress-track{
+        flex:1 1 auto;
+        width:auto;
+        max-width:none;
+      }
+      .save-state{order:4;}
+      .btn-ghost{margin-left:auto;}
+    }
+
+    @media(max-width:680px){
+      .toolbar{
+        min-height:174px;
+        padding:12px 16px;
+      }
+      body{padding-top:174px;}
+      .toolbar .brand{
+        flex-basis:100%;
+      }
+      .toolbar .brand img{max-width:190px;}
+      .progress-wrap{
+        order:2;
+        flex-basis:100%;
+      }
+      .save-state{
+        order:3;
+        flex-basis:auto;
+        min-width:48px;
+      }
+      .btn-ghost{
+        order:4;
+        margin-left:0;
+      }
+      .btn-primary{
+        order:5;
+        flex:1 1 140px;
+      }
+    }
+
+    @media print{
+      body{padding-top:0;}
+      .toolbar{display:none!important;}
+    }`;
+
 function escapeHTML(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -17,6 +121,7 @@ function escapeHTML(value: string): string {
 
 export function buildBrandClarityWorksheetHTML(input: WorksheetHTMLInput): string {
   return WORKSHEET_HTML
+    .replace("</style>", `${WORKSHEET_TOOLBAR_CSS}</style>`)
     .replaceAll("__LOGO_SRC__", input.logoSrc)
     .replaceAll("__STORAGE_NAMESPACE__", input.storageNamespace)
     .replaceAll("__WATERMARK_TEXT__", escapeHTML(input.watermarkText));
