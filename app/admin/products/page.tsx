@@ -289,6 +289,9 @@ export default function AdminProductsPage() {
                   <option value="brand-clarity-worksheet">
                     Brand Clarity Worksheet
                   </option>
+                  <option value="ideal-customer-profile-template">
+                    Ideal Customer Profile Template
+                  </option>
                 </select>
                 <p className="mt-1 text-xs text-ink/45">
                   Grants authenticated in-app access instead of exposing a

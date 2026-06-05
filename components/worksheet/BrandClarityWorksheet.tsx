@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { customerFetch } from "@/lib/customer";
 import { buildBrandClarityWorksheetHTML } from "@/components/worksheet/brandClarityWorksheetTemplate";
+import { buildIdealCustomerProfileTemplateHTML } from "@/components/worksheet/idealCustomerProfileTemplate";
 
 interface Entitlement {
   id: number;
@@ -28,24 +29,46 @@ export default function BrandClarityWorksheet({
 
   const watermarkText = `${userEmail} · ${entitlement.licenseId}`;
   const srcDoc = useMemo(
-    () =>
-      buildBrandClarityWorksheetHTML({
+    () => {
+      const input = {
         logoSrc: "/logo-wordmark.svg",
-        storageNamespace: `kkk-bcw:${userId}:${entitlement.licenseId}:`,
+        storageNamespace:
+          entitlement.assetSlug === "ideal-customer-profile-template"
+            ? `kkk-icp:${userId}:${entitlement.licenseId}:`
+            : `kkk-bcw:${userId}:${entitlement.licenseId}:`,
         watermarkText,
-      }),
-    [entitlement.licenseId, userId, watermarkText],
+      };
+      if (entitlement.assetSlug === "ideal-customer-profile-template") {
+        return buildIdealCustomerProfileTemplateHTML(input);
+      }
+      return buildBrandClarityWorksheetHTML(input);
+    },
+    [entitlement.assetSlug, entitlement.licenseId, userId, watermarkText],
   );
 
   useEffect(() => {
     const onMessage = async (event: MessageEvent) => {
       if (event.source !== iframeRef.current?.contentWindow) return;
-      if (event.data?.type !== "kkk-bcw-export-request") return;
+      const requestType = event.data?.type;
+      if (
+        requestType !== "kkk-bcw-export-request" &&
+        requestType !== "kkk-interactive-asset-export-request"
+      ) {
+        return;
+      }
+      const approvedType =
+        requestType === "kkk-bcw-export-request"
+          ? "kkk-bcw-print-approved"
+          : "kkk-interactive-asset-print-approved";
+      const deniedType =
+        requestType === "kkk-bcw-export-request"
+          ? "kkk-bcw-print-denied"
+          : "kkk-interactive-asset-print-denied";
 
       if (usesRemaining <= 0) {
         iframeRef.current?.contentWindow?.postMessage(
           {
-            type: "kkk-bcw-print-denied",
+            type: deniedType,
             error: "You have reached the export limit for this worksheet.",
             usesRemaining: 0,
           },
@@ -64,13 +87,13 @@ export default function BrandClarityWorksheet({
         const remaining = data.entitlement.usesRemaining as number;
         setUsesRemaining(remaining);
         iframeRef.current?.contentWindow?.postMessage(
-          { type: "kkk-bcw-print-approved", usesRemaining: remaining },
+          { type: approvedType, usesRemaining: remaining },
           "*",
         );
       } catch (e) {
         iframeRef.current?.contentWindow?.postMessage(
           {
-            type: "kkk-bcw-print-denied",
+            type: deniedType,
             error: e instanceof Error ? e.message : "Export failed.",
             usesRemaining,
           },
@@ -95,7 +118,7 @@ export default function BrandClarityWorksheet({
       </div>
       <iframe
         ref={iframeRef}
-        title="Brand Clarity Worksheet"
+        title={entitlement.assetName}
         srcDoc={srcDoc}
         className="h-[calc(100vh-180px)] min-h-[720px] w-full border-0 bg-[#efe9df]"
         sandbox="allow-scripts allow-same-origin allow-modals"

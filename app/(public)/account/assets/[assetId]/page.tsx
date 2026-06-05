@@ -8,6 +8,11 @@ import EmptyState from "@/components/EmptyState";
 import BrandClarityWorksheet from "@/components/worksheet/BrandClarityWorksheet";
 import { customerFetch, useCustomer } from "@/lib/customer";
 
+const SUPPORTED_ASSETS = new Set([
+  "brand-clarity-worksheet",
+  "ideal-customer-profile-template",
+]);
+
 interface Entitlement {
   id: number;
   assetSlug: string;
@@ -32,7 +37,7 @@ export default function AccountAssetPage() {
 
   return (
     <AccountShell>
-      {assetId === "brand-clarity-worksheet" ? (
+      {SUPPORTED_ASSETS.has(assetId) ? (
         <Body assetId={assetId} />
       ) : (
         <EmptyState
@@ -73,7 +78,7 @@ function Body({ assetId }: { assetId: string }) {
         icon="🔒"
         title="This tool is locked"
         description="Buy the worksheet from the shop, then return here from My Tools after the order is confirmed."
-        action={{ href: "/shop/brand-clarity-worksheet", label: "View product" }}
+        action={{ href: `/shop/${assetId}`, label: "View product" }}
       />
     );
   }
