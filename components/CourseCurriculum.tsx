@@ -101,15 +101,19 @@ export default function CourseCurriculum({
                 );
               })}
             </ul>
-            {taskCountByModule[g.module] > 0 && (
-              <div className="mt-2 flex items-center gap-2 rounded-2xl border border-dashed border-brand-300 bg-brand-50/50 px-4 py-2.5 text-sm text-brand-700">
+            {taskCountByModule[g.module] > 0 && g.items.length > 0 && (
+              <Link
+                href={`/courses/${courseSlug}/${g.items[g.items.length - 1].slug}#assignment`}
+                className="mt-2 flex items-center gap-2 rounded-2xl border border-dashed border-brand-300 bg-brand-50/50 px-4 py-2.5 text-sm text-brand-700 transition hover:bg-brand-50"
+              >
                 <span aria-hidden>📝</span>
                 <span className="font-medium">
                   {taskCountByModule[g.module] === 1
                     ? "Graded assignment at the end of this module"
                     : `${taskCountByModule[g.module]} graded assignments in this module`}
                 </span>
-              </div>
+                <span className="ml-auto text-xs font-semibold">Open →</span>
+              </Link>
             )}
           </div>
         ))}
