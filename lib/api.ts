@@ -326,6 +326,9 @@ export interface Course {
   lessons: Lesson[];
   /** Course-wide resources (resources whose lessonId is null). */
   resources?: CourseResource[];
+  /** End-of-module tasks. On the public payload the prompt is blank for
+   *  non-entitled viewers — only `module`/`requiredPass` drive the marker. */
+  tasks?: CourseTask[];
   // Set by /api/courses/{slug}: `locked` means the course is paid and access
   // is gated; `entitled` means this requester has access (free, member, or
   // bought the course). When locked && !entitled, lesson content/video URLs

@@ -49,6 +49,7 @@ const NAV_GROUPS: { label: string; links: NavLink[] }[] = [
     label: "Learn",
     links: [
       { href: "/admin/courses", label: "Courses", perm: "courses.view" },
+      { href: "/admin/courses/submissions", label: "Submissions", perm: "courses.view" },
       { href: "/admin/library", label: "Library", perm: "library.view" },
       { href: "/admin/memberships", label: "Members", perm: "memberships.view" },
     ],
@@ -193,7 +194,7 @@ export default function AdminShell({
                     key={link.href}
                     href={link.href}
                     className={`block rounded-md px-3 py-1.5 text-sm font-medium ${
-                      isActive(link.href)
+                      matchedLink?.href === link.href
                         ? "bg-brand-500 text-white"
                         : "text-ink/60 hover:bg-ink/5"
                     }`}

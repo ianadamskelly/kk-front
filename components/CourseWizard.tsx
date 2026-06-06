@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -8,13 +8,13 @@ import {
   formatPrice,
   imageUrl,
   type Course,
+  type CourseTask,
   type Lesson,
 } from "@/lib/api";
 import { getToken } from "@/lib/auth";
 import RichTextEditor from "./RichTextEditor";
 import Spinner from "./Spinner";
 import CourseResources from "./admin/CourseResources";
-import CourseTasks from "./admin/CourseTasks";
 
 // One coherent step-driven course builder. The component takes a course
 // that already exists in the database (created as a draft by /admin/courses/new)
@@ -562,6 +562,8 @@ function CurriculumStep({
 }) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newModuleInput, setNewModuleInput] = useState("");
+  const [tasks, setTasks] = useState<CourseTask[]>([]);
+  const [taskError, setTaskError] = useState("");
   const dragId = useRef<number | null>(null);
 
   // Group lessons by module name; preserve insertion order of modules.
@@ -579,6 +581,89 @@ function CurriculumStep({
     }
     return order.map((m) => ({ name: m, lessons: byModule[m] }));
   }, [lessons]);
+
+  // Bucket tasks by their module name so each ModuleBlock can render
+  // its own. Any task whose module no longer matches a module group
+  // (e.g. a renamed/legacy module) falls into orphanTasks and is
+  // surfaced separately so it never silently disappears.
+  const tasksByModule = useMemo(() => {
+    const map: Record<string, CourseTask[]> = {};
+    for (const t of tasks) (map[t.module] ||= []).push(t);
+    return map;
+  }, [tasks]);
+  const moduleNames = useMemo(
+    () => new Set(modules.map((m) => m.name)),
+    [modules],
+  );
+  const orphanTasks = useMemo(
+    () => tasks.filter((t) => !moduleNames.has(t.module)),
+    [tasks, moduleNames],
+  );
+
+  const loadTasks = useCallback(async () => {
+    const res = await adminFetch(
+      `/api/admin/courses/${course.id}/tasks`,
+      getToken() || "",
+    );
+    if (res.ok) setTasks((await res.json()) || []);
+  }, [course.id]);
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
+
+  // Create a task pinned to a module. The module name comes straight
+  // from the block it was added in, so it always matches the lessons
+  // there — this is what makes the task show up in the lesson runner.
+  // Seeded with a placeholder prompt (the create endpoint requires a
+  // non-empty prompt), which the admin edits inline.
+  const addTask = async (module: string) => {
+    setTaskError("");
+    const res = await adminFetch(
+      `/api/admin/courses/${course.id}/tasks`,
+      getToken() || "",
+      {
+        method: "POST",
+        body: JSON.stringify({ module, prompt: "New task", requiredPass: false }),
+      },
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      setTaskError(data.error || "Could not add task");
+      return;
+    }
+    setTasks((list) => [...list, data]);
+  };
+
+  const changeTask = (updated: CourseTask) =>
+    setTasks((list) => list.map((t) => (t.id === updated.id ? updated : t)));
+
+  const commitTask = async (t: CourseTask) => {
+    setTaskError("");
+    const res = await adminFetch(
+      `/api/admin/courses/${course.id}/tasks/${t.id}`,
+      getToken() || "",
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          module: t.module,
+          prompt: t.prompt,
+          requiredPass: t.requiredPass,
+        }),
+      },
+    );
+    if (!res.ok) setTaskError("Could not save task changes");
+  };
+
+  const deleteTask = async (id: number) => {
+    if (!confirm("Delete this task and all of its submissions?")) return;
+    const res = await adminFetch(
+      `/api/admin/courses/${course.id}/tasks/${id}`,
+      getToken() || "",
+      { method: "DELETE" },
+    );
+    if (res.ok) setTasks((list) => list.filter((t) => t.id !== id));
+  };
 
   const refresh = async () => {
     const res = await adminFetch(
@@ -696,25 +781,18 @@ function CurriculumStep({
 
   return (
     <div>
-      <SectionHeader
-        eyebrow="Step 3"
-        title="Curriculum"
-        description="Group lessons into modules. Drag any lesson to reorder it or move it between modules."
-      />
-
-      {/* Course-wide resources — shown on the course landing page. */}
-      <div className="mt-6">
-        <CourseResources courseId={course.id} />
-      </div>
-
-      {/* Module-end tasks. The knownModules list comes from the
-          curriculum so the dropdown nudges the admin toward existing
-          module names — but free text is still allowed. */}
-      <div className="mt-6">
-        <CourseTasks
-          courseId={course.id}
-          knownModules={[...new Set(lessons.map((l) => l.module).filter(Boolean))]}
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <SectionHeader
+          eyebrow="Step 3"
+          title="Curriculum"
+          description="Build each module from lessons and an optional end-of-module task. Drag any lesson to reorder it or move it between modules."
         />
+        <Link
+          href={`/admin/courses/${course.id}/submissions`}
+          className="shrink-0 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-medium text-ink/70 hover:border-brand-400 hover:text-ink"
+        >
+          View submissions →
+        </Link>
       </div>
 
       <div className="mt-6 space-y-6">
@@ -730,9 +808,14 @@ function CurriculumStep({
               key={m.name}
               module={m.name}
               lessons={m.lessons}
+              tasks={tasksByModule[m.name] || []}
               editingId={editingId}
               setEditingId={setEditingId}
               onAddLesson={() => addLesson(m.name)}
+              onAddTask={() => addTask(m.name)}
+              onChangeTask={changeTask}
+              onCommitTask={commitTask}
+              onDeleteTask={deleteTask}
               onChangeLesson={(updated) => {
                 setLessons(
                   lessons.map((l) => (l.id === updated.id ? updated : l)),
@@ -778,6 +861,25 @@ function CurriculumStep({
             </div>
           </div>
         )}
+
+        {orphanTasks.length > 0 && (
+          <OrphanTasksCard
+            tasks={orphanTasks}
+            moduleNames={[...moduleNames]}
+            onChangeTask={changeTask}
+            onCommitTask={commitTask}
+            onDeleteTask={deleteTask}
+          />
+        )}
+
+        {taskError && <p className="text-sm text-red-600">{taskError}</p>}
+      </div>
+
+      {/* Course-wide resources live at the bottom — they're supplementary
+          downloads shown on the course landing page, not part of the
+          lesson/module structure above. */}
+      <div className="mt-8 border-t border-ink/10 pt-6">
+        <CourseResources courseId={course.id} />
       </div>
     </div>
   );
@@ -820,9 +922,14 @@ function EmptyCurriculum({
 function ModuleBlock({
   module,
   lessons,
+  tasks,
   editingId,
   setEditingId,
   onAddLesson,
+  onAddTask,
+  onChangeTask,
+  onCommitTask,
+  onDeleteTask,
   onChangeLesson,
   onDeleteLesson,
   onDragStart,
@@ -833,9 +940,14 @@ function ModuleBlock({
 }: {
   module: string;
   lessons: Lesson[];
+  tasks: CourseTask[];
   editingId: number | null;
   setEditingId: (id: number | null) => void;
   onAddLesson: () => void;
+  onAddTask: () => void;
+  onChangeTask: (t: CourseTask) => void;
+  onCommitTask: (t: CourseTask) => void;
+  onDeleteTask: (id: number) => void;
   onChangeLesson: (l: Lesson) => void;
   onDeleteLesson: (id: number) => void;
   onDragStart: (id: number) => () => void;
@@ -851,13 +963,23 @@ function ModuleBlock({
     <div className="rounded-2xl border border-ink/10 bg-ink/[0.015]">
       <div className="flex items-center justify-between gap-3 border-b border-ink/10 px-4 py-3">
         <h3 className="text-sm font-semibold text-ink">{module}</h3>
-        <button
-          type="button"
-          onClick={onAddLesson}
-          className="text-xs font-semibold text-brand-600 hover:underline"
-        >
-          + Add lesson
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onAddLesson}
+            className="text-xs font-semibold text-brand-600 hover:underline"
+          >
+            + Add lesson
+          </button>
+          <span className="text-ink/20">·</span>
+          <button
+            type="button"
+            onClick={onAddTask}
+            className="text-xs font-semibold text-brand-600 hover:underline"
+          >
+            + Add task
+          </button>
+        </div>
       </div>
       <ul
         className="divide-y divide-ink/[0.06]"
@@ -899,6 +1021,151 @@ function ModuleBlock({
             Drop a lesson here, or click “Add lesson” above.
           </li>
         )}
+      </ul>
+
+      {/* End-of-module tasks, pinned after the lessons — this mirrors
+          where the task renders for students (after the module's last
+          lesson). */}
+      {tasks.length > 0 && (
+        <div className="space-y-3 border-t border-ink/10 bg-brand-50/30 px-4 py-3">
+          {tasks.map((t) => (
+            <ModuleTaskRow
+              key={t.id}
+              task={t}
+              onChange={onChangeTask}
+              onCommit={onCommitTask}
+              onDelete={() => onDeleteTask(t.id)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ModuleTaskRow is the inline editor for one end-of-module task. The
+// prompt saves on blur; the required-to-pass toggle saves immediately.
+function ModuleTaskRow({
+  task,
+  onChange,
+  onCommit,
+  onDelete,
+}: {
+  task: CourseTask;
+  onChange: (t: CourseTask) => void;
+  onCommit: (t: CourseTask) => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div className="rounded-lg border border-brand-200/70 bg-white p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-brand-700">
+          <span aria-hidden>📝</span> End-of-module task
+        </span>
+        <label className="inline-flex items-center gap-1.5 text-xs text-ink/65">
+          <input
+            type="checkbox"
+            checked={task.requiredPass}
+            onChange={(e) => {
+              const next = { ...task, requiredPass: e.target.checked };
+              onChange(next);
+              onCommit(next);
+            }}
+          />
+          Required to pass
+        </label>
+      </div>
+      <textarea
+        rows={2}
+        value={task.prompt}
+        onChange={(e) => onChange({ ...task, prompt: e.target.value })}
+        onBlur={() => onCommit(task)}
+        placeholder="Task prompt — what should the student do?"
+        className="mt-2 w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
+      />
+      <div className="mt-1 flex justify-end">
+        <button
+          type="button"
+          onClick={onDelete}
+          className="text-xs text-red-600 hover:underline"
+        >
+          Delete task
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// OrphanTasksCard surfaces tasks whose module no longer matches any
+// module in the curriculum (e.g. a module that was renamed by moving
+// its lessons elsewhere). Without this they'd be invisible in the
+// per-module UI yet still hidden on the front-end. The admin can
+// reassign each to a real module or delete it.
+function OrphanTasksCard({
+  tasks,
+  moduleNames,
+  onChangeTask,
+  onCommitTask,
+  onDeleteTask,
+}: {
+  tasks: CourseTask[];
+  moduleNames: string[];
+  onChangeTask: (t: CourseTask) => void;
+  onCommitTask: (t: CourseTask) => void;
+  onDeleteTask: (id: number) => void;
+}) {
+  return (
+    <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4">
+      <p className="text-xs font-semibold uppercase tracking-widest text-amber-800">
+        Tasks not matched to a module
+      </p>
+      <p className="mt-1 text-xs text-amber-900/80">
+        These tasks point at a module name that no longer exists in this
+        curriculum, so students won’t see them. Reassign each to a module or
+        delete it.
+      </p>
+      <ul className="mt-3 space-y-3">
+        {tasks.map((t) => (
+          <li key={t.id} className="rounded-lg border border-amber-200 bg-white p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-ink/60">
+              <span>
+                Was: <strong className="text-ink/80">{t.module || "—"}</strong>
+              </span>
+              <label className="inline-flex items-center gap-1.5">
+                <span>Reassign to</span>
+                <select
+                  value=""
+                  onChange={(e) => {
+                    if (!e.target.value) return;
+                    const next = { ...t, module: e.target.value };
+                    onChangeTask(next);
+                    onCommitTask(next);
+                  }}
+                  className="rounded-lg border border-ink/15 bg-white px-2 py-1 text-xs outline-none focus:border-brand-500"
+                >
+                  <option value="">Choose module…</option>
+                  {moduleNames.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <p className="mt-2 whitespace-pre-wrap text-sm text-ink/80">
+              {t.prompt}
+            </p>
+            <div className="mt-1 flex justify-end">
+              <button
+                type="button"
+                onClick={() => onDeleteTask(t.id)}
+                className="text-xs text-red-600 hover:underline"
+              >
+                Delete task
+              </button>
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
   );
