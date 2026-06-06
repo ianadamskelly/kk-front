@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { API_URL, imageUrl, type Course } from "@/lib/api";
+import {
+  API_URL,
+  imageUrl,
+  type Certificate,
+  type Course,
+} from "@/lib/api";
 import { useCustomer, customerFetch } from "@/lib/customer";
 import AccountShell from "@/components/account/AccountShell";
 import EmptyState from "@/components/EmptyState";
@@ -18,19 +23,11 @@ export default function AccountCoursesPage() {
   );
 }
 
-interface CertificateRow {
-  id: number;
-  code: string;
-  userId: number;
-  courseId: number;
-  issuedAt: string;
-}
-
 function Body() {
   const { user } = useCustomer();
   const [courses, setCourses] = useState<Course[] | null>(null);
   // Certs keyed by courseId so we can badge each card in the loop.
-  const [certs, setCerts] = useState<Record<number, CertificateRow>>({});
+  const [certs, setCerts] = useState<Record<number, Certificate>>({});
 
   useEffect(() => {
     if (!user) return;
@@ -38,9 +35,9 @@ function Body() {
       .then(async (r) => (r.ok ? ((await r.json()) as Course[]) : []))
       .then(setCourses);
     customerFetch(`/api/account/certificates`)
-      .then(async (r) => (r.ok ? ((await r.json()) as CertificateRow[]) : []))
+      .then(async (r) => (r.ok ? ((await r.json()) as Certificate[]) : []))
       .then((rows) => {
-        const map: Record<number, CertificateRow> = {};
+        const map: Record<number, Certificate> = {};
         for (const c of rows) map[c.courseId] = c;
         setCerts(map);
       });

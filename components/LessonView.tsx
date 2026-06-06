@@ -1,8 +1,10 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
+  API_URL,
+  type Certificate,
   type Course,
   type CourseTaskSubmission,
   type Lesson,
@@ -63,6 +65,61 @@ export default function LessonView({
       cancelled = true;
     };
   }, [course.slug, user]);
+
+  // --- Completion → certificate auto-claim ---
+  // Lesson progress lives in the browser, so the client decides when the
+  // course is finished and asks the server to issue the certificate. The
+  // server still validates access + required tasks.
+  const allComplete =
+    loaded && lessons.length > 0 && lessons.every((l) => isComplete(l.slug));
+  const claimedKey = `kk_cert_claimed_${course.slug}`;
+  const claimingRef = useRef(false);
+  const [certCode, setCertCode] = useState<string | null>(null);
+  const [claimNote, setClaimNote] = useState("");
+
+  // Surface an already-earned certificate so the banner persists on
+  // revisits without re-hitting the API.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(claimedKey);
+      if (saved) setCertCode(saved);
+    } catch {
+      // ignore storage access errors
+    }
+  }, [claimedKey]);
+
+  useEffect(() => {
+    if (!allComplete || !user || certCode || claimingRef.current) return;
+    try {
+      if (localStorage.getItem(claimedKey)) return;
+    } catch {
+      // ignore
+    }
+    claimingRef.current = true;
+    customerFetch(`/api/account/courses/${course.slug}/complete`, {
+      method: "POST",
+    })
+      .then(async (r) => {
+        if (r.ok) {
+          const c = (await r.json()) as Certificate;
+          try {
+            localStorage.setItem(claimedKey, c.code);
+          } catch {
+            // ignore
+          }
+          setCertCode(c.code);
+          setClaimNote("");
+        } else if (r.status === 409) {
+          setClaimNote(
+            "Finish and pass the required assignments to unlock your certificate.",
+          );
+        }
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        claimingRef.current = false;
+      });
+  }, [allComplete, user, course.slug, certCode, claimedKey]);
 
   // Modules that carry a task, so the sidebar can show a navigable
   // "Assignment" entry under each one.
@@ -170,6 +227,42 @@ export default function LessonView({
 
         {/* Lesson content */}
         <article>
+          {certCode && (
+            <div className="mb-6 rounded-2xl border border-brand-300 bg-brand-50 p-4">
+              <p className="text-sm font-semibold text-brand-800">
+                🎓 Certificate unlocked!
+              </p>
+              <p className="mt-1 text-xs text-ink/65">
+                You&apos;ve completed this course. Download your certificate or
+                share the verified copy.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <a
+                  href={`${API_URL}/api/cert/${certCode}/download`}
+                  className="rounded-full bg-brand-500 px-4 py-2 text-xs font-semibold text-white hover:bg-brand-600"
+                >
+                  ⬇ Download PDF
+                </a>
+                <Link
+                  href={`/cert/${certCode}`}
+                  className="rounded-full border border-ink/15 px-4 py-2 text-xs font-medium text-ink/70 hover:border-brand-300 hover:text-ink"
+                >
+                  View / share
+                </Link>
+                <Link
+                  href="/account/certificates"
+                  className="rounded-full border border-ink/15 px-4 py-2 text-xs font-medium text-ink/70 hover:border-brand-300 hover:text-ink"
+                >
+                  All certificates
+                </Link>
+              </div>
+            </div>
+          )}
+          {!certCode && claimNote && (
+            <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900">
+              {claimNote}
+            </div>
+          )}
           {lesson.module && (
             <span className="text-xs font-semibold uppercase tracking-widest text-brand-500">
               {lesson.module}

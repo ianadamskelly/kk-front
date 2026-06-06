@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   resolveFileURL,
   type CourseTask,
@@ -32,6 +32,23 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [current, setCurrent] = useState<CourseTaskSubmission | undefined>(existing);
+  // Show the editor by default only when there's nothing submitted yet.
+  // Once a response exists we show the read-only record + feedback, and
+  // the student opens the editor explicitly to revise.
+  const [editing, setEditing] = useState(!existing);
+
+  // The student's submission is loaded asynchronously by LessonView, so
+  // `existing` is undefined on first mount and arrives a tick later (and
+  // again after each (re)submit/grade). Sync our local state to it so the
+  // saved response + feedback render instead of an empty editor.
+  useEffect(() => {
+    if (!existing) return;
+    setCurrent(existing);
+    setBody(existing.body || "");
+    setFileUrl(existing.fileUrl || "");
+    setFileViewUrl(resolveFileURL(existing.fileUrl));
+    setEditing(false);
+  }, [existing]);
 
   const onUpload = async (file: File) => {
     if (!user) return;
@@ -81,6 +98,10 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
       const data = (await res.json()) as CourseTaskSubmission;
       if (!res.ok) throw new Error((data as unknown as { error?: string }).error || "Could not submit");
       setCurrent(data);
+      setBody(data.body || "");
+      // Collapse back to the read-only record so the student can see
+      // exactly what they submitted (and any feedback once it lands).
+      setEditing(false);
       onSaved?.(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not submit");
@@ -97,11 +118,23 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
     );
   }
 
+  const statusBadge =
+    current?.grade === "passed" ? (
+      <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-green-800">
+        Passed ✓
+      </span>
+    ) : current?.grade === "failed" ? (
+      <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-800">
+        Needs changes
+      </span>
+    ) : current ? (
+      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-800">
+        Awaiting review
+      </span>
+    ) : null;
+
   return (
-    <form
-      onSubmit={submit}
-      className="rounded-2xl border border-brand-200 bg-brand-50/40 p-5"
-    >
+    <div className="rounded-2xl border border-brand-200 bg-brand-50/40 p-5">
       <p className="text-xs font-semibold uppercase tracking-widest text-brand-700">
         End of module · Task
       </p>
@@ -112,87 +145,161 @@ export default function ModuleTask({ task, existing, onSaved }: Props) {
         </p>
       )}
 
-      {current?.grade === "passed" && (
-        <p className="mt-3 rounded-md bg-green-100 px-3 py-2 text-sm text-green-900">
-          ✓ You passed this task.
-          {current.feedback && (
-            <span className="mt-1 block whitespace-pre-wrap text-xs">{current.feedback}</span>
-          )}
-        </p>
-      )}
-      {current?.grade === "failed" && (
-        <p className="mt-3 rounded-md bg-red-100 px-3 py-2 text-sm text-red-900">
-          Your submission wasn&apos;t accepted — revise and resubmit.
-          {current.feedback && (
-            <span className="mt-1 block whitespace-pre-wrap text-xs">{current.feedback}</span>
-          )}
-        </p>
-      )}
-      {current && current.grade === "" && (
-        <p className="mt-3 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-900">
-          Your submission is awaiting review.
-        </p>
-      )}
+      {/* Submitted record + threaded instructor feedback. Stays visible
+          so the student always sees what they sent and the reply. */}
+      {current && !editing && (
+        <div className="mt-4 space-y-3">
+          <div className="rounded-xl border border-ink/10 bg-white p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-xs font-semibold uppercase tracking-widest text-ink/45">
+                Your response
+              </p>
+              {statusBadge}
+            </div>
+            {current.body && (
+              <p className="mt-2 whitespace-pre-wrap text-sm text-ink/85">
+                {current.body}
+              </p>
+            )}
+            {current.fileUrl && fileViewUrl && (
+              <a
+                href={fileViewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block text-xs font-semibold text-brand-600 hover:underline"
+              >
+                📎 View your attachment
+              </a>
+            )}
+            {current.submittedAt && (
+              <p className="mt-2 text-[11px] text-ink/40">
+                Submitted {fmtDate(current.submittedAt)}
+              </p>
+            )}
+          </div>
 
-      <div className="mt-4 space-y-3">
-        <textarea
-          rows={4}
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          placeholder="Write your response…"
-          className="w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
-        />
+          {current.feedback ? (
+            <div className="rounded-xl border-l-4 border-brand-400 bg-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-brand-700">
+                Instructor feedback
+              </p>
+              <p className="mt-1 whitespace-pre-wrap text-sm text-ink/85">
+                {current.feedback}
+              </p>
+              {current.gradedAt && (
+                <p className="mt-2 text-[11px] text-ink/40">
+                  Reviewed {fmtDate(current.gradedAt)}
+                </p>
+              )}
+            </div>
+          ) : (
+            current.grade === "" && (
+              <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                Your response is awaiting review. Your instructor&apos;s
+                feedback will appear here.
+              </p>
+            )
+          )}
 
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-ink/70 hover:border-brand-400 hover:text-ink">
-            <span>
-              {uploading
-                ? "Uploading…"
-                : fileUrl
-                  ? "📎 Replace file"
-                  : "📎 Attach a file (optional)"}
-            </span>
-            <input
-              type="file"
-              accept=".pdf,.zip,.epub,.mobi,.docx,.xlsx,.pptx,.txt,.csv,.mp3,.mp4,.m4a,.wav,.png,.jpg,.jpeg"
-              disabled={uploading}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) onUpload(file);
-                e.target.value = "";
-              }}
-              className="sr-only"
-            />
-          </label>
-          {fileUrl && fileViewUrl && (
-            <a
-              href={fileViewUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-ink/60 hover:text-brand-600"
+          {current.grade !== "passed" && (
+            <button
+              type="button"
+              onClick={() => setEditing(true)}
+              className="text-sm font-semibold text-brand-600 hover:underline"
             >
-              View attachment
-            </a>
+              {current.grade === "failed"
+                ? "Revise & resubmit →"
+                : "Edit your response"}
+            </button>
           )}
         </div>
+      )}
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+      {/* Editor — shown for the first attempt and when revising. */}
+      {(!current || editing) && (
+        <form onSubmit={submit} className="mt-4 space-y-3">
+          <textarea
+            rows={4}
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Write your response…"
+            className="w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
+          />
 
-        <div>
-          <button
-            type="submit"
-            disabled={submitting || uploading}
-            className="inline-flex items-center gap-2 rounded-full bg-brand-500 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-600 disabled:opacity-50"
-          >
-            {submitting && <Spinner size="sm" />}
-            {submitting
-              ? "Submitting…"
-              : current
-                ? "Resubmit"
-                : "Submit response"}
-          </button>
-        </div>
-      </div>
-    </form>
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-ink/70 hover:border-brand-400 hover:text-ink">
+              <span>
+                {uploading
+                  ? "Uploading…"
+                  : fileUrl
+                    ? "📎 Replace file"
+                    : "📎 Attach a file (optional)"}
+              </span>
+              <input
+                type="file"
+                accept=".pdf,.zip,.epub,.mobi,.docx,.xlsx,.pptx,.txt,.csv,.mp3,.mp4,.m4a,.wav,.png,.jpg,.jpeg"
+                disabled={uploading}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) onUpload(file);
+                  e.target.value = "";
+                }}
+                className="sr-only"
+              />
+            </label>
+            {fileUrl && fileViewUrl && (
+              <a
+                href={fileViewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink/60 hover:text-brand-600"
+              >
+                View attachment
+              </a>
+            )}
+          </div>
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
+          <div className="flex items-center gap-2">
+            <button
+              type="submit"
+              disabled={submitting || uploading}
+              className="inline-flex items-center gap-2 rounded-full bg-brand-500 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-600 disabled:opacity-50"
+            >
+              {submitting && <Spinner size="sm" />}
+              {submitting
+                ? "Submitting…"
+                : current
+                  ? "Resubmit"
+                  : "Submit response"}
+            </button>
+            {current && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditing(false);
+                  setBody(current.body || "");
+                }}
+                className="rounded-full border border-ink/15 px-4 py-2 text-sm text-ink/65 hover:bg-ink/5"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+      )}
+    </div>
   );
+}
+
+// Compact, locale-aware date for the submission / review timestamps.
+function fmtDate(s: string): string {
+  const d = new Date(s);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
