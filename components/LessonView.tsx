@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   type Course,
-  type CourseTask,
   type CourseTaskSubmission,
   type Lesson,
 } from "@/lib/api";
@@ -40,9 +39,11 @@ export default function LessonView({
   const isLastInModule =
     !next || next.module !== lesson.module;
 
-  // Pull tasks + my submissions for this course once on mount so the
-  // end-of-module section can render synchronously when reached.
-  const [tasks, setTasks] = useState<CourseTask[]>([]);
+  // Tasks come from the course payload so the assignment is visible even
+  // before (or without) the account fetch — including for signed-out
+  // visitors, who then get a "sign in to submit" prompt. The account
+  // fetch only layers in the student's own submissions.
+  const courseTasks = course.tasks || [];
   const [subs, setSubs] = useState<Record<number, CourseTaskSubmission>>({});
   useEffect(() => {
     if (!user) return;
@@ -51,7 +52,6 @@ export default function LessonView({
       .then(async (r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (cancelled || !data) return;
-        setTasks((data.tasks || []) as CourseTask[]);
         const byTask: Record<number, CourseTaskSubmission> = {};
         for (const s of (data.submissions || []) as CourseTaskSubmission[]) {
           byTask[s.taskId] = s;
@@ -64,8 +64,14 @@ export default function LessonView({
     };
   }, [course.slug, user]);
 
+  // Modules that carry a task, so the sidebar can show a navigable
+  // "Assignment" entry under each one.
+  const modulesWithTask = new Set(
+    courseTasks.map((t) => t.module).filter(Boolean),
+  );
+
   const moduleTasks = isLastInModule
-    ? tasks.filter((t) => t.module === lesson.module)
+    ? courseTasks.filter((t) => t.module === lesson.module)
     : [];
 
   return (
@@ -93,28 +99,70 @@ export default function LessonView({
             {lessons.map((l, i) => {
               const active = l.id === lesson.id;
               const done = loaded && isComplete(l.slug);
+              // The assignment lives on the last lesson of its module, so
+              // show a navigable entry right after it.
+              const lastInModule =
+                i === lessons.length - 1 || lessons[i + 1].module !== l.module;
+              const showAssignment =
+                lastInModule && !!l.module && modulesWithTask.has(l.module);
+              const moduleSubs = courseTasks
+                .filter((t) => t.module === l.module)
+                .map((t) => subs[t.id])
+                .filter(Boolean) as CourseTaskSubmission[];
+              const passed = moduleSubs.some((s) => s.grade === "passed");
+              const submitted = moduleSubs.length > 0;
               return (
-                <li key={l.id}>
-                  <Link
-                    href={`/courses/${course.slug}/${l.slug}`}
-                    className={`flex items-center gap-2 rounded-lg px-2 py-2 text-sm ${
-                      active
-                        ? "bg-brand-50 font-semibold text-brand-700"
-                        : "text-ink/70 hover:bg-ink/5"
-                    }`}
-                  >
-                    <span
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[10px] ${
-                        done
-                          ? "border-brand-500 bg-brand-500 text-white"
-                          : "border-ink/25 text-ink/40"
+                <Fragment key={l.id}>
+                  <li>
+                    <Link
+                      href={`/courses/${course.slug}/${l.slug}`}
+                      className={`flex items-center gap-2 rounded-lg px-2 py-2 text-sm ${
+                        active
+                          ? "bg-brand-50 font-semibold text-brand-700"
+                          : "text-ink/70 hover:bg-ink/5"
                       }`}
                     >
-                      {done ? "✓" : i + 1}
-                    </span>
-                    <span className="flex-1">{l.title}</span>
-                  </Link>
-                </li>
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[10px] ${
+                          done
+                            ? "border-brand-500 bg-brand-500 text-white"
+                            : "border-ink/25 text-ink/40"
+                        }`}
+                      >
+                        {done ? "✓" : i + 1}
+                      </span>
+                      <span className="flex-1">{l.title}</span>
+                    </Link>
+                  </li>
+                  {showAssignment && (
+                    <li>
+                      <Link
+                        href={`/courses/${course.slug}/${l.slug}#assignment`}
+                        className={`flex items-center gap-2 rounded-lg px-2 py-2 text-sm ${
+                          active
+                            ? "bg-brand-50/70 font-medium text-brand-700"
+                            : "text-ink/60 hover:bg-ink/5"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[10px] ${
+                            passed
+                              ? "border-brand-500 bg-brand-500 text-white"
+                              : "border-brand-300 text-brand-500"
+                          }`}
+                        >
+                          {passed ? "✓" : "📝"}
+                        </span>
+                        <span className="flex-1">Assignment</span>
+                        {submitted && !passed && (
+                          <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-600">
+                            sent
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  )}
+                </Fragment>
               );
             })}
           </ol>
@@ -173,7 +221,10 @@ export default function LessonView({
           )}
 
           {moduleTasks.length > 0 && (
-            <div className="mt-8 space-y-4">
+            <div id="assignment" className="mt-10 scroll-mt-24 space-y-4">
+              <h2 className="text-sm font-semibold uppercase tracking-widest text-brand-500">
+                {moduleTasks.length === 1 ? "Module assignment" : "Module assignments"}
+              </h2>
               {moduleTasks.map((t) => (
                 <ModuleTask
                   key={t.id}
