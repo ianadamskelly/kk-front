@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Lesson } from "@/lib/api";
+import { Lesson, type CourseTask } from "@/lib/api";
 import { useCourseProgress } from "@/lib/progress";
 
 interface Group {
@@ -25,12 +25,23 @@ function group(lessons: Lesson[]): Group[] {
 export default function CourseCurriculum({
   courseSlug,
   lessons,
+  tasks,
 }: {
   courseSlug: string;
   lessons: Lesson[];
+  tasks?: CourseTask[];
 }) {
   const { isComplete, loaded } = useCourseProgress(courseSlug);
   const groups = group(lessons);
+  // How many graded tasks each module carries, so we can flag modules
+  // that end in an assignment.
+  const taskCountByModule = (tasks || []).reduce<Record<string, number>>(
+    (acc, t) => {
+      acc[t.module] = (acc[t.module] || 0) + 1;
+      return acc;
+    },
+    {},
+  );
   const done = loaded
     ? lessons.filter((l) => isComplete(l.slug)).length
     : 0;
@@ -90,6 +101,16 @@ export default function CourseCurriculum({
                 );
               })}
             </ul>
+            {taskCountByModule[g.module] > 0 && (
+              <div className="mt-2 flex items-center gap-2 rounded-2xl border border-dashed border-brand-300 bg-brand-50/50 px-4 py-2.5 text-sm text-brand-700">
+                <span aria-hidden>📝</span>
+                <span className="font-medium">
+                  {taskCountByModule[g.module] === 1
+                    ? "Graded assignment at the end of this module"
+                    : `${taskCountByModule[g.module]} graded assignments in this module`}
+                </span>
+              </div>
+            )}
           </div>
         ))}
       </div>

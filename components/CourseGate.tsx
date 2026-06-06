@@ -51,7 +51,11 @@ export function CurriculumGate({ initialCourse }: { initialCourse: Course }) {
     return <p className="text-sm text-ink/55">Lessons coming soon.</p>;
   }
   return (
-    <CourseCurriculum courseSlug={course.slug} lessons={course.lessons} />
+    <CourseCurriculum
+      courseSlug={course.slug}
+      lessons={course.lessons}
+      tasks={course.tasks}
+    />
   );
 }
 
