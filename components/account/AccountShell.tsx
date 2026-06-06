@@ -18,6 +18,7 @@ const NAV: { href: string; label: string; icon: string }[] = [
   { href: "/account/downloads", label: "My Downloads", icon: "⬇️" },
   { href: "/account/assets", label: "My Tools", icon: "✍️" },
   { href: "/account/courses", label: "My Courses", icon: "🎓" },
+  { href: "/account/certificates", label: "My Certificates", icon: "🎖️" },
   { href: "/account/tickets", label: "Complaints", icon: "💬" },
   { href: "/account/testimonials", label: "Testimonials", icon: "⭐" },
   { href: "/account/profile", label: "Profile Settings", icon: "👤" },

@@ -337,6 +337,21 @@ export interface Course {
   locked?: boolean;
 }
 
+// A course-completion certificate issued to the signed-in user. `code`
+// is the public verify/download identifier.
+export interface Certificate {
+  id: number;
+  code: string;
+  userId: number;
+  courseId: number;
+  issuedAt: string;
+  // Course context, present on /api/account/certificates so the UI can
+  // render the title/cover without the owned-courses list.
+  courseTitle?: string;
+  courseSlug?: string;
+  courseCover?: string;
+}
+
 export interface LibraryResource {
   id: number;
   slug: string;
