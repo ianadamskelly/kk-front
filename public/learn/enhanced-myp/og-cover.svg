@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a3d62"/>
+      <stop offset="100%" stop-color="#1e6091"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f6a609"/>
+      <stop offset="100%" stop-color="#ef6c00"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1050" cy="120" r="180" fill="#f6a609" opacity="0.18"/>
+  <circle cx="120" cy="540" r="220" fill="#ffffff" opacity="0.06"/>
+  <text x="80" y="200" font-family="Georgia, serif" font-size="44" fill="#f6a609" font-weight="700">A PRACTICAL GUIDE FOR TEACHERS</text>
+  <text x="80" y="310" font-family="Georgia, serif" font-size="96" fill="#ffffff" font-weight="700">Enhanced MYP</text>
+  <text x="80" y="400" font-family="Georgia, serif" font-size="96" fill="url(#accent)" font-weight="700">Navigator</text>
+  <text x="80" y="490" font-family="-apple-system, Segoe UI, sans-serif" font-size="32" fill="#cdd6e3">Concepts · ATL · Contextual Lenses · Community Engagement</text>
+  <text x="80" y="540" font-family="-apple-system, Segoe UI, sans-serif" font-size="28" fill="#93a0b4">Ready for the September 2027 launch</text>
+</svg>

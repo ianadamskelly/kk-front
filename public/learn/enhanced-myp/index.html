@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a3d62" />
+
+<title>Enhanced MYP Navigator — A Teacher's Guide to the IB MYP Enhancements (2027)</title>
+<meta name="description" content="A practical, interactive guide for teachers to the Enhanced IB Middle Years Programme. Compare old vs new, practise inquiry questions, explore Specified Concepts, ATL, Contextual Lenses, Community Engagement, and the new 3-criterion assessment model — ready for September 2027." />
+<meta name="keywords" content="Enhanced MYP, IB MYP enhancements, MYP 2027, IB Middle Years Programme, Specified Concepts, Approaches to Learning, ATL, Global Contexts, Contextual Lenses, Inquiry Question, Statement of Inquiry, Community Engagement, MYP assessment, MYP unit planning, IB teacher resources, MYP eAssessment 2030" />
+<meta name="author" content="Enhanced MYP Navigator" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://enhanced-myp-navigator.example/" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Enhanced MYP Navigator — A Teacher's Guide to the IB MYP Enhancements" />
+<meta property="og:description" content="Interactive, mobile-friendly guide to the Enhanced IB MYP: Specified Concepts, ATL, Contextual Lenses, Community Engagement, the new 3-criterion assessment. Practise, compare, apply." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image" content="og-cover.svg" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Enhanced MYP Navigator — A Teacher's Guide" />
+<meta name="twitter:description" content="Practical, interactive guide to the IB MYP Enhancements coming September 2027." />
+<meta name="twitter:image" content="og-cover.svg" />
+
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="stylesheet" href="styles.css" />
+
+<!-- Structured data: educational website + FAQ + course outline -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Enhanced MYP Navigator",
+      "url": "https://enhanced-myp-navigator.example/",
+      "description": "A practical, interactive guide for teachers to the Enhanced IB Middle Years Programme.",
+      "inLanguage": "en",
+      "publisher": { "@type": "EducationalOrganization", "name": "Enhanced MYP Navigator" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://enhanced-myp-navigator.example/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Course",
+      "name": "The Enhanced MYP for Teachers",
+      "description": "A self-paced, interactive overview of the four pillars of the Enhanced IB Middle Years Programme: Concepts, ATL, Contextual Lenses, and Community Engagement.",
+      "provider": { "@type": "EducationalOrganization", "name": "Enhanced MYP Navigator" },
+      "educationalLevel": "Secondary education",
+      "audience": { "@type": "EducationalAudience", "educationalRole": "teacher" },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "online",
+        "courseWorkload": "PT2H"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "When does the Enhanced MYP launch?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The Enhanced MYP beta began in December 2024. Full mandatory launch is September 2027, with the first eAssessment under the new model in May 2030." }
+        },
+        {
+          "@type": "Question",
+          "name": "What replaces the Statement of Inquiry?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Teachers can now use an Inquiry Statement or an Inquiry Question. There is no longer a requirement to embed a Key Concept, Related Concept and Global Context into one sentence." }
+        },
+        {
+          "@type": "Question",
+          "name": "What happened to Key and Related Concepts?",
+          "acceptedAnswer": { "@type": "Answer", "text": "They have been merged into a single list of Specified Concepts per subject group (around 25+ per subject). Schools can add their own concepts to reflect local priorities." }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the three Contextual Lenses?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Individual, Local, and Global. They are used alongside (or instead of) the six Global Contexts and force teachers to specify the angle of a unit." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many assessment criteria are there now?",
+          "acceptedAnswer": { "@type": "Answer", "text": "All subjects move to three criteria with fewer strands. Arts, Physical & Health Education, and Design now share a criterion family (Investigating, Applying, Evaluating)." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" role="banner">
+  <div class="container nav-row">
+    <a href="#top" class="brand" aria-label="Enhanced MYP Navigator home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28">
+          <circle cx="16" cy="16" r="15" fill="#0a3d62"/>
+          <path d="M8 22 L8 10 L12 10 L16 16 L20 10 L24 10 L24 22 L20 22 L20 16 L16 21 L12 16 L12 22 Z" fill="#fff"/>
+        </svg>
+      </span>
+      <span class="brand-text">Enhanced MYP <em>Navigator</em></span>
+    </a>
+
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#pillars">Four Pillars</a></li>
+        <li><a href="#compare">Compare</a></li>
+        <li><a href="#planner">Plan a Unit</a></li>
+        <li><a href="#practice">Practise</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- ===================== HERO ===================== -->
+<section id="top" class="hero">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <p class="eyebrow">For MYP teachers · Beta now · Live by Sept 2027</p>
+      <h1>Make sense of the <span class="grad-text">Enhanced MYP</span> — without drowning in jargon.</h1>
+      <p class="lede">A practical, plain-language guide to the four pillars, the new 3-criterion assessment, Inquiry Questions, Specified Concepts and Contextual Lenses. Built for teachers who plan on Monday.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#overview">Start in 2 minutes</a>
+        <a class="btn btn-ghost" href="#practice">Try a practice activity</a>
+      </div>
+
+      <ul class="hero-stats" role="list">
+        <li><strong>4</strong><span>Pillars of change</span></li>
+        <li><strong>3</strong><span>Criteria per subject</span></li>
+        <li><strong>1</strong><span>Inquiry Question per unit</span></li>
+      </ul>
+    </div>
+
+    <aside class="hero-card" aria-label="Quick countdown">
+      <h2 class="card-title">Key dates</h2>
+      <ul class="timeline">
+        <li><span class="dot done"></span><b>Dec 2024</b> — Beta trial launches</li>
+        <li><span class="dot now"></span><b>Now (May 2026)</b> — Refine practice with beta units</li>
+        <li><span class="dot"></span><b>Sept 2027</b> — Full launch · new guides on IB Exchange</li>
+        <li><span class="dot"></span><b>May 2030</b> — First eAssessment under new model</li>
+      </ul>
+      <p class="countdown" data-target="2027-09-01">Counting down to launch…</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ===================== OVERVIEW ===================== -->
+<section id="overview" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Start here</p>
+      <h2>What actually changes — in 90 seconds</h2>
+      <p class="lede">The Enhanced MYP is an <strong>evolution, not a rewrite</strong>. The IB kept the soul of the programme (concept-driven inquiry, international-mindedness) and simplified the paperwork around it.</p>
+    </header>
+
+    <div class="overview-grid">
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🧭</span>
+        <h3>Less bureaucracy</h3>
+        <p>Shorter ATL lists. No more rigid "In order to… students must…" statement. The planner is a thinking tool, not a compliance form.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🎯</span>
+        <h3>More teacher agency</h3>
+        <p>You decide when and how to teach a skill. The terms <em>implicit</em> and <em>explicit</em> are gone — teach concepts the way your learners need them.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🔍</span>
+        <h3>Sharper inquiry</h3>
+        <p>The Statement of Inquiry becomes an <strong>Inquiry Question</strong> a 12-year-old actually wants to answer. Curiosity over compliance.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🤝</span>
+        <h3>With, not for</h3>
+        <p>"Service as Action" becomes <strong>Community Engagement</strong>. Action <em>with</em> the community, not <em>to</em> it. Dialogue, relationships, principled action.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">📐</span>
+        <h3>Three criteria. Period.</h3>
+        <p>Every subject now uses <strong>3 criteria</strong> with fewer strands. Design slims 16 strands to 6. Arts, PHE and Design share a family.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🌍</span>
+        <h3>Lens it</h3>
+        <p>Pair any Global Context with one of three <strong>Contextual Lenses</strong>: Individual · Local · Global. No more generic tagging.</p>
+      </article>
+    </div>
+
+    <details class="callout">
+      <summary><strong>Read this if you're brand new to the MYP</strong></summary>
+      <p>The Middle Years Programme is the IB's framework for ages 11–16 (Y1–Y5). Students learn through inquiry, in eight subject groups, anchored by big concepts and real-world contexts. They complete a <em>Community Project</em> (Y3) and a <em>Personal Project</em> (Y5). The Enhanced MYP changes <em>how</em> teachers plan and assess — not <em>what</em> students learn.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ===================== FOUR PILLARS ===================== -->
+<section id="pillars" class="section section-alt">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Deep dive</p>
+      <h2>The four pillars of change</h2>
+      <p class="lede">Tap a tab to explore each pillar. Each section has a "What changed", "Why it matters", and a "Try this Monday" prompt.</p>
+    </header>
+
+    <div class="tabs" data-tabs>
+      <div role="tablist" aria-label="Four pillars">
+        <button role="tab" id="tab-concepts" aria-controls="panel-concepts" aria-selected="true" class="tab is-active">Concepts</button>
+        <button role="tab" id="tab-atl" aria-controls="panel-atl" aria-selected="false" class="tab">ATL Skills</button>
+        <button role="tab" id="tab-contexts" aria-controls="panel-contexts" aria-selected="false" class="tab">Contexts &amp; Lenses</button>
+        <button role="tab" id="tab-community" aria-controls="panel-community" aria-selected="false" class="tab">Community Engagement</button>
+      </div>
+
+      <!-- Concepts panel -->
+      <div role="tabpanel" id="panel-concepts" aria-labelledby="tab-concepts" class="panel is-active">
+        <div class="panel-grid">
+          <div>
+            <h3>1. Specified Concepts</h3>
+            <p><b>What changed:</b> The two-tier "Key + Related" concept system is gone. Each subject group now has a single curated list of about <strong>25+ Specified Concepts</strong>. Schools can add their own (e.g. <em>justice</em>, <em>sustainability</em>).</p>
+            <p><b>Why it matters:</b> Concepts become functional — they should appear in the inquiry question, the teaching, and the summative task. Anything else is decoration.</p>
+            <p><b>Try this Monday:</b> Open one current unit. Highlight the <em>Key Concept</em>. Ask: "If I removed this, would the unit still work?" If yes — it was decoration. Replace it with one that the assessment task actually rewards.</p>
+            <h4>Sample Specified Concepts</h4>
+            <div class="chip-grid" data-subject-chips>
+              <div class="chip-group" data-subject="Sciences"><h5>Sciences</h5><span>models</span><span>evidence</span><span>systems</span><span>change</span><span>energy</span><span>scale</span><span>cause</span></div>
+              <div class="chip-group" data-subject="Mathematics"><h5>Mathematics</h5><span>pattern</span><span>representation</span><span>relationships</span><span>quantity</span><span>validity</span><span>generalisation</span><span>form</span></div>
+              <div class="chip-group" data-subject="Arts"><h5>Arts</h5><span>expression</span><span>audience</span><span>identity</span><span>aesthetics</span><span>composition</span><span>intention</span></div>
+              <div class="chip-group" data-subject="Lang &amp; Lit"><h5>Lang &amp; Lit</h5><span>perspective</span><span>voice</span><span>context</span><span>structure</span><span>purpose</span><span>audience</span></div>
+              <div class="chip-group" data-subject="Individuals &amp; Societies"><h5>Individuals &amp; Societies</h5><span>power</span><span>causality</span><span>equity</span><span>time</span><span>place</span><span>systems</span></div>
+              <div class="chip-group" data-subject="Design"><h5>Design</h5><span>function</span><span>form</span><span>user</span><span>sustainability</span><span>iteration</span><span>communication</span></div>
+              <div class="chip-group" data-subject="PHE"><h5>Physical &amp; Health Ed</h5><span>movement</span><span>well-being</span><span>balance</span><span>performance</span><span>identity</span></div>
+              <div class="chip-group" data-subject="Lang Acquisition"><h5>Language Acquisition</h5><span>meaning</span><span>audience</span><span>register</span><span>culture</span><span>message</span></div>
+            </div>
+          </div>
+          <aside class="aside-tip">
+            <h4>Plain-English definition</h4>
+            <p><strong>A specified concept</strong> is a big idea your subject keeps returning to — the thing students will still understand five years from now, when they've forgotten the textbook page.</p>
+            <hr/>
+            <h4>Watch out for…</h4>
+            <ul class="check"><li>Concepts that sound impressive but don't drive the assessment.</li><li>Adding "school concepts" without retiring redundant ones.</li><li>Treating "no formula" as "no concept needed." Concepts still anchor learning.</li></ul>
+          </aside>
+        </div>
+      </div>
+
+      <!-- ATL panel -->
+      <div role="tabpanel" id="panel-atl" aria-labelledby="tab-atl" class="panel" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>2. Approaches to Learning (ATL)</h3>
+            <p><b>What stays:</b> the five categories — Thinking, Communication, Social, Self-management, Research.</p>
+            <p><b>What changed:</b></p>
+            <ul class="check">
+              <li>The <strong>10 sub-clusters are removed</strong> for PYP→MYP→DP coherence.</li>
+              <li>The "<em>In order to… students must…</em>" sentence is no longer required.</li>
+              <li>The terms <em>implicit</em> and <em>explicit</em> are gone — teachers decide <em>when</em> and <em>how</em>.</li>
+              <li>Skill development moves to the <strong>curriculum overview</strong>, not unit-by-unit logging.</li>
+            </ul>
+            <p><b>Try this Monday:</b> Write one sentence in plain English: "In this unit, students will practise [skill] by [task]." Done.</p>
+
+            <h4>The 5 ATL categories — explore</h4>
+            <div class="atl-cards">
+              <article class="atl-card" data-cat="Thinking"><h5>Thinking</h5><p>Critical, creative, transfer.</p><span class="atl-eg">e.g. evaluate a source, generate alternative solutions, transfer a maths strategy to a science problem.</span></article>
+              <article class="atl-card" data-cat="Communication"><h5>Communication</h5><p>Exchanging information.</p><span class="atl-eg">e.g. give and receive feedback, present a finding clearly, adapt tone for different audiences.</span></article>
+              <article class="atl-card" data-cat="Social"><h5>Social</h5><p>Collaboration.</p><span class="atl-eg">e.g. negotiate roles, resolve disagreement, share responsibility in group work.</span></article>
+              <article class="atl-card" data-cat="Self-management"><h5>Self-management</h5><p>Organisation &amp; affective.</p><span class="atl-eg">e.g. plan deadlines, manage focus, persist after setbacks.</span></article>
+              <article class="atl-card" data-cat="Research"><h5>Research</h5><p>Information &amp; media literacy.</p><span class="atl-eg">e.g. evaluate sources, organise notes, cross-reference data.</span></article>
+            </div>
+          </div>
+
+          <aside class="aside-tip">
+            <h4>Old vs new ATL statement</h4>
+            <p><b>Old:</b> "In order to <em>analyse the impact of trade routes</em>, students must <em>organise information from multiple sources</em> (Research: information literacy)."</p>
+            <p><b>New:</b> "Students will practise <em>organising information from multiple sources</em> (Research) as they investigate trade routes."</p>
+            <hr/>
+            <h4>Plain-English definition</h4>
+            <p><strong>ATL skills</strong> are the transferable habits — how to think, talk, work together, manage yourself, and find things out — that make the content stick.</p>
+          </aside>
+        </div>
+      </div>
+
+      <!-- Contexts panel -->
+      <div role="tabpanel" id="panel-contexts" aria-labelledby="tab-contexts" class="panel" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>3. Global Contexts &amp; Three Contextual Lenses</h3>
+            <p>The six Global Contexts <strong>remain</strong>:</p>
+            <ol class="gc-list">
+              <li>Identities and relationships</li>
+              <li>Orientation in space and time</li>
+              <li>Personal and cultural expression</li>
+              <li>Scientific and technical innovation</li>
+              <li>Globalization and sustainability</li>
+              <li>Fairness and development</li>
+            </ol>
+
+            <p><b>What's new:</b> three <strong>Contextual Lenses</strong> — Individual, Local, Global — used <em>alongside</em> (or instead of) a global context. The global context is <strong>optional</strong> in the inquiry framing.</p>
+
+            <div class="lens-row">
+              <button class="lens-card" data-lens="individual" aria-pressed="false">
+                <span class="lens-emoji" aria-hidden="true">🪞</span>
+                <b>Individual</b>
+                <span>Why does this matter to <em>me</em>?</span>
+              </button>
+              <button class="lens-card" data-lens="local" aria-pressed="false">
+                <span class="lens-emoji" aria-hidden="true">🏘️</span>
+                <b>Local</b>
+                <span>How does this look in <em>my city / school</em>?</span>
+              </button>
+              <button class="lens-card" data-lens="global" aria-pressed="false">
+                <span class="lens-emoji" aria-hidden="true">🌐</span>
+                <b>Global</b>
+                <span>How does this connect to <em>humanity</em>?</span>
+              </button>
+            </div>
+
+            <div class="lens-example" data-lens-example>
+              <h4>Worked example — Statistics unit</h4>
+              <p>Global Context: <em>Fairness and Development</em>.</p>
+              <p><b>Pick a lens above</b> to see how the same unit can be reframed.</p>
+            </div>
+          </div>
+          <aside class="aside-tip">
+            <h4>Why the lenses help</h4>
+            <p>They fix the "compliance tag" problem — a fractions unit labelled <em>Fairness and Development</em> just because fractions can be used for fair sharing. The lenses force a real angle.</p>
+            <hr/>
+            <h4>Pick <em>one</em> lens</h4>
+            <p>You can combine, but don't tag all three. One genuine lens beats three vague ones.</p>
+          </aside>
+        </div>
+      </div>
+
+      <!-- Community panel -->
+      <div role="tabpanel" id="panel-community" aria-labelledby="tab-community" class="panel" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>4. Community Engagement</h3>
+            <p>"Service as Action" becomes <strong>Community Engagement</strong>. The shift is from <em>"for"</em> to <em>"with"</em>.</p>
+
+            <h4>Four Learning Objectives</h4>
+            <ol class="check">
+              <li><b>Explore</b> systems and develop awareness of your role.</li>
+              <li><b>Foster dialogue</b> and build relationships.</li>
+              <li><b>Engage</b> in reflective &amp; reflexive practice.</li>
+              <li><b>Develop</b> and conduct principled action.</li>
+            </ol>
+
+            <h4>Five Forms of Engagement</h4>
+            <div class="form-row">
+              <span class="pill">Advocacy</span>
+              <span class="pill">Action Research</span>
+              <span class="pill">Social Entrepreneurship</span>
+              <span class="pill">Participation</span>
+              <span class="pill">Community-building</span>
+            </div>
+
+            <p><b>Try this Monday:</b> Pick one current unit. Where could a student have an honest conversation with a community member that changes their thinking? That's your engagement angle.</p>
+          </div>
+          <aside class="aside-tip">
+            <h4>From "to" to "with"</h4>
+            <p>Old framing: "Year 8 will run a beach clean-up <em>for</em> the local town."</p>
+            <p>New framing: "Year 8 will meet with the local council and the waste team to co-design a behaviour-change campaign <em>with</em> them."</p>
+            <hr/>
+            <h4>Plain-English definition</h4>
+            <p><strong>Community Engagement</strong> is what happens when students sit at the table with the people their learning affects — and then act, together.</p>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPARE ===================== -->
+<section id="compare" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Side by side</p>
+      <h2>Current MYP vs Enhanced MYP — the real diff</h2>
+      <p class="lede">Toggle a row to see the before/after framing. Useful in a department meeting or parent comms.</p>
+    </header>
+
+    <div class="compare-table" role="table" aria-label="Comparison of current and enhanced MYP">
+      <div class="ct-head" role="row">
+        <div role="columnheader">Element</div>
+        <div role="columnheader">Current MYP</div>
+        <div role="columnheader">Enhanced MYP</div>
+      </div>
+
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Concepts</b></div>
+        <div role="cell" data-label="Current">Key Concepts (16) + Related Concepts per subject</div>
+        <div role="cell" data-label="Enhanced">Single <em>Specified Concepts</em> list (~25+) per subject — adaptable</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Inquiry framing</b></div>
+        <div role="cell" data-label="Current">Statement of Inquiry (KC + RC + GC in one sentence)</div>
+        <div role="cell" data-label="Enhanced">Inquiry <em>Statement</em> or <em>Question</em>; no required elements</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Guiding questions</b></div>
+        <div role="cell" data-label="Current">Must classify Factual / Conceptual / Debatable</div>
+        <div role="cell" data-label="Enhanced">Free-form guiding questions</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Global Contexts</b></div>
+        <div role="cell" data-label="Current">One of six, required in SOI</div>
+        <div role="cell" data-label="Enhanced">Optional, paired with Individual/Local/Global lenses</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>ATL</b></div>
+        <div role="cell" data-label="Current">10 sub-clusters, formula statement, implicit/explicit</div>
+        <div role="cell" data-label="Enhanced">5 categories, plain-prose, teacher agency</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Service</b></div>
+        <div role="cell" data-label="Current">Service as Action · 7 outcomes · direct/indirect</div>
+        <div role="cell" data-label="Enhanced">Community Engagement · 4 objectives · 5 forms</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Interdisciplinary</b></div>
+        <div role="cell" data-label="Current">2 per year</div>
+        <div role="cell" data-label="Enhanced">1 planned + assessed per year</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Assessment criteria</b></div>
+        <div role="cell" data-label="Current">4 per subject, many strands</div>
+        <div role="cell" data-label="Enhanced">3 per subject · fewer strands · Arts/PHE/Design share a family</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Citations</b></div>
+        <div role="cell" data-label="Current">Graded in some subjects</div>
+        <div role="cell" data-label="Enhanced">Not graded (still taught)</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Pathways</b></div>
+        <div role="cell" data-label="Current">Single model Y1–5</div>
+        <div role="cell" data-label="Enhanced">4 pathway options (generic → specific)</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Guidance format</b></div>
+        <div role="cell" data-label="Current">Static PDFs</div>
+        <div role="cell" data-label="Enhanced">Interactive <em>IB Exchange</em> platform</div>
+      </div>
+    </div>
+
+    <!-- Assessment criteria interactive -->
+    <div class="assess-block">
+      <h3>The new 3-criterion model by subject</h3>
+      <p>Click a subject to see its three criteria.</p>
+      <div class="assess-grid" data-assess>
+        <button class="ab" data-subject="Language &amp; Literature" data-criteria="Understanding · Applying · Communicating">Language &amp; Literature</button>
+        <button class="ab" data-subject="Language Acquisition" data-criteria="Knowing &amp; Understanding · Using written form · Using spoken form">Language Acquisition</button>
+        <button class="ab" data-subject="Individuals &amp; Societies" data-criteria="Planning &amp; Evaluating · Analysing · Applying">Individuals &amp; Societies</button>
+        <button class="ab" data-subject="Sciences" data-criteria="Knowing &amp; Understanding · Investigating · Exploring beyond the classroom">Sciences</button>
+        <button class="ab" data-subject="Mathematics" data-criteria="Knowing &amp; Understanding · Investigating · Exploring beyond the classroom">Mathematics</button>
+        <button class="ab" data-subject="Arts" data-criteria="Investigating · Applying · Evaluating">Arts</button>
+        <button class="ab" data-subject="Physical &amp; Health Ed" data-criteria="Investigating · Applying · Evaluating">Physical &amp; Health Ed</button>
+        <button class="ab" data-subject="Design" data-criteria="Investigating · Applying · Evaluating">Design</button>
+      </div>
+      <output class="assess-out" data-assess-out aria-live="polite">Pick a subject to see its criteria…</output>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PLANNER ===================== -->
+<section id="planner" class="section section-alt">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Apply it</p>
+      <h2>Plan an Enhanced MYP unit in 6 fields</h2>
+      <p class="lede">A live mini-planner. Fill the fields and we'll generate a clean, copy-ready outline using the new framing — Inquiry Question, lens, ATL, community angle, and a 3-criterion task stem.</p>
+    </header>
+
+    <form class="planner" data-planner aria-label="Unit planner">
+      <div class="grid-2">
+        <label>Unit title
+          <input type="text" name="title" placeholder="e.g. Patterns in Number Systems" />
+        </label>
+        <label>Subject
+          <select name="subject">
+            <option>Sciences</option><option>Mathematics</option><option>Arts</option>
+            <option>Language &amp; Literature</option><option>Language Acquisition</option>
+            <option>Individuals &amp; Societies</option><option>Physical &amp; Health Ed</option><option>Design</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="grid-2">
+        <label>Specified Concept(s)
+          <input type="text" name="concept" placeholder="e.g. pattern, representation" />
+        </label>
+        <label>Contextual Lens
+          <select name="lens">
+            <option>Individual</option><option>Local</option><option>Global</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Inquiry Question <small>(provocative, not Googleable)</small>
+        <input type="text" name="iq" placeholder="e.g. Why does every culture in history invent a number system, and why do they all look different?" />
+      </label>
+
+      <div class="grid-2">
+        <label>ATL skill in focus
+          <select name="atl">
+            <option>Thinking</option><option>Communication</option><option>Social</option><option>Self-management</option><option>Research</option>
+          </select>
+        </label>
+        <label>Community Engagement angle <small>(optional)</small>
+          <input type="text" name="ce" placeholder="e.g. interview a local accountant about how they use number systems" />
+        </label>
+      </div>
+
+      <div class="planner-actions">
+        <button type="button" class="btn btn-primary" data-planner-generate>Generate outline</button>
+        <button type="button" class="btn btn-ghost" data-planner-copy>Copy to clipboard</button>
+        <button type="button" class="btn btn-ghost" data-planner-reset>Reset</button>
+      </div>
+    </form>
+
+    <pre class="planner-out" data-planner-out aria-live="polite">Your outline will appear here.</pre>
+    <div class="planner-feedback" data-planner-feedback aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ===================== PRACTICE ===================== -->
+<section id="practice" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Practise</p>
+      <h2>Try it before Monday</h2>
+      <p class="lede">Three quick, no-stakes activities. No login. No data leaves your browser.</p>
+    </header>
+
+    <div class="practice-grid">
+      <!-- 1. SOI -> IQ rewriter -->
+      <article class="practice-card">
+        <h3>① Rewrite a Statement of Inquiry as an Inquiry Question</h3>
+        <p>Type or paste an old SOI. We'll suggest curiosity-driven rewrites and show strong examples from your subject.</p>
+        <textarea data-soi placeholder="e.g. The form of number systems reflects logical relationships that allow efficient representation of quantity." rows="3"></textarea>
+        <label class="inline">
+          <span class="visually-hidden">Subject</span>
+          <select data-soi-subject>
+            <option>Sciences</option><option>Mathematics</option><option>Arts</option>
+            <option>Language &amp; Literature</option><option>Language Acquisition</option>
+            <option>Individuals &amp; Societies</option><option>Physical &amp; Health Ed</option><option>Design</option>
+          </select>
+        </label>
+        <div class="row">
+          <button class="btn btn-primary" data-soi-rewrite>Suggest a rewrite</button>
+        </div>
+        <output class="practice-out" data-soi-out aria-live="polite">Your suggested inquiry question will appear here.</output>
+      </article>
+
+      <!-- 2. Quiz -->
+      <article class="practice-card">
+        <h3>② 5-question quick check</h3>
+        <p>Test what you remember about the Enhanced MYP. Instant feedback.</p>
+        <div class="quiz" data-quiz aria-live="polite"></div>
+        <div class="row"><button class="btn btn-ghost" data-quiz-reset>Restart</button></div>
+      </article>
+
+      <!-- 3. Flashcards -->
+      <article class="practice-card">
+        <h3>③ Term flashcards</h3>
+        <p>Tap the card to flip. Use the arrow keys to navigate.</p>
+        <div class="flash" data-flash tabindex="0" role="button" aria-label="Flashcard — press space or click to flip">
+          <div class="flash-inner">
+            <div class="flash-face flash-front"><span class="flash-term">Specified Concept</span></div>
+            <div class="flash-face flash-back"><span class="flash-def">A big idea your subject keeps returning to. One curated list per subject group (~25+). Schools can adapt.</span></div>
+          </div>
+        </div>
+        <div class="flash-nav">
+          <button class="btn btn-ghost" data-flash-prev aria-label="Previous">←</button>
+          <span data-flash-count>1 / 8</span>
+          <button class="btn btn-ghost" data-flash-next aria-label="Next">→</button>
+        </div>
+      </article>
+
+      <!-- 4. Inquiry question grader -->
+      <article class="practice-card">
+        <h3>④ Inquiry-question health check</h3>
+        <p>Paste a question — the engine scores it across six dimensions and surfaces strong examples from your subject.</p>
+        <input type="text" data-iqcheck placeholder="e.g. What is the formula for the area of a circle?" />
+        <label class="inline">
+          <span class="visually-hidden">Subject</span>
+          <select data-iqcheck-subject>
+            <option>Sciences</option><option>Mathematics</option><option>Arts</option>
+            <option>Language &amp; Literature</option><option>Language Acquisition</option>
+            <option>Individuals &amp; Societies</option><option>Physical &amp; Health Ed</option><option>Design</option>
+          </select>
+        </label>
+        <div class="row"><button class="btn btn-primary" data-iqcheck-go>Check it</button></div>
+        <output class="practice-out" data-iqcheck-out aria-live="polite">Awaiting question…</output>
+      </article>
+
+      <!-- 5. Community Engagement check (NEW) -->
+      <article class="practice-card practice-card-wide">
+        <h3>⑤ Community Engagement check</h3>
+        <p>Describe your planned engagement in 1–3 sentences. The engine flags charity / one-way framing, missing partners, missing action verbs, and outdated language.</p>
+        <textarea data-ce-input rows="3" placeholder="e.g. Year 8 will run a beach clean-up for the community to help reduce plastic waste."></textarea>
+        <div class="row"><button class="btn btn-primary" data-ce-go>Check it</button></div>
+        <output class="practice-out" data-ce-out aria-live="polite">Awaiting description…</output>
+      </article>
+
+      <!-- 6. Concept Usage check (NEW) -->
+      <article class="practice-card practice-card-wide">
+        <h3>⑥ Concept-in-task check</h3>
+        <p>Type your Specified Concept and the task you'll set. The engine checks whether the task <em>actually</em> rewards the concept — and flags low-level verbs.</p>
+        <div class="grid-2">
+          <label>Specified Concept
+            <input type="text" data-cu-concept placeholder="e.g. systems" />
+          </label>
+          <label>Subject
+            <select data-cu-subject>
+              <option>Sciences</option><option>Mathematics</option><option>Arts</option>
+              <option>Language &amp; Literature</option><option>Language Acquisition</option>
+              <option>Individuals &amp; Societies</option><option>Physical &amp; Health Ed</option><option>Design</option>
+            </select>
+          </label>
+        </div>
+        <label>Task description
+          <textarea data-cu-task rows="3" placeholder="e.g. Students will define the parts of an ecosystem and list the producers and consumers."></textarea>
+        </label>
+        <div class="row"><button class="btn btn-primary" data-cu-go>Check it</button></div>
+        <output class="practice-out" data-cu-out aria-live="polite">Awaiting input…</output>
+      </article>
+    </div>
+
+    <p class="muted small kb-note">All checks run locally in your browser using a transparent rules-based knowledge base — no AI, no network, no data sent anywhere. The rule set is in <code>kb.js</code> if you want to inspect or extend it.</p>
+  </div>
+</section>
+
+<!-- ===================== GLOSSARY ===================== -->
+<section id="glossary" class="section section-alt">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Reference</p>
+      <h2>Plain-English glossary</h2>
+      <p class="lede">Filter the terms. Bookmark this page when you forget what something means.</p>
+    </header>
+
+    <div class="glossary-tools">
+      <label class="search">
+        <span class="visually-hidden">Search terms</span>
+        <input type="search" placeholder="Search a term, e.g. ‘ATL’ or ‘lens’" data-gloss-search />
+      </label>
+    </div>
+
+    <dl class="glossary" data-glossary>
+      <div><dt>Specified Concept</dt><dd>A big idea your subject keeps coming back to. Each subject has one curated list (~25+); schools may add their own. Replaces "Key" and "Related" concepts.</dd></div>
+      <div><dt>Inquiry Question</dt><dd>A provocative, non-Googleable question that frames a unit. Replaces the old Statement of Inquiry formula.</dd></div>
+      <div><dt>Inquiry Statement</dt><dd>The same role as the Inquiry Question, but phrased as a statement. Either is acceptable.</dd></div>
+      <div><dt>Statement of Inquiry (old)</dt><dd>One sentence combining a Key Concept + Related Concept + Global Context. No longer required.</dd></div>
+      <div><dt>ATL — Approaches to Learning</dt><dd>The transferable skills (Thinking, Communication, Social, Self-management, Research) students practise across every subject.</dd></div>
+      <div><dt>Skill cluster (old)</dt><dd>The 10 sub-categories under ATL. Removed in the Enhanced MYP.</dd></div>
+      <div><dt>Global Context</dt><dd>One of six big real-world frames (e.g. <em>Fairness and Development</em>) used to root learning in the wider world. Now optional in the inquiry framing.</dd></div>
+      <div><dt>Contextual Lens</dt><dd>Individual, Local, or Global. The specific angle from which a unit examines its context. Pick one — don't tag all three.</dd></div>
+      <div><dt>Community Engagement</dt><dd>The new name for "Service as Action". Action <em>with</em> the community, not <em>to</em> it. Four objectives, five forms.</dd></div>
+      <div><dt>Integrated Core</dt><dd>The four mandatory programme-wide elements: Interdisciplinary learning, ATL, Community Engagement, Self-Directed Projects.</dd></div>
+      <div><dt>Interdisciplinary Learning</dt><dd>Learning that deliberately combines two or more subject groups. At least one planned + assessed per year.</dd></div>
+      <div><dt>Community Project</dt><dd>A student-led project in Year 3. In the Enhanced MYP, no formal assessment criteria — evidence via journal, story, exhibition.</dd></div>
+      <div><dt>Personal Project</dt><dd>The capstone independent project in Year 5. Retained, with external moderation.</dd></div>
+      <div><dt>eAssessment</dt><dd>On-screen exams + ePortfolios for Year 5 students. First eAssessment under the new model is May 2030.</dd></div>
+      <div><dt>IB Exchange</dt><dd>The new interactive platform replacing static IB subject guide PDFs from 2027.</dd></div>
+      <div><dt>Subject-generic criteria</dt><dd>Shared rubric strands across subjects (Investigating, Applying, Evaluating). Suitable for younger MYP years.</dd></div>
+      <div><dt>Subject-specific criteria</dt><dd>Discipline-specific rubrics, used in later MYP years and required for Language Acquisition throughout.</dd></div>
+      <div><dt>Command term</dt><dd>An instruction verb like <em>analyse</em>, <em>justify</em>, <em>investigate</em>. Now embedded directly in achievement descriptors.</dd></div>
+      <div><dt>"I can…" statements</dt><dd>Asset-based, student-facing self-reflection statements aligned to the new criteria.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section id="faq" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Common questions</p>
+      <h2>FAQ — straight answers</h2>
+    </header>
+
+    <div class="faq">
+      <details><summary>When do I <em>have</em> to be teaching the Enhanced MYP?</summary><p>September 2027. The beta is voluntary. The first eAssessment under the new model is May 2030 — schools currently in eAssessment shouldn't use beta guidance with those students until the 2027 official publication.</p></details>
+      <details><summary>Do I have to throw out my old unit planners?</summary><p>No. Re-plan one or two anchor units in the new framing this year. Iterate. Most existing content survives — it's the framing and the rubric that change.</p></details>
+      <details><summary>Will my students still sit an MYP eAssessment?</summary><p>Yes — same model (on-screen exam + ePortfolio), now aligned to the 3-criterion structure from May 2030.</p></details>
+      <details><summary>Are Global Contexts dead?</summary><p>No. They remain, but they're <em>optional</em> in the inquiry framing and now sit alongside the three Contextual Lenses (Individual / Local / Global).</p></details>
+      <details><summary>What about the Personal Project?</summary><p>Retained with external moderation. The <em>Community Project</em> (Y3) is simplified — no formal assessment criteria.</p></details>
+      <details><summary>How do I know if a unit is "Enhanced MYP enough"?</summary><p>Ask three things: (1) Could a 12-year-old answer my inquiry question without genuine thinking? If yes, rewrite it. (2) Is my Specified Concept doing real work in the assessment task? (3) Have I picked a <em>specific</em> Contextual Lens, not a generic tag?</p></details>
+      <details><summary>I'm a new MYP teacher — where do I start?</summary><p>Start with the <a href="#overview">Overview</a> above, then <a href="#planner">plan one unit</a> using the mini-planner. The four pillars are the headline — everything else is detail.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RESOURCES ===================== -->
+<section id="resources" class="section section-alt">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Go deeper</p>
+      <h2>Sources &amp; further reading</h2>
+      <p class="lede">Every claim on this site is backed by the IB or an established MYP practitioner. Links open in a new tab.</p>
+    </header>
+
+    <div class="resources-grid">
+      <article class="res-card">
+        <h3>Primary IB sources</h3>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://ibo.org/programmes/middle-years-programme/curriculum/">MYP curriculum overview</a></li>
+          <li><a target="_blank" rel="noopener" href="https://pds.ibo.org/Prototype10MYPBeta-EN/course/en/assets/6752a5296bbe08d1d82df1c6/file.pdf">Enhancing the MYP BETA (PDF)</a></li>
+          <li><a target="_blank" rel="noopener" href="https://pds.ibo.org/the-enhancing-the-myp-beta-trial-explained-EN/">Beta trial explained</a></li>
+          <li><a target="_blank" rel="noopener" href="https://ibo.org/programmes/middle-years-programme/curriculum/interdisciplinary/">MYP Interdisciplinary Study</a></li>
+        </ul>
+      </article>
+      <article class="res-card">
+        <h3>Analysis &amp; commentary</h3>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://www.casieonline.org/post/enhancing-the-myp/">CASIE — Enhancing the MYP</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.managebac.com/blog/ib-launches-myp-enhancements-beta-trial">ManageBac — Beta launch summary</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.toddleapp.com/learn/blog-post/the-enhanced-myp-powered-by-toddle/">Toddle — The Enhanced MYP</a></li>
+          <li><a target="_blank" rel="noopener" href="https://alisonyang.com/myp-enhancement/">Building Learning Agility — MYP Enhancement</a></li>
+          <li><a target="_blank" rel="noopener" href="https://alisonyang.com/myp-enhancement-guide/">Building Learning Agility — Enhancement Guide</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.revisiondojo.com/blog/the-future-of-the-ib-middle-years-programme-trends-and-innovations">Revision Dojo — Future of the MYP</a></li>
+        </ul>
+      </article>
+      <article class="res-card">
+        <h3>Practical examples</h3>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://learnlattice.org/blog/enhancing-the-myp-what-changes/">LearnLattice — What changes &amp; how to prepare</a></li>
+          <li><a target="_blank" rel="noopener" href="https://learnlattice.org/blog/enhancing-myp-inquiry-questions/">LearnLattice — 20 inquiry-question examples</a></li>
+          <li><a target="_blank" rel="noopener" href="https://learnlattice.org/blog/enhancing-myp-specified-concepts/">LearnLattice — Specified Concepts guide</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.toddleapp.com/learn/docs/your-guide-to-getting-started-with-the-myp/part-2-how-are-myp-unit-plans-designed/global-contexts/">Toddle — Global Contexts guide</a></li>
+          <li><a target="_blank" rel="noopener" href="https://tutorsplus.com/the-complete-guide-to-the-six-global-contexts-in-the-ib-myp/">TutorsPlus — Six Global Contexts</a></li>
+        </ul>
+      </article>
+      <article class="res-card">
+        <h3>Original PD article</h3>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://mypenhanced-pd-by-dhruvkumar.base44.app/">Enhanced MYP — PD by Dhruvkumar</a> <small>(login required for full content)</small></li>
+        </ul>
+        <p class="muted"><small>Need the full research document? See <a href="ENHANCED_MYP_RESEARCH.md">ENHANCED_MYP_RESEARCH.md</a> in this project.</small></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="container foot-grid">
+    <div>
+      <p class="brand small"><span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="22" height="22"><circle cx="16" cy="16" r="15" fill="#fff"/><path d="M8 22 L8 10 L12 10 L16 16 L20 10 L24 10 L24 22 L20 22 L20 16 L16 21 L12 16 L12 22 Z" fill="#0a3d62"/></svg>
+      </span>Enhanced MYP Navigator</p>
+      <p class="muted small">A practical, teacher-built reference. Not affiliated with the IBO.</p>
+    </div>
+    <nav aria-label="Footer">
+      <h4>On this site</h4>
+      <ul><li><a href="#overview">Overview</a></li><li><a href="#pillars">Four Pillars</a></li><li><a href="#compare">Compare</a></li><li><a href="#planner">Plan a Unit</a></li><li><a href="#practice">Practise</a></li><li><a href="#glossary">Glossary</a></li><li><a href="#faq">FAQ</a></li><li><a href="#resources">Sources</a></li></ul>
+    </nav>
+    <div>
+      <h4>Built for</h4>
+      <p class="muted small">MYP coordinators, subject teachers, new IB hires, parents who like detail, and anyone who has to explain the Enhanced MYP next Tuesday.</p>
+    </div>
+  </div>
+  <p class="copyright">© <span data-year>2026</span> Enhanced MYP Navigator. All content under CC-BY 4.0.</p>
+</footer>
+
+<script src="kb.js" defer></script>
+<script src="evaluator.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

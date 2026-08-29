@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://enhanced-myp-navigator.example/sitemap.xml

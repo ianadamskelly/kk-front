@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#14746f" />
+
+<title>Enhanced PYP Navigator — A Teacher's Guide to the IB PYP (2018 + 2025, ready for 2027)</title>
+<meta name="description" content="A practical, interactive guide for teachers to the Enhanced IB Primary Years Programme — the 2018 framework refresh plus the 2025 evolution (subject continuums, refreshed transdisciplinary descriptors, Inquiry Learning Progressions). Practise authoring Central Ideas and Lines of Inquiry, explore the six themes, the seven key concepts, agency, action, and the PYP→MYP continuum." />
+<meta name="keywords" content="Enhanced PYP, IB Primary Years Programme, PYP 2025, PYP 2027, transdisciplinary themes, Central Idea, Lines of Inquiry, key concepts, Approaches to Learning, ATL, Learner Profile, student agency, action cycle, learning through play, PYP Exhibition, PYPX, subject continuums, Inquiry Learning Progressions, developmental phases, PYP to MYP" />
+<meta name="author" content="Enhanced PYP Navigator" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://enhanced-pyp-navigator.example/" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Enhanced PYP Navigator — A Teacher's Guide to the IB Primary Years Programme" />
+<meta property="og:description" content="Interactive, mobile-friendly guide to the Enhanced IB PYP: six transdisciplinary themes, seven key concepts, the 2025 subject continuums and Inquiry Learning Progressions, agency, action, and the PYP→MYP continuum. Author a Central Idea, check it, ship it." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image" content="og-cover.svg" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Enhanced PYP Navigator — A Teacher's Guide" />
+<meta name="twitter:description" content="Practical, interactive guide to the IB PYP — 2018 framework plus the 2025 evolution, ready for September 2027." />
+<meta name="twitter:image" content="og-cover.svg" />
+
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="stylesheet" href="styles.css" />
+
+<!-- Structured data: educational website + FAQ + course outline -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Enhanced PYP Navigator",
+      "url": "https://enhanced-pyp-navigator.example/",
+      "description": "A practical, interactive guide for teachers to the Enhanced IB Primary Years Programme.",
+      "inLanguage": "en",
+      "publisher": { "@type": "EducationalOrganization", "name": "Enhanced PYP Navigator" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://enhanced-pyp-navigator.example/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Course",
+      "name": "The Enhanced PYP for Teachers",
+      "description": "A self-paced, interactive overview of the Enhanced IB Primary Years Programme — three pillars, six transdisciplinary themes, seven key concepts, the action cycle, the 2025 subject continuums and the Inquiry Learning Progressions.",
+      "provider": { "@type": "EducationalOrganization", "name": "Enhanced PYP Navigator" },
+      "educationalLevel": "Primary education",
+      "audience": { "@type": "EducationalAudience", "educationalRole": "teacher" },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "online",
+        "courseWorkload": "PT2H"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the Enhanced PYP?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The 2018 framework refresh (\"PYP: From principles into practice\") that re-organised the programme around three pillars — the Learner, Learning and Teaching, and the Learning Community — and elevated student agency, the action cycle, and learning through play. The April 2025 evolution adds refreshed transdisciplinary descriptors, six new Subject Continuums, and Inquiry Learning Progressions, with full implementation by September 2027." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many key concepts does the PYP have?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Seven. The 2018 enhancement removed Reflection (treating it as a programme-wide practice rather than a concept). The current seven are: form, function, causation, change, connection, perspective, and responsibility." }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the six transdisciplinary themes?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Who We Are; Where We Are in Place and Time; How We Express Ourselves; How the World Works; How We Organize Ourselves; Sharing the Planet. The 2025 evolution refreshed their descriptors (one driving statement + three conceptual supports) but did not change the names." }
+        },
+        {
+          "@type": "Question",
+          "name": "What changes in the 2025 evolution?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The IB published refreshed transdisciplinary theme descriptors, six new Subject Continuums (replacing the legacy Scope and Sequence), and Inquiry Learning Progressions that describe how inquiry skills mature across ages 5–16. Progression is now organised by four developmental phases rather than fixed grade levels. Full transition by September 2027 — deliberately aligned with the Enhanced MYP launch." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a PYP eAssessment?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The PYP remains exam-free; periodic rumours of a PYP eAssessment are unfounded as of 2026. Assessment is formative, portfolio-led, and student-led-conference-based." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" role="banner">
+  <div class="container nav-row">
+    <a href="#top" class="brand" aria-label="Enhanced PYP Navigator home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28">
+          <circle cx="16" cy="16" r="15" fill="#14746f"/>
+          <path d="M10 23 L10 9 L17 9 Q22 9 22 13.5 Q22 18 17 18 L13 18 L13 23 Z M13 11.5 L13 15.5 L16.5 15.5 Q19 15.5 19 13.5 Q19 11.5 16.5 11.5 Z" fill="#fff"/>
+        </svg>
+      </span>
+      <span class="brand-text">Enhanced PYP <em>Navigator</em></span>
+    </a>
+
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#themes">Themes</a></li>
+        <li><a href="#pillars">Pillars</a></li>
+        <li><a href="#compare">Compare</a></li>
+        <li><a href="#planner">Plan a UOI</a></li>
+        <li><a href="#practice">Practise</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- ===================== HERO ===================== -->
+<section id="top" class="hero">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <p class="eyebrow">For PYP teachers · 2018 framework + 2025 evolution · Ready for Sept 2027</p>
+      <h1>The <span class="grad-text">Enhanced PYP</span>, made practical — from agency to the action cycle.</h1>
+      <p class="lede">A plain-language, interactive guide to the three pillars, the six transdisciplinary themes, the seven key concepts, the 2025 subject continuums, and the PYP→MYP continuum. Built for teachers who plan on Monday and run a student-led conference on Friday.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#overview">Start in 2 minutes</a>
+        <a class="btn btn-ghost" href="#practice">Try a practice activity</a>
+      </div>
+
+      <ul class="hero-stats" role="list">
+        <li><strong>3</strong><span>Pillars</span></li>
+        <li><strong>6</strong><span>Transdisciplinary themes</span></li>
+        <li><strong>7</strong><span>Key concepts</span></li>
+      </ul>
+    </div>
+
+    <aside class="hero-card" aria-label="Key dates">
+      <h2 class="card-title">Key dates</h2>
+      <ul class="timeline">
+        <li><span class="dot done"></span><b>Oct 2018</b> — "From principles into practice" — the three-pillar framework</li>
+        <li><span class="dot done"></span><b>Apr 2025</b> — Refreshed descriptors, subject continuums, ILPs</li>
+        <li><span class="dot now"></span><b>Now (May 2026)</b> — Transition window; pilot units, audit POI</li>
+        <li><span class="dot"></span><b>Sept 2027</b> — Full implementation deadline (aligns with Enhanced MYP)</li>
+      </ul>
+      <p class="countdown" data-target="2027-09-01">Counting down to the 2027 deadline…</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ===================== OVERVIEW ===================== -->
+<section id="overview" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Start here</p>
+      <h2>What actually changes — in 90 seconds</h2>
+      <p class="lede">The PYP didn't get a rewrite. It got <strong>two layers</strong>: the 2018 enhancement (Three Pillars, agency, action, play) is the live baseline; the 2025 evolution (subject continuums, ILPs, refreshed descriptors) is a fresh layer on top — mandatory by September 2027.</p>
+    </header>
+
+    <div class="overview-grid">
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🧒</span>
+        <h3>Learner first</h3>
+        <p>Three pillars, in this order: <strong>the Learner</strong>, then Learning &amp; Teaching, then the Learning Community. The child is named before the curriculum is.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🎙️</span>
+        <h3>Agency, made concrete</h3>
+        <p>Three surfaces: <em>voice</em> (the child is heard), <em>choice</em> (the child decides), <em>ownership</em> (the child takes responsibility). Every unit should show all three.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🔄</span>
+        <h3>Action is a cycle</h3>
+        <p>Choose → Act → Reflect. Action has <strong>five forms</strong> — participation, advocacy, social entrepreneurship, social justice, lifestyle choices — not just community service.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🎨</span>
+        <h3>Play is learning</h3>
+        <p>For ages 3–6, <strong>play is the primary mode of inquiry</strong>. Provoked by environment, documented by teachers, mapped to the central idea — not a warm-up to "real" learning.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">📐</span>
+        <h3>2025: Subject Continuums</h3>
+        <p>Six new continuums replace the legacy Scope &amp; Sequence. Progression by <strong>four developmental phases</strong>, not fixed year groups. Unified structure across all subjects.</p>
+      </article>
+      <article class="ov-card">
+        <span class="ov-icon" aria-hidden="true">🌉</span>
+        <h3>Continuity to the MYP</h3>
+        <p>The 2025 refresh and the 2027 MYP launch are deliberately the same date. Shared ATL, shared Learner Profile, and the <strong>Inquiry Learning Progressions</strong> span ages 5–16.</p>
+      </article>
+    </div>
+
+    <details class="callout">
+      <summary><strong>Read this if you're brand new to the PYP</strong></summary>
+      <p>The Primary Years Programme is the IB's framework for ages 3–12. Learning is transdisciplinary — the six themes (Who We Are, Where We Are in Place and Time, How We Express Ourselves, How the World Works, How We Organize Ourselves, Sharing the Planet) frame inquiry across subjects. Each unit of inquiry is anchored by a <em>Central Idea</em> and 3–4 <em>Lines of Inquiry</em>. Children build a portfolio, run a student-led conference each year, and finish with the <em>PYP Exhibition</em> (PYPX) in their final year.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ===================== THEMES ===================== -->
+<section id="themes" class="section section-alt">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">The signature</p>
+      <h2>The six transdisciplinary themes</h2>
+      <p class="lede">The PYP's defining structural feature. Six themes that, together, capture what is worth inquiring into across the primary years. Each is taught once per year-group (the PYPX year explores five through teacher-designed UOIs and one through the children's exhibition). The 2025 evolution refreshed each descriptor — a single driving statement plus three conceptual supports.</p>
+    </header>
+
+    <div class="themes-grid" data-themes-grid>
+      <article class="theme-card" data-theme="who-we-are">
+        <header><span class="theme-emoji" aria-hidden="true">🪞</span><h3>Who We Are</h3></header>
+        <p class="theme-driver">An inquiry into the nature of the self, who we are as individuals, and who we are together.</p>
+        <ul class="theme-supports">
+          <li>Identity, beliefs and values shape how we see ourselves and others.</li>
+          <li>Physical, mental, social and spiritual well-being are connected.</li>
+          <li>Families, friendships, communities and cultures hold us together.</li>
+        </ul>
+      </article>
+
+      <article class="theme-card" data-theme="where-we-are">
+        <header><span class="theme-emoji" aria-hidden="true">🧭</span><h3>Where We Are in Place and Time</h3></header>
+        <p class="theme-driver">An inquiry into orientation in place and time, our shared histories, and our connection to the natural world.</p>
+        <ul class="theme-supports">
+          <li>People, places and ideas move across time — and leave traces.</li>
+          <li>The natural world has its own histories that overlap with ours.</li>
+          <li>Discovery, exploration and migration shape everyone they touch.</li>
+        </ul>
+      </article>
+
+      <article class="theme-card" data-theme="how-we-express">
+        <header><span class="theme-emoji" aria-hidden="true">🎭</span><h3>How We Express Ourselves</h3></header>
+        <p class="theme-driver">An inquiry into the ways we discover and express ideas, feelings, nature, culture and beliefs — and the aesthetic.</p>
+        <ul class="theme-supports">
+          <li>Creativity is how humans share what cannot easily be said.</li>
+          <li>Audiences shape what is made, just as makers shape audiences.</li>
+          <li>Expression carries the values and questions of its maker.</li>
+        </ul>
+      </article>
+
+      <article class="theme-card" data-theme="how-the-world-works">
+        <header><span class="theme-emoji" aria-hidden="true">🔬</span><h3>How the World Works</h3></header>
+        <p class="theme-driver">An inquiry into the natural world and its laws, and into the impact of scientific and technological advances on humans and the environment.</p>
+        <ul class="theme-supports">
+          <li>Living and non-living systems behave in patterns we can study.</li>
+          <li>Technologies extend what humans can do — and change us in return.</li>
+          <li>Every transformation in nature or technology has costs and consequences.</li>
+        </ul>
+      </article>
+
+      <article class="theme-card" data-theme="how-we-organize">
+        <header><span class="theme-emoji" aria-hidden="true">🏛️</span><h3>How We Organize Ourselves</h3></header>
+        <p class="theme-driver">An inquiry into the interconnectedness of human-made systems and communities — structures, organisations, decision-making and economic activity.</p>
+        <ul class="theme-supports">
+          <li>Communities organise themselves to meet shared needs.</li>
+          <li>Systems shape what is produced, exchanged and valued.</li>
+          <li>Decisions made by a few often affect many.</li>
+        </ul>
+      </article>
+
+      <article class="theme-card" data-theme="sharing-the-planet">
+        <header><span class="theme-emoji" aria-hidden="true">🌍</span><h3>Sharing the Planet</h3></header>
+        <p class="theme-driver">An inquiry into rights and responsibilities in the struggle to share finite resources with other people and other living things — peace and conflict resolution.</p>
+        <ul class="theme-supports">
+          <li>All living things depend on one another and on the planet.</li>
+          <li>Resources are finite, and how they are shared matters.</li>
+          <li>Rights and responsibilities exist together; neither survives alone.</li>
+        </ul>
+      </article>
+    </div>
+
+    <details class="callout">
+      <summary><strong>What changed in 2025 — and what didn't</strong></summary>
+      <p>The six theme <em>names are unchanged</em>. The <em>descriptors</em> were refreshed: each opens with a single driving statement followed by three concise conceptual supports (down from the older, denser paragraphs). The new descriptors deliberately rebalance human commonalities with the natural world — a small but significant philosophical shift acknowledging that the PYP child lives in an ecosystem, not just a society.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ===================== PILLARS ===================== -->
+<section id="pillars" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Deep dive</p>
+      <h2>The three pillars (+ the 2025 evolution)</h2>
+      <p class="lede">Tap a tab to explore each pillar. Each section has a "What changed", "Why it matters", and a "Try this Monday" prompt.</p>
+    </header>
+
+    <div class="tabs" data-tabs>
+      <div role="tablist" aria-label="Three pillars and the 2025 evolution">
+        <button role="tab" id="tab-learner" aria-controls="panel-learner" aria-selected="true" class="tab is-active">1 · The Learner</button>
+        <button role="tab" id="tab-lt" aria-controls="panel-lt" aria-selected="false" class="tab">2 · Learning &amp; Teaching</button>
+        <button role="tab" id="tab-community" aria-controls="panel-community" aria-selected="false" class="tab">3 · Learning Community</button>
+        <button role="tab" id="tab-2025" aria-controls="panel-2025" aria-selected="false" class="tab">★ 2025 Evolution</button>
+      </div>
+
+      <!-- LEARNER panel -->
+      <div role="tabpanel" id="panel-learner" aria-labelledby="tab-learner" class="panel is-active">
+        <div class="panel-grid">
+          <div>
+            <h3>Pillar 1 — The Learner</h3>
+            <p>The pillar named first, on purpose. The PYP starts from the child, not the curriculum document. This pillar holds the <strong>Learner Profile</strong>, <strong>student agency</strong>, the <strong>action cycle</strong>, and <strong>learner well-being</strong>.</p>
+
+            <h4>Agency — three concrete surfaces</h4>
+            <div class="agency-row">
+              <article class="agency-card"><span class="agency-emoji" aria-hidden="true">🎙️</span><b>Voice</b><span>The learner is <em>heard</em>. "What did you notice? What do you wonder?"</span></article>
+              <article class="agency-card"><span class="agency-emoji" aria-hidden="true">🤲</span><b>Choice</b><span>The learner <em>decides</em>. Which line of inquiry? Which artefact? Which audience?</span></article>
+              <article class="agency-card"><span class="agency-emoji" aria-hidden="true">📔</span><b>Ownership</b><span>The learner takes <em>responsibility</em>. Co-construct criteria, run the conference, curate the portfolio.</span></article>
+            </div>
+
+            <h4>The Action Cycle</h4>
+            <p>The 2018 framework replaced the old "Service Learning" framing with a continuous cycle: <strong>Choose → Act → Reflect</strong>. Action has <em>five forms</em>, not just community service.</p>
+            <div class="form-row">
+              <span class="pill">Participation</span>
+              <span class="pill">Advocacy</span>
+              <span class="pill">Social entrepreneurship</span>
+              <span class="pill">Social justice</span>
+              <span class="pill">Lifestyle choices</span>
+            </div>
+
+            <h4>The 10 Learner Profile attributes</h4>
+            <div class="lp-grid">
+              <span>Inquirers</span><span>Knowledgeable</span><span>Thinkers</span><span>Communicators</span>
+              <span>Principled</span><span>Open-minded</span><span>Caring</span><span>Risk-takers</span>
+              <span>Balanced</span><span>Reflective</span>
+            </div>
+
+            <p><b>Try this Monday:</b> Pick one current unit. Find one place each for voice, choice, and ownership. If you can't find all three, you've found your next iteration.</p>
+          </div>
+          <aside class="aside-tip">
+            <h4>Plain-English definition</h4>
+            <p><strong>Student agency</strong> is the difference between "I'm being taught" and "I'm doing the learning." Voice = heard. Choice = decides. Ownership = responsible.</p>
+            <hr/>
+            <h4>Watch out for…</h4>
+            <ul class="check">
+              <li>"Pick blue or red" framed as agency. (Allocation, not choice.)</li>
+              <li>Action that is all charity and no relationship.</li>
+              <li>Treating the early years as a warm-up. Play <em>is</em> the inquiry.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+
+      <!-- LEARNING & TEACHING panel -->
+      <div role="tabpanel" id="panel-lt" aria-labelledby="tab-lt" class="panel" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>Pillar 2 — Learning and Teaching</h3>
+            <p>This pillar holds the curriculum-shaped machinery: the <strong>six transdisciplinary themes</strong>, the <strong>seven key concepts</strong>, the <strong>Approaches to Learning</strong>, and the <strong>Central Idea + Lines of Inquiry</strong> framing of every unit.</p>
+
+            <h4>The 7 Key Concepts</h4>
+            <div class="concept-cards">
+              <article class="concept-card"><h5>Form</h5><span>What is it like?</span></article>
+              <article class="concept-card"><h5>Function</h5><span>How does it work?</span></article>
+              <article class="concept-card"><h5>Causation</h5><span>Why is it like it is?</span></article>
+              <article class="concept-card"><h5>Change</h5><span>How is it transforming?</span></article>
+              <article class="concept-card"><h5>Connection</h5><span>How is it linked to other things?</span></article>
+              <article class="concept-card"><h5>Perspective</h5><span>What are the points of view?</span></article>
+              <article class="concept-card"><h5>Responsibility</h5><span>What is our obligation?</span></article>
+            </div>
+            <p class="muted small">Reflection (the old 8th concept) was removed in 2018 — it is now a programme-wide <em>practice</em> rather than a unit-bound concept.</p>
+
+            <h4>The 5 ATL categories</h4>
+            <div class="atl-cards">
+              <article class="atl-card" data-cat="Thinking"><h5>Thinking</h5><p>Notice, wonder, question.</p><span class="atl-eg">e.g. compare two stories, predict what will happen, infer a character's motive.</span></article>
+              <article class="atl-card" data-cat="Communication"><h5>Communication</h5><p>Listen, speak, read, write, show.</p><span class="atl-eg">e.g. present a finding, listen to feedback, draw a diagram.</span></article>
+              <article class="atl-card" data-cat="Social"><h5>Social</h5><p>Cooperate, share, resolve.</p><span class="atl-eg">e.g. take turns, negotiate roles, include someone left out.</span></article>
+              <article class="atl-card" data-cat="Self-management"><h5>Self-management</h5><p>Plan, organise, persist.</p><span class="atl-eg">e.g. set a goal, manage time, try again after a setback.</span></article>
+              <article class="atl-card" data-cat="Research"><h5>Research</h5><p>Observe, find out, cite.</p><span class="atl-eg">e.g. interview a parent, look up a source, record observations.</span></article>
+            </div>
+
+            <h4>Central Idea + Lines of Inquiry — worked example</h4>
+            <div class="ci-example">
+              <p><b>Theme:</b> Sharing the Planet · <b>Phase 3</b> (Year 3)</p>
+              <p><b>Central Idea:</b> <em>Freshwater is a finite resource that sustains all life and depends on the choices people make.</em></p>
+              <ol class="loi-list">
+                <li>Where freshwater comes from and where it goes <span class="concept-tag">form</span></li>
+                <li>How human activity affects freshwater systems <span class="concept-tag">causation</span></li>
+                <li>The responsibilities of individuals and communities towards shared water <span class="concept-tag">responsibility</span></li>
+              </ol>
+            </div>
+
+            <p><b>Try this Monday:</b> Re-write one current Central Idea. Strip any proper nouns and dates. Add a concept-verb (depends on, shapes, sustains, influences). Test it: would the idea still hold if you taught the unit in a different country?</p>
+          </div>
+          <aside class="aside-tip">
+            <h4>Plain-English definition</h4>
+            <p>A <strong>Central Idea</strong> is a single concept-rich sentence stating the enduring understanding the unit is built around — not a topic, not a question, not an opinion.</p>
+            <p>A <strong>Line of Inquiry</strong> is a focused conceptual angle on the Central Idea — usually a noun phrase, 5–12 words.</p>
+            <hr/>
+            <h4>Watch out for…</h4>
+            <ul class="check">
+              <li>A Central Idea that is really a topic ("Water").</li>
+              <li>A Central Idea written as a question.</li>
+              <li>Five or six Lines of Inquiry. (3–4 is the sweet spot.)</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+
+      <!-- COMMUNITY panel -->
+      <div role="tabpanel" id="panel-community" aria-labelledby="tab-community" class="panel" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>Pillar 3 — The Learning Community</h3>
+            <p>The pillar that puts <strong>everyone else</strong> in the frame: collaborative planning teams, families, partnerships beyond the school, and the wider IB community. The unit of work in this pillar is the <em>relationship</em>, not the lesson.</p>
+
+            <h4>What "Learning Community" actually means</h4>
+            <ul class="check">
+              <li><b>Collaborative planning</b> — teachers plan UOIs <em>together</em>, not in isolation. The planner is a thinking tool, not a compliance document.</li>
+              <li><b>Families as partners</b> — student-led conferences, three-way conferences, portfolios shared with families, mother-tongue support.</li>
+              <li><b>Beyond the school</b> — local experts, alumni, council, NGOs, the local environment as collaborators in action.</li>
+              <li><b>The IB community</b> — connections with other IB schools (PYP, MYP, DP) for continuity and shared inquiry.</li>
+            </ul>
+
+            <h4>The PYP Exhibition (PYPX)</h4>
+            <p>The PYPX is where all three pillars meet. In the final year of the PYP, students choose a transdisciplinary theme, form groups of ≤ 5, work with a <strong>mentor</strong>, drive their own inquiry, and culminate in a public exhibition of learning and a real-world action.</p>
+            <ul class="check">
+              <li>6–8 weeks, student-led, collaborative.</li>
+              <li>Mentors as <em>facilitators</em>, never as researchers.</li>
+              <li>Central Idea and Lines of Inquiry authored by the students.</li>
+              <li>Public sharing — to families, the school, sometimes the wider community.</li>
+            </ul>
+
+            <p><b>Try this Monday:</b> Host one <em>student-led</em> conference even if your school normally does three-ways. Reflect on how it felt to be the quietest adult in the room.</p>
+          </div>
+          <aside class="aside-tip">
+            <h4>Plain-English definition</h4>
+            <p>The <strong>learning community</strong> is everyone who has a stake in this child's learning — teachers, families, peers, neighbours, mentors, the planet. Education is collective.</p>
+            <hr/>
+            <h4>The PYPX in one line</h4>
+            <p>The IB's clearest expression of what a PYP graduate looks like: a curious, collaborative, principled child who can drive their own inquiry, work in a team, and act on what they have learned.</p>
+          </aside>
+        </div>
+      </div>
+
+      <!-- 2025 EVOLUTION panel -->
+      <div role="tabpanel" id="panel-2025" aria-labelledby="tab-2025" class="panel" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>★ The 2025 evolution — mandatory by Sept 2027</h3>
+            <p>In April 2025 the IB published a fresh layer on top of the 2018 framework. The themes, pillars and concepts are unchanged. What's new is the <em>infrastructure</em> around them.</p>
+
+            <h4>1 · Refreshed transdisciplinary descriptors</h4>
+            <p>Each of the six themes now opens with a single <strong>driving statement</strong> followed by <strong>three conceptual supports</strong> — down from longer, denser paragraphs. The new descriptors deliberately rebalance human commonalities with the natural world.</p>
+
+            <h4>2 · Six new Subject Continuums</h4>
+            <p>Replacing the legacy Scope &amp; Sequence documents. All six follow a unified structure:</p>
+            <ol class="check">
+              <li><b>Overall Expectations</b> — the big picture by phase.</li>
+              <li><b>Conceptual Understandings</b> — the durable ideas.</li>
+              <li><b>Learning Outcomes</b> — clearer, schools can map to local standards.</li>
+            </ol>
+            <div class="chip-grid" data-subject-chips>
+              <div class="chip-group"><h5>Language</h5><span>audience</span><span>purpose</span><span>voice</span><span>genre</span><span>meaning</span><span>register</span></div>
+              <div class="chip-group"><h5>Mathematics</h5><span>pattern</span><span>equivalence</span><span>quantity</span><span>representation</span><span>relationships</span><span>space</span></div>
+              <div class="chip-group"><h5>Science</h5><span>systems</span><span>evidence</span><span>energy</span><span>forces</span><span>matter</span><span>environment</span></div>
+              <div class="chip-group"><h5>Social Studies</h5><span>community</span><span>culture</span><span>rights</span><span>governance</span><span>continuity</span><span>change</span></div>
+              <div class="chip-group"><h5>Arts</h5><span>expression</span><span>audience</span><span>composition</span><span>aesthetic</span><span>interpretation</span><span>style</span></div>
+              <div class="chip-group"><h5>PSPE</h5><span>identity</span><span>well-being</span><span>movement</span><span>balance</span><span>cooperation</span><span>relationships</span></div>
+            </div>
+
+            <h4>3 · Four developmental phases</h4>
+            <p>Progression by phase, not by year group — respecting the wide developmental range in any primary classroom.</p>
+            <div class="phase-row">
+              <article class="phase-card" data-phase="1"><b>Phase 1</b><span>ages 3–5</span><p>Sensory, playful, here-and-now. Inquiry through provocation and shared wonder.</p></article>
+              <article class="phase-card" data-phase="2"><b>Phase 2</b><span>ages 5–7</span><p>Concrete, story-driven. Inquiry through observation, classification, role-play.</p></article>
+              <article class="phase-card" data-phase="3"><b>Phase 3</b><span>ages 7–9</span><p>Pattern-seeking, beginning to generalise. Inquiry through investigation and structured action.</p></article>
+              <article class="phase-card" data-phase="4"><b>Phase 4</b><span>ages 9–12</span><p>Abstract, multi-perspective, student-led. Inquiry through research, debate, authored action (PYPX).</p></article>
+            </div>
+
+            <h4>4 · Inquiry Learning Progressions (ILPs)</h4>
+            <p>A new document describing how <strong>inquiry skills</strong> — observing, questioning, role-taking, decision-making, hypothesising — develop in sophistication across <strong>ages 5–16</strong>. The first IB document to formally span PYP into MYP Years 1–2 — the vertical spine of PYP→MYP continuity.</p>
+
+            <p><b>Try this Monday:</b> Read the new Subject Continuum for your strongest subject. Sketch how the four developmental phases map onto the year groups you teach.</p>
+          </div>
+          <aside class="aside-tip">
+            <h4>Why this matters</h4>
+            <p>The 2025 deadline (September 2027) deliberately aligns with the Enhanced MYP launch. PYP and MYP teachers will, for the first time, share a published vertical document. The cliff between Year 6 and MYP Year 1 narrows.</p>
+            <hr/>
+            <h4>What hasn't changed</h4>
+            <ul class="check">
+              <li>The three pillars.</li>
+              <li>The six theme names.</li>
+              <li>The seven key concepts.</li>
+              <li>The five ATL categories.</li>
+              <li>The 10 Learner Profile attributes.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPARE ===================== -->
+<section id="compare" class="section section-alt">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Side by side</p>
+      <h2>Pre-2018 · Enhanced PYP (2018) · 2025 Evolution</h2>
+      <p class="lede">A row-by-row diff. Useful in a coordinator meeting or a parent newsletter.</p>
+    </header>
+
+    <div class="compare-table" role="table" aria-label="Comparison across three PYP eras">
+      <div class="ct-head" role="row">
+        <div role="columnheader">Element</div>
+        <div role="columnheader">Pre-2018</div>
+        <div role="columnheader">Enhanced PYP (2018)</div>
+        <div role="columnheader">2025 Evolution</div>
+      </div>
+
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Organising structure</b></div>
+        <div role="cell" data-label="Pre-2018">Five "essential elements" (knowledge, concepts, skills, attitudes, action)</div>
+        <div role="cell" data-label="2018">Three Pillars (Learner / L&amp;T / Community)</div>
+        <div role="cell" data-label="2025">Unchanged</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Key concepts</b></div>
+        <div role="cell" data-label="Pre-2018">8 (including Reflection)</div>
+        <div role="cell" data-label="2018">7 (Reflection removed)</div>
+        <div role="cell" data-label="2025">Same 7 — terminology aligning with MYP "Specified Concepts"</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Attitudes</b></div>
+        <div role="cell" data-label="Pre-2018">12-item separate list</div>
+        <div role="cell" data-label="2018">Folded into the 10 Learner Profile attributes</div>
+        <div role="cell" data-label="2025">Unchanged</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Action</b></div>
+        <div role="cell" data-label="Pre-2018">Optional outcome — often "service learning"</div>
+        <div role="cell" data-label="2018">The Action Cycle (Choose → Act → Reflect), 5 forms, 3 scaffolding levels</div>
+        <div role="cell" data-label="2025">Unchanged</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Agency</b></div>
+        <div role="cell" data-label="Pre-2018">Implicit</div>
+        <div role="cell" data-label="2018">Central organising principle — voice, choice, ownership</div>
+        <div role="cell" data-label="2025">Unchanged</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Early years</b></div>
+        <div role="cell" data-label="Pre-2018">Treated as "younger PYP"</div>
+        <div role="cell" data-label="2018">Learning through play named as primary mode (ages 3–6)</div>
+        <div role="cell" data-label="2025">Unchanged</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Theme descriptors</b></div>
+        <div role="cell" data-label="Pre-2018">Dense paragraphs</div>
+        <div role="cell" data-label="2018">Dense paragraphs</div>
+        <div role="cell" data-label="2025">1 driving statement + 3 conceptual supports — rebalanced toward natural world</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Subject documents</b></div>
+        <div role="cell" data-label="Pre-2018">Scope &amp; Sequence (six)</div>
+        <div role="cell" data-label="2018">Scope &amp; Sequence (six)</div>
+        <div role="cell" data-label="2025">Subject Continuums (six) — unified structure, phase-based</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Progression spine</b></div>
+        <div role="cell" data-label="Pre-2018">None published</div>
+        <div role="cell" data-label="2018">None published</div>
+        <div role="cell" data-label="2025">Inquiry Learning Progressions (5–16, into MYP)</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Assessment</b></div>
+        <div role="cell" data-label="Pre-2018">Four dimensions; no exam</div>
+        <div role="cell" data-label="2018">Same four dimensions, formative-led</div>
+        <div role="cell" data-label="2025">Same philosophy; clearer outcome descriptors per subject</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Planner</b></div>
+        <div role="cell" data-label="Pre-2018">Fixed template</div>
+        <div role="cell" data-label="2018">Flexible thinking tool, school-adaptable</div>
+        <div role="cell" data-label="2025">Unchanged</div>
+      </div>
+      <div class="ct-row" role="row">
+        <div role="cell" data-label="Element"><b>Format</b></div>
+        <div role="cell" data-label="Pre-2018">Static PDFs</div>
+        <div role="cell" data-label="2018">Digital "From principles into practice"</div>
+        <div role="cell" data-label="2025">Migrating toward interactive platform (mirroring MYP's IB Exchange)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PLANNER ===================== -->
+<section id="planner" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Apply it</p>
+      <h2>Plan a Unit of Inquiry in 7 fields</h2>
+      <p class="lede">A live mini-planner that produces a clean, copy-ready outline — Central Idea, Lines of Inquiry, ATL focus, agency surfaces, and an action seed. No login. Nothing leaves your browser.</p>
+    </header>
+
+    <form class="planner" data-planner aria-label="Unit of Inquiry planner">
+      <div class="grid-2">
+        <label>Unit title
+          <input type="text" name="title" placeholder="e.g. Where Our Water Comes From" />
+        </label>
+        <label>Transdisciplinary theme
+          <select name="theme">
+            <option>Who We Are</option>
+            <option>Where We Are in Place and Time</option>
+            <option>How We Express Ourselves</option>
+            <option>How the World Works</option>
+            <option>How We Organize Ourselves</option>
+            <option>Sharing the Planet</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="grid-2">
+        <label>Developmental phase
+          <select name="phase">
+            <option>Phase 1 (ages 3–5)</option>
+            <option>Phase 2 (ages 5–7)</option>
+            <option>Phase 3 (ages 7–9)</option>
+            <option>Phase 4 (ages 9–12)</option>
+          </select>
+        </label>
+        <label>Key concepts (2–3) <small>comma-separated</small>
+          <input type="text" name="concepts" placeholder="e.g. form, causation, responsibility" />
+        </label>
+      </div>
+
+      <label>Central Idea <small>(a single concept-rich statement)</small>
+        <input type="text" name="ci" placeholder="e.g. Freshwater is a finite resource that sustains all life and depends on the choices people make." />
+      </label>
+
+      <label>Lines of Inquiry <small>(3–4, one per line)</small>
+        <textarea name="loi" rows="4" placeholder="Where freshwater comes from and where it goes&#10;How human activity affects freshwater systems&#10;The responsibilities of individuals and communities towards shared water"></textarea>
+      </label>
+
+      <div class="grid-2">
+        <label>ATL focus
+          <select name="atl">
+            <option>Thinking</option><option>Communication</option><option>Social</option><option>Self-management</option><option>Research</option>
+          </select>
+        </label>
+        <label>Action seed <small>(form + verb)</small>
+          <input type="text" name="action" placeholder="e.g. advocacy: write to the council about a local water issue" />
+        </label>
+      </div>
+
+      <div class="planner-actions">
+        <button type="button" class="btn btn-primary" data-planner-generate>Generate outline</button>
+        <button type="button" class="btn btn-ghost" data-planner-copy>Copy to clipboard</button>
+        <button type="button" class="btn btn-ghost" data-planner-reset>Reset</button>
+      </div>
+    </form>
+
+    <pre class="planner-out" data-planner-out aria-live="polite">Your UOI outline will appear here.</pre>
+    <div class="planner-feedback" data-planner-feedback aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ===================== PRACTICE ===================== -->
+<section id="practice" class="section section-alt">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Practise</p>
+      <h2>Try it before Monday</h2>
+      <p class="lede">Five quick, no-stakes activities. No login. No data leaves your browser.</p>
+    </header>
+
+    <div class="practice-grid">
+      <!-- 1. Central Idea health check -->
+      <article class="practice-card practice-card-wide">
+        <h3>① Central Idea — health check</h3>
+        <p>Type or paste a Central Idea. The engine scores it across eight dimensions, flags proper nouns / dates / opinion framing / topic-only writing, and offers stronger rewrites.</p>
+        <input type="text" data-ci-input placeholder="e.g. Water is important." />
+        <label class="inline">
+          <span class="visually-hidden">Theme</span>
+          <select data-ci-theme>
+            <option>Who We Are</option>
+            <option>Where We Are in Place and Time</option>
+            <option>How We Express Ourselves</option>
+            <option selected>How the World Works</option>
+            <option>How We Organize Ourselves</option>
+            <option>Sharing the Planet</option>
+          </select>
+        </label>
+        <div class="row"><button class="btn btn-primary" data-ci-go>Check it</button></div>
+        <output class="practice-out" data-ci-out aria-live="polite">Awaiting Central Idea…</output>
+      </article>
+
+      <!-- 2. Lines of Inquiry check -->
+      <article class="practice-card practice-card-wide">
+        <h3>② Lines of Inquiry — coverage check</h3>
+        <p>Paste your 3–4 Lines of Inquiry, one per line. The engine checks count, length, whether each is a noun phrase, and whether they span at least two key concepts.</p>
+        <textarea data-loi-input rows="4" placeholder="Where freshwater comes from and where it goes&#10;How human activity affects freshwater systems&#10;The responsibilities of individuals and communities towards shared water"></textarea>
+        <div class="row"><button class="btn btn-primary" data-loi-go>Check the lines</button></div>
+        <output class="practice-out" data-loi-out aria-live="polite">Awaiting lines…</output>
+      </article>
+
+      <!-- 3. Action framing check -->
+      <article class="practice-card">
+        <h3>③ Action — framing check</h3>
+        <p>Describe your planned action in 1–3 sentences. The engine flags charity-only framing, missing verbs, and missing forms — and points to the cycle.</p>
+        <textarea data-action-input rows="3" placeholder="e.g. We will collect cans of food for the local foodbank."></textarea>
+        <div class="row"><button class="btn btn-primary" data-action-go>Check it</button></div>
+        <output class="practice-out" data-action-out aria-live="polite">Awaiting description…</output>
+      </article>
+
+      <!-- 4. Agency check -->
+      <article class="practice-card">
+        <h3>④ Agency — voice/choice/ownership</h3>
+        <p>Describe one part of the unit. The engine surfaces voice, choice, and ownership — or flags teacher-directed framing.</p>
+        <textarea data-agency-input rows="3" placeholder="e.g. Students will choose which line of inquiry to lead and design their own way to share their learning."></textarea>
+        <div class="row"><button class="btn btn-primary" data-agency-go>Check it</button></div>
+        <output class="practice-out" data-agency-out aria-live="polite">Awaiting description…</output>
+      </article>
+
+      <!-- 5. Quiz -->
+      <article class="practice-card">
+        <h3>⑤ 5-question quick check</h3>
+        <p>Test what you remember about the Enhanced PYP. Instant feedback.</p>
+        <div class="quiz" data-quiz aria-live="polite"></div>
+        <div class="row"><button class="btn btn-ghost" data-quiz-reset>Restart</button></div>
+      </article>
+
+      <!-- 6. Flashcards -->
+      <article class="practice-card">
+        <h3>⑥ Term flashcards</h3>
+        <p>Tap the card to flip. Use the arrow keys to navigate.</p>
+        <div class="flash" data-flash tabindex="0" role="button" aria-label="Flashcard — press space or click to flip">
+          <div class="flash-inner">
+            <div class="flash-face flash-front"><span class="flash-term">Central Idea</span></div>
+            <div class="flash-face flash-back"><span class="flash-def">A single concept-rich statement of the enduring understanding a Unit of Inquiry is built around. Not a topic, not a question, not an opinion.</span></div>
+          </div>
+        </div>
+        <div class="flash-nav">
+          <button class="btn btn-ghost" data-flash-prev aria-label="Previous">←</button>
+          <span data-flash-count>1 / 8</span>
+          <button class="btn btn-ghost" data-flash-next aria-label="Next">→</button>
+        </div>
+      </article>
+    </div>
+
+    <p class="muted small kb-note">All checks run locally in your browser using a transparent rules-based knowledge base — no AI, no network, no data sent anywhere. The rule set is in <code>kb.js</code> if you want to inspect or extend it.</p>
+  </div>
+</section>
+
+<!-- ===================== GLOSSARY ===================== -->
+<section id="glossary" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Reference</p>
+      <h2>Plain-English glossary</h2>
+      <p class="lede">Filter the terms. Bookmark this page when you forget what something means.</p>
+    </header>
+
+    <div class="glossary-tools">
+      <label class="search">
+        <span class="visually-hidden">Search terms</span>
+        <input type="search" placeholder="Search a term, e.g. 'agency' or 'central idea'" data-gloss-search />
+      </label>
+    </div>
+
+    <dl class="glossary" data-glossary>
+      <div><dt>Central Idea</dt><dd>A single, concept-rich statement of the enduring understanding the unit is built around. Not a topic, not a question, not an opinion.</dd></div>
+      <div><dt>Line of Inquiry</dt><dd>A focused conceptual angle on the Central Idea — usually a noun phrase, 5–12 words. Each UOI typically has 3–4.</dd></div>
+      <div><dt>Programme of Inquiry (POI)</dt><dd>The school-wide map of every Unit of Inquiry, organised by year-group across the six transdisciplinary themes. A living document.</dd></div>
+      <div><dt>Unit of Inquiry (UOI)</dt><dd>Typically 6–8 weeks of transdisciplinary learning anchored by a Central Idea, 3–4 Lines of Inquiry, key concepts, ATL skills, Learner Profile attributes, and anticipated action.</dd></div>
+      <div><dt>Transdisciplinary theme</dt><dd>One of six themes (Who We Are; Where We Are in Place and Time; How We Express Ourselves; How the World Works; How We Organize Ourselves; Sharing the Planet) that frame inquiry across subjects.</dd></div>
+      <div><dt>Key Concept</dt><dd>One of the seven transdisciplinary concepts: form, function, causation, change, connection, perspective, responsibility. Reflection was removed in 2018.</dd></div>
+      <div><dt>Related / Additional Concept</dt><dd>Subject-specific concepts (e.g. pattern in mathematics, voice in language). Drawn from the 2025 Subject Continuums.</dd></div>
+      <div><dt>ATL — Approaches to Learning</dt><dd>Five categories — Thinking, Communication, Social, Self-management, Research — shared across PYP, MYP and DP.</dd></div>
+      <div><dt>Learner Profile</dt><dd>The 10 IB attributes (Inquirers, Knowledgeable, Thinkers, Communicators, Principled, Open-minded, Caring, Risk-takers, Balanced, Reflective). Now also carry what used to be called "the 12 attitudes".</dd></div>
+      <div><dt>Agency</dt><dd>Voice (heard), choice (decides), ownership (responsible). The 2018 framework's central organising principle.</dd></div>
+      <div><dt>Action Cycle</dt><dd>Choose → Act → Reflect. Action has five forms — participation, advocacy, social entrepreneurship, social justice, lifestyle choices.</dd></div>
+      <div><dt>PYP Exhibition (PYPX)</dt><dd>The capstone in the final PYP year. 6–8 weeks, student-led, collaborative, transdisciplinary inquiry with a real-world action and a public sharing.</dd></div>
+      <div><dt>Subject Continuum</dt><dd>The 2025 replacement for the legacy Scope &amp; Sequence. Six continuums, one per subject, unified structure (Overall Expectations → Conceptual Understandings → Learning Outcomes), phase-based.</dd></div>
+      <div><dt>Developmental Phases</dt><dd>The four 2025 progression bands — Phase 1 (3–5), Phase 2 (5–7), Phase 3 (7–9), Phase 4 (9–12) — that replace fixed grade-level standards.</dd></div>
+      <div><dt>Inquiry Learning Progressions (ILPs)</dt><dd>The 2025 document describing how inquiry skills mature across ages 5–16, spanning PYP into MYP Years 1–2. The first published PYP→MYP vertical spine.</dd></div>
+      <div><dt>Learning through play</dt><dd>For ages 3–6, the 2018 framework explicitly names play as the primary mode of inquiry — purposeful, documented, child-led, mapped to the Central Idea.</dd></div>
+      <div><dt>Student-led conference</dt><dd>A meeting the child runs with their family, walking them through their own portfolio and goals. The teacher is present but quiet.</dd></div>
+      <div><dt>Three pillars</dt><dd>The 2018 framework's structure: the Learner; Learning and Teaching; the Learning Community. The order matters — the child is named first.</dd></div>
+      <div><dt>Five essential elements (old)</dt><dd>Pre-2018: knowledge, concepts, skills, attitudes, action. Replaced in 2018 by the three pillars.</dd></div>
+      <div><dt>Transdisciplinary (vs cross-curricular)</dt><dd>Cross-curricular = subjects clustered around a topic. Transdisciplinary = subjects disappear into the inquiry. The PYP is the latter.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section id="faq" class="section section-alt">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Common questions</p>
+      <h2>FAQ — straight answers</h2>
+    </header>
+
+    <div class="faq">
+      <details><summary>When do I <em>have</em> to be using the 2025 updates?</summary><p>September 2027. That is the IB's mandatory full-implementation deadline for the new Subject Continuums and the refreshed descriptors — deliberately aligned with the Enhanced MYP launch. The 2018 framework remains the underlying baseline; 2025 is a layer on top.</p></details>
+      <details><summary>Do I have to throw out my current POI?</summary><p>No. Audit it against the 2025 transdisciplinary descriptors — is each unit still aligned with the refreshed "natural world balance" framing? Re-write one or two anchor Central Ideas. Iterate.</p></details>
+      <details><summary>Is there a PYP eAssessment coming?</summary><p>No. The PYP remains exam-free; periodic rumours of a PYP eAssessment are unfounded as of 2026. Assessment is formative, portfolio-led, conference-based.</p></details>
+      <details><summary>What happened to "Service Learning"?</summary><p>It was replaced in 2018 by the <em>Action Cycle</em> (Choose → Act → Reflect). Action has five forms — community service is one. Lifestyle choices and advocacy count.</p></details>
+      <details><summary>What about the 12 "PYP attitudes"?</summary><p>Folded into the 10 Learner Profile attributes in 2018. Schools still teaching the separate attitudes list are running on the pre-2018 framework.</p></details>
+      <details><summary>How do I know if a Central Idea is "good enough"?</summary><p>Three tests: (1) Is it transferable? Strip the proper nouns and dates — does the idea still hold? (2) Does it use a concept-verb (depends on / shapes / sustains / influences)? (3) Could you teach the same Central Idea in a different country and have it still mean something? If all three: ship it.</p></details>
+      <details><summary>Is the PYPX changing?</summary><p>No formal IB signal that the PYPX format is changing. Some school-led conversation about lighter-touch options (mini-exhibitions in earlier years) is around — but it's school-driven, not IB-driven.</p></details>
+      <details><summary>I'm a new PYP teacher — where do I start?</summary><p>Start with the <a href="#overview">Overview</a>, then the <a href="#themes">six themes</a>, then <a href="#planner">plan one UOI</a>. The three pillars and the Central Idea + Lines of Inquiry framing are the headline — everything else is detail.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RESOURCES ===================== -->
+<section id="resources" class="section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Go deeper</p>
+      <h2>Sources &amp; further reading</h2>
+      <p class="lede">Every claim on this site is backed by the IB or an established PYP practitioner. Links open in a new tab.</p>
+    </header>
+
+    <div class="resources-grid">
+      <article class="res-card">
+        <h3>Primary IB sources</h3>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://ibo.org/programmes/primary-years-programme/">PYP overview</a></li>
+          <li><a target="_blank" rel="noopener" href="https://ibo.org/programmes/primary-years-programme/curriculum/">PYP curriculum framework</a></li>
+          <li><a target="_blank" rel="noopener" href="https://ibo.org/programmes/primary-years-programme/curriculum/the-learner/">The Learner pillar</a></li>
+          <li><a target="_blank" rel="noopener" href="https://ibo.org/programmes/primary-years-programme/pyp-exhibition/">PYP Exhibition page</a></li>
+        </ul>
+      </article>
+      <article class="res-card">
+        <h3>2025 evolution analysis</h3>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://www.toddleapp.com/learn/blog-post/2025-pyp-updates-your-guide-to-whats-changing-2/">Toddle — Your Guide to the 2025 PYP Changes</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.managebac.com/blog/ib-pyp-updates-strands-scope-sequence">ManageBac — Strands, Scope and Sequence updates</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.casieonline.org/post/pyp-changes-and-action-planning/">CASIE — PYP Changes and Action Planning</a></li>
+          <li><a target="_blank" rel="noopener" href="https://inquiryintolearningblog.wordpress.com/2025/05/24/ready-to-r-u-n-unpacking-the-ib-pyp-subject-continuums-updates-with-curiosity-collaboration-and-joy/">Inquiry into Learning — R.U.N. continuums</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.managebac.com/blog/pyp-next-transition-update">ManageBac — PYP Next transition update</a></li>
+        </ul>
+      </article>
+      <article class="res-card">
+        <h3>Practical / classroom</h3>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://www.casieonline.org/post/transdisciplinary-learning-in-ib-a-guide-for-teachers/">CASIE — Transdisciplinary Learning</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.pypteachingtools.com/blog/step-by-step-through-the-ib-pyp-exhibition">PYP Teaching Tools — PYPX step-by-step</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.pypteachingtools.com/blog/inspiring-student-led-action-in-the-ib-pyp">PYP Teaching Tools — Student-led Action</a></li>
+          <li><a target="_blank" rel="noopener" href="https://tessais.org/assessment-in-the-ib-pyp/">Tessa International — Assessment in the PYP</a></li>
+          <li><a target="_blank" rel="noopener" href="http://making-teaching-visible.blogspot.com/2018/11/learner-agency-7-ways.html">Making Teaching Visible — Learner Agency in 7 ways</a></li>
+        </ul>
+      </article>
+      <article class="res-card">
+        <h3>Continuum context</h3>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://mics.edu.gh/the-ib-continuum-of-education-pyp-myp-and-dp/">MICS — The IB Continuum</a></li>
+          <li><a target="_blank" rel="noopener" href="https://www.structural-learning.com/post/primary-years-programme">Structural Learning — PYP guide</a></li>
+        </ul>
+        <p class="muted"><small>Need the full research document? See <a href="ENHANCED_PYP_RESEARCH.md">ENHANCED_PYP_RESEARCH.md</a> in this project. The sibling MYP site is at <a href="../Enhanced%20MYP/index.html">Enhanced MYP Navigator</a>.</small></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="container foot-grid">
+    <div>
+      <p class="brand small"><span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="22" height="22"><circle cx="16" cy="16" r="15" fill="#fff"/><path d="M10 23 L10 9 L17 9 Q22 9 22 13.5 Q22 18 17 18 L13 18 L13 23 Z M13 11.5 L13 15.5 L16.5 15.5 Q19 15.5 19 13.5 Q19 11.5 16.5 11.5 Z" fill="#14746f"/></svg>
+      </span>Enhanced PYP Navigator</p>
+      <p class="muted small">A practical, teacher-built reference. Not affiliated with the IBO.</p>
+    </div>
+    <nav aria-label="Footer">
+      <h4>On this site</h4>
+      <ul><li><a href="#overview">Overview</a></li><li><a href="#themes">Themes</a></li><li><a href="#pillars">Pillars</a></li><li><a href="#compare">Compare</a></li><li><a href="#planner">Plan a UOI</a></li><li><a href="#practice">Practise</a></li><li><a href="#glossary">Glossary</a></li><li><a href="#faq">FAQ</a></li><li><a href="#resources">Sources</a></li></ul>
+    </nav>
+    <div>
+      <h4>Built for</h4>
+      <p class="muted small">PYP coordinators, classroom teachers, EY specialists, new IB hires, families curious about the framework, and anyone explaining the Enhanced PYP next Tuesday.</p>
+    </div>
+  </div>
+  <p class="copyright">© <span data-year>2026</span> Enhanced PYP Navigator. All content under CC-BY 4.0.</p>
+</footer>
+
+<script src="kb.js" defer></script>
+<script src="evaluator.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

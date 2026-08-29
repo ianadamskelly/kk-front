@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://enhanced-pyp-navigator.example/sitemap.xml

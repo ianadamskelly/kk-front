@@ -43,6 +43,16 @@ const LEARN_ITEMS: DropdownItem[] = [
     label: "Membership",
     description: "Library from $1.90, full access $10",
   },
+  {
+    href: "/learn/enhanced-pyp/index.html",
+    label: "Enhanced PYP",
+    description: "An interactive guide for PYP teachers",
+  },
+  {
+    href: "/learn/enhanced-myp/index.html",
+    label: "Enhanced MYP",
+    description: "An interactive guide for MYP teachers",
+  },
 ];
 
 const SIMPLE_NAV = [

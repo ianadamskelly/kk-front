@@ -1,0 +1,19 @@
+{
+  "name": "Enhanced MYP Navigator",
+  "short_name": "Enhanced MYP",
+  "description": "A practical, interactive teacher's guide to the Enhanced IB Middle Years Programme.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a3d62",
+  "lang": "en",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

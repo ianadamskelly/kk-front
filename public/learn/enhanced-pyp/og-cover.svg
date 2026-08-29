@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14746f"/>
+      <stop offset="100%" stop-color="#2a9d8f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e9c46a"/>
+      <stop offset="100%" stop-color="#e76f51"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1050" cy="120" r="180" fill="#e9c46a" opacity="0.22"/>
+  <circle cx="120" cy="540" r="220" fill="#ffffff" opacity="0.06"/>
+  <text x="80" y="200" font-family="Georgia, serif" font-size="44" fill="#e9c46a" font-weight="700">A PRACTICAL GUIDE FOR TEACHERS</text>
+  <text x="80" y="310" font-family="Georgia, serif" font-size="96" fill="#ffffff" font-weight="700">Enhanced PYP</text>
+  <text x="80" y="400" font-family="Georgia, serif" font-size="96" fill="url(#accent)" font-weight="700">Navigator</text>
+  <text x="80" y="490" font-family="-apple-system, Segoe UI, sans-serif" font-size="32" fill="#e6efed">Transdisciplinary themes · Central Idea · Agency · Action · 2025 Continuums</text>
+  <text x="80" y="540" font-family="-apple-system, Segoe UI, sans-serif" font-size="28" fill="#aac0bc">Ready for the September 2027 deadline</text>
+</svg>
