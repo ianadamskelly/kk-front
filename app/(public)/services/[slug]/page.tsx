@@ -17,6 +17,7 @@ export async function generateMetadata({
   return {
     title: service?.title ?? "Service not found",
     description: service?.summary,
+    alternates: service ? { canonical: `/services/${service.slug}` } : undefined,
   };
 }
 

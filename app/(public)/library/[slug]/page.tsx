@@ -14,6 +14,7 @@ export async function generateMetadata({
   return {
     title: resource.title,
     description: resource.description.replace(/<[^>]+>/g, "").slice(0, 160),
+    alternates: { canonical: `/library/${resource.slug}` },
     openGraph: {
       title: resource.title,
       description: resource.description.replace(/<[^>]+>/g, "").slice(0, 160),

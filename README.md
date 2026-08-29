@@ -62,17 +62,18 @@ The Dockerfile is multi-stage and uses Next.js standalone output, so the final i
 ```bash
 docker build \
   --build-arg NEXT_PUBLIC_API_URL=https://api.kuzakizazi.com \
+  --build-arg NEXT_PUBLIC_SITE_URL=https://kuzakizazi.com \
   -t kk-front .
 docker run --rm -p 3000:3000 kk-front
 ```
 
-`NEXT_PUBLIC_API_URL` **must** be passed as a build arg — `NEXT_PUBLIC_*` values are inlined at build time, not read at runtime.
+`NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_SITE_URL` **must** be passed as build args — `NEXT_PUBLIC_*` values are inlined at build time, not read at runtime. `NEXT_PUBLIC_SITE_URL` powers the canonical URLs, Open Graph URLs, robots.txt, and sitemap.
 
 ## Deploy on Coolify
 
 1. Create a new **Application** from this repo, branch `main`, build pack **Dockerfile**.
-2. Under **Build Variables**, set `NEXT_PUBLIC_API_URL` to the backend's public URL (e.g. `https://api.kuzakizazi.com`).
+2. Under **Build Variables**, set `NEXT_PUBLIC_API_URL` to the backend's public URL (e.g. `https://api.kuzakizazi.com`) and `NEXT_PUBLIC_SITE_URL` to the frontend's public URL (e.g. `https://kuzakizazi.com`).
 3. Assign a domain (e.g. `kuzakizazi.com`); Coolify/Traefik handles TLS via Let's Encrypt.
 4. Deploy. Health check the home page.
 
-Whenever the backend URL changes, you must **rebuild** (not just restart) the frontend.
+Whenever either public URL changes, you must **rebuild** (not just restart) the frontend.

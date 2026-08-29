@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Shop",
   description:
     "Merchandise and digital resources from Kuza Kizazi — designed to help your brand grow.",
+  alternates: { canonical: "/shop" },
 };
 
 function chipClass(active: boolean): string {

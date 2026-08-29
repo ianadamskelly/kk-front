@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   fetchSettings,
@@ -19,6 +20,10 @@ import TrustLogoStrip from "@/components/TrustLogoStrip";
 import JsonLd from "@/components/JsonLd";
 import { HeroGraphic, PartnershipGraphic } from "@/components/LandingGraphics";
 import { SERVICE_PILLARS } from "@/lib/service-pillars";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage() {
   const [settings, projects, testimonials, stats, postList] =

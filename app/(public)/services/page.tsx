@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   title: "Services",
   description:
     "Branding, graphic design, web development, animation, photography, and digital marketing from Kuza Kizazi.",
+  alternates: { canonical: "/services" },
 };
 
 export default async function ServicesPage() {

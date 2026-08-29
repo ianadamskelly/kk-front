@@ -26,6 +26,7 @@ export async function generateMetadata({
   return {
     title: product?.name ?? "Product not found",
     description: product?.description,
+    alternates: product ? { canonical: `/shop/${product.slug}` } : undefined,
   };
 }
 

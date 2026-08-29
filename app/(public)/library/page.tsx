@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Resource Library",
   description:
     "A growing library of templates, guides, and tools for Kuza Kizazi members. Become a member to unlock every resource.",
+  alternates: { canonical: "/library" },
 };
 
 // The library is members-only. The page itself stays publicly indexable

@@ -27,6 +27,7 @@ export async function generateMetadata({
   return {
     title: course?.title ?? "Course not found",
     description: course?.summary,
+    alternates: course ? { canonical: `/courses/${course.slug}` } : undefined,
   };
 }
 

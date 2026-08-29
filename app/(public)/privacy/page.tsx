@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "How Kuza Kizazi collects, uses, and protects the personal information you share with us.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

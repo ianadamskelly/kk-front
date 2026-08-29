@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Courses",
   description:
     "Learn design, branding, and web skills at your own pace with courses from the Kuza Kizazi team.",
+  alternates: { canonical: "/courses" },
 };
 
 function filterLinkClass(active: boolean): string {

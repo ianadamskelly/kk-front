@@ -23,6 +23,7 @@ export async function generateMetadata({
   return {
     title: project?.title ?? "Project not found",
     description: project?.summary,
+    alternates: project ? { canonical: `/portfolio/${project.slug}` } : undefined,
   };
 }
 

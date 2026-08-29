@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Terms of Service",
   description:
     "The rules of engagement for using the Kuza Kizazi website, courses, shop, and membership.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

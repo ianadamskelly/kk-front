@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Whether you need a brand identity, website, campaign, content system, or long-term creative partner, tell Kuza Kizazi what you are building.",
+  alternates: { canonical: "/contact" },
 };
 
 // Tiny inline icons for the contact-method tiles. Kept here rather than

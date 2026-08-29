@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Insights",
   description:
     "Deep-dives on design, strategy, and technology from the Kuza Kizazi team.",
+  alternates: { canonical: "/insights" },
 };
 
 function chipClass(active: boolean): string {

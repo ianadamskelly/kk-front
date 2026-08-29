@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Portfolio",
   description:
     "Selected case studies from Kuza Kizazi — branding, platforms, and digital experiences.",
+  alternates: { canonical: "/portfolio" },
 };
 
 export default async function PortfolioPage() {

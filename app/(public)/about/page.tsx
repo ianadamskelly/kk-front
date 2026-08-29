@@ -48,6 +48,7 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Kuza Kizazi — meaning 'Grow the Generation' — is a Nairobi creative agency building enduring brands across Africa.",
+  alternates: { canonical: "/about" },
 };
 
 const VALUES = [
