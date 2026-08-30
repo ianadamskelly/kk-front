@@ -35,7 +35,7 @@ const IMAGE_SRC_RE = /(<img\b[^>]*?\bsrc\s*=\s*)(["'])([^"']+)(\2)/gi;
 export function resolveContentImageUrls(html: string): string {
   if (!html) return "";
   return html.replace(IMAGE_SRC_RE, (match, prefix, quote, src, endQuote) => {
-    if (typeof src !== "string" || !src.startsWith("/")) return match;
+    if (typeof src !== "string" || !src.startsWith("/") || src.startsWith("/images/")) return match;
     return `${prefix}${quote}${resolveFileURL(src)}${endQuote}`;
   });
 }
@@ -411,6 +411,7 @@ export interface User {
 export function imageUrl(path: string): string {
   if (!path) return "";
   if (path.startsWith("http")) return path;
+  if (path.startsWith("/images/")) return path;
   return `${API_URL}${path}`;
 }
 
