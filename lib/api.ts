@@ -24,6 +24,7 @@ export const SITE_NAME = "Kuza Kizazi";
 export function resolveFileURL(url: string | null | undefined): string {
   if (!url) return "";
   if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith("/images/") || url.startsWith("/downloads/")) return url;
   return `${API_URL}${url}`;
 }
 
