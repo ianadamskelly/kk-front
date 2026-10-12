@@ -3,7 +3,7 @@ import "./globals.css";
 import { SITE_NAME, SITE_URL } from "@/lib/api";
 
 const DESCRIPTION =
-  "Kuza Kizazi is a Nairobi creative agency crafting brands, websites, animation, and digital experiences that move people.";
+  "Kuza Kizazi Kreative helps professionals and small teams communicate clearly with presentation polish, document layout, social graphics and focused websites. Kenya-based, working remotely.";
 
 export const metadata: Metadata = {
   // metadataBase makes every `images: "/og.png"`, `alternates.canonical:
@@ -29,10 +29,10 @@ export const metadata: Metadata = {
     url: SITE_URL,
     // Per-page metadata can override `images` for richer link previews.
     // The /icon.svg mark is the fallback.
-    images: [{ url: "/icon.svg", width: 64, height: 64, alt: SITE_NAME }],
+    images: [{ url: "/brand/social-preview.png", width: 1200, height: 630, alt: SITE_NAME }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: `${SITE_NAME} — Creative Agency in Nairobi`,
     description: DESCRIPTION,
     images: ["/icon.svg"],

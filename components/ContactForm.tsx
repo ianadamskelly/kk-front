@@ -66,8 +66,8 @@ export default function ContactForm({ services }: { services: string[] }) {
     <form onSubmit={submit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="text-sm font-medium text-ink/70">Full name</label>
-          <input
+          <label htmlFor="brief-full-name" className="text-sm font-medium text-ink/70">Full name</label>
+          <input id="brief-full-name"
             required
             value={form.name}
             onChange={(e) => set("name", e.target.value)}
@@ -75,8 +75,8 @@ export default function ContactForm({ services }: { services: string[] }) {
           />
         </div>
         <div>
-          <label className="text-sm font-medium text-ink/70">Email</label>
-          <input
+          <label htmlFor="brief-email" className="text-sm font-medium text-ink/70">Email</label>
+          <input id="brief-email"
             type="email"
             required
             value={form.email}
@@ -85,16 +85,16 @@ export default function ContactForm({ services }: { services: string[] }) {
           />
         </div>
         <div>
-          <label className="text-sm font-medium text-ink/70">Phone</label>
-          <input
+          <label htmlFor="brief-phone" className="text-sm font-medium text-ink/70">Phone</label>
+          <input id="brief-phone"
             value={form.phone}
             onChange={(e) => set("phone", e.target.value)}
             className={`mt-1 ${inputClass}`}
           />
         </div>
         <div>
-          <label className="text-sm font-medium text-ink/70">Service</label>
-          <select
+          <label htmlFor="brief-service" className="text-sm font-medium text-ink/70">Service</label>
+          <select id="brief-service"
             value={form.service}
             onChange={(e) => set("service", e.target.value)}
             className={`mt-1 ${inputClass}`}
@@ -110,16 +110,16 @@ export default function ContactForm({ services }: { services: string[] }) {
         </div>
       </div>
       <div>
-        <label className="text-sm font-medium text-ink/70">Subject</label>
-        <input
+        <label htmlFor="brief-subject" className="text-sm font-medium text-ink/70">Subject</label>
+        <input id="brief-subject"
           value={form.subject}
           onChange={(e) => set("subject", e.target.value)}
           className={`mt-1 ${inputClass}`}
         />
       </div>
       <div>
-        <label className="text-sm font-medium text-ink/70">Message</label>
-        <textarea
+        <label htmlFor="brief-message" className="text-sm font-medium text-ink/70">Message</label>
+        <textarea id="brief-message"
           required
           rows={5}
           value={form.message}

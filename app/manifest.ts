@@ -9,11 +9,11 @@ export default function manifest(): MetadataRoute.Manifest {
     name: SITE_NAME,
     short_name: SITE_NAME,
     description:
-      "Nairobi creative agency crafting brands, websites, animation, and digital experiences.",
+      "Kuza Kizazi Kreative: presentations, documents, graphics and websites.",
     start_url: "/",
     display: "standalone",
-    background_color: "#faf8f5", // cream
-    theme_color: "#ef5a28", // brand-500
+    background_color: "#F7F8FA", // cream
+    theme_color: "#08777C", // brand-500
     icons: [
       // The SVG mark covers any size for modern browsers; iOS picks
       // up the apple-touch path via app/apple-icon convention if we

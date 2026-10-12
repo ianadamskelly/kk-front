@@ -28,6 +28,7 @@ const WORK_ITEMS: DropdownItem[] = [
 ];
 
 const LEARN_ITEMS: DropdownItem[] = [
+  { href: "/resources", label: "Free resources", description: "Editable slide starters and explained examples" },
   {
     href: "/courses",
     label: "Courses",
@@ -41,7 +42,7 @@ const LEARN_ITEMS: DropdownItem[] = [
   {
     href: "/membership",
     label: "Membership",
-    description: "Library from $1.90, full access $10",
+    description: "Explore learning memberships",
   },
   {
     href: "/learn/enhanced-pyp/index.html",
@@ -115,19 +116,20 @@ export default function SiteHeader() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink/10 bg-cream/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-ink/10 bg-cream">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-semibold tracking-tight"
+          className="flex items-center gap-2 text-base font-semibold tracking-tight"
           onClick={() => setOpen(false)}
         >
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-brand-500" />
+          {/* Approved brand mark; the adjacent name provides its accessible label. */}
+          <img src="/brand/kuza-mark.svg" alt="" width="28" height="40" />
           {SITE_NAME}
         </Link>
 
         {/* Primary nav — desktop only */}
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-4 lg:flex">
           <NavDropdown label="Work" items={WORK_ITEMS} />
           <NavDropdown label="Learn" items={LEARN_ITEMS} />
           {SIMPLE_NAV.map((item) => (
@@ -181,7 +183,7 @@ export default function SiteHeader() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="rounded-md border border-ink/15 p-2 md:hidden"
+            className="rounded-md border border-ink/15 p-2 lg:hidden"
           >
             <span className="block h-0.5 w-5 bg-ink" />
             <span className="mt-1 block h-0.5 w-5 bg-ink" />
@@ -193,7 +195,7 @@ export default function SiteHeader() {
       {/* Mobile sheet — mirrors the desktop structure but flattens each
           dropdown into a labelled section so everything is one tap away. */}
       {open && (
-        <nav className="border-t border-ink/10 bg-cream md:hidden">
+        <nav className="border-t border-ink/10 bg-cream lg:hidden">
           <div className="space-y-4 px-4 py-4">
             <MobileSection label="Work" items={WORK_ITEMS} />
             <MobileSection label="Learn" items={LEARN_ITEMS} />

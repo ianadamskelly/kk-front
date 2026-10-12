@@ -25,9 +25,10 @@ export default async function ServicesPage() {
       <section className="mx-auto max-w-6xl px-4 pt-16 sm:pt-20">
         <SectionHeading
           eyebrow="What we do"
-          title="Creative work built around your growth"
-          description="From identity to digital platforms and ongoing content, our work is organised around three connected ways to help your brand grow."
+          title="Clear work, built around your audience"
+          description="Start with a specific task: polish existing slides, format a document, create a social graphic or build a focused website. For broader work, explore our capabilities below."
         />
+        <div className="kuza-home mt-10"><div className="kuza-resource"><img src="/brand/story-deck.svg" width="1200" height="720" alt="Illustrative presentation showing focus, structure and flow"/><div><h2>Have the content. Need the polish?</h2><p className="kuza-lead mt-4">Tell us the file format, audience, amount of content and deadline. We agree a precise scope before starting.</p><p className="kuza-caption">Illustrative sample, not a client result. Your facts and brand are preserved.</p><Link className="kuza-button mt-6" href="/contact">Describe your task</Link></div></div></div>
         {services.length > 0 ? (
           <div className="mt-12 space-y-16">
             {SERVICE_PILLARS.map((pillar) => {

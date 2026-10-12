@@ -11,7 +11,7 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
   "http://localhost:3000";
 
-export const SITE_NAME = "Kuza Kizazi";
+export const SITE_NAME = "Kuza Kizazi Kreative";
 
 // resolveFileURL turns a stored URL into something a browser can
 // fetch. Three cases:

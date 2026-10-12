@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cream: #faf8f5;
-  --color-ink: #18181b;
+  --color-cream: #F7F8FA;
+  --color-ink: #172126;
 
-  --color-brand-50: #fff3ee;
-  --color-brand-100: #ffe2d6;
-  --color-brand-200: #ffc4ab;
-  --color-brand-300: #ff9f7a;
-  --color-brand-400: #fa7d4f;
-  --color-brand-500: #ef5a28;
-  --color-brand-600: #d6431a;
-  --color-brand-700: #b23415;
-  --color-brand-800: #8f2c14;
+  --color-brand-50: #EAF6F6;
+  --color-brand-100: #D6EEEE;
+  --color-brand-200: #B5DDDE;
+  --color-brand-300: #79CCCF;
+  --color-brand-400: #4BB7BA;
+  --color-brand-500: #08777C;
+  --color-brand-600: #07666A;
+  --color-brand-700: #07565A;
+  --color-brand-800: #06474A;
 }
 
 /* ----- Dark theme — scoped via the `.kk-dark` class -----
@@ -326,3 +326,6 @@ html {
   height: auto;
   border-radius: 0.5rem;
 }
+
+@font-face{font-family:KuzaInter;src:url('/brand/inter.ttf') format('truetype');font-weight:100 900;font-display:swap}body{font-family:KuzaInter,Arial,sans-serif}a:focus-visible,button:focus-visible{outline:3px solid #08777C;outline-offset:4px}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.kuza-home{--muted:#52616B}.kuza-shell{max-width:1152px;margin:auto;padding:0 24px}.kuza-hero{padding:80px 0 64px;display:grid;grid-template-columns:1.12fr 1fr;gap:40px;align-items:center}.kuza-kicker{font-size:13px;font-weight:650;letter-spacing:.1em;text-transform:uppercase;color:#08777C}.kuza-home h1{font-size:clamp(46px,5.5vw,76px);font-weight:720;line-height:1.03;letter-spacing:-.045em;margin:22px 0}.kuza-home h2{font-size:clamp(32px,3.5vw,48px);font-weight:680;letter-spacing:-.035em;line-height:1.12}.kuza-home h3{font-size:26px;font-weight:650;letter-spacing:-.02em}.kuza-lead{font-size:20px;line-height:1.6;color:var(--muted);max-width:560px}.kuza-actions{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-top:30px}.kuza-button{background:#08777C;color:white;border-radius:12px;padding:15px 22px;display:inline-block;font-weight:600}.kuza-link{color:#08777C;text-decoration:underline;text-underline-offset:5px;font-weight:550}.kuza-art{padding:20px 0}.kuza-art img{width:100%;height:auto}.kuza-caption{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.5}.kuza-section{padding:72px 0;border-top:1px solid #DCE2E6}.kuza-service{display:grid;grid-template-columns:80px 1fr 1.2fr;gap:24px;padding:32px 0;border-bottom:1px solid #DCE2E6}.kuza-service p{font-size:18px;line-height:1.6;color:var(--muted)}.kuza-resource{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center;margin-top:36px}.kuza-resource img{width:100%;border-radius:16px;border:1px solid #DCE2E6}.kuza-process{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:36px}.kuza-process p{margin-top:12px;color:var(--muted);font-size:18px;line-height:1.6}.kuza-contact{background:#112C3A;color:white;border-radius:24px;padding:48px;margin:48px 0 72px}.kuza-contact p{color:#DCE2E6;margin:20px 0;font-size:20px;max-width:660px;line-height:1.6}.kuza-contact a{color:white}.kuza-contact .kuza-button{background:#4BB7BA;color:#172126}@media(max-width:760px){.kuza-hero{grid-template-columns:1fr;padding:44px 0;gap:20px}.kuza-art{max-width:550px}.kuza-service{grid-template-columns:40px 1fr;gap:14px}.kuza-service p{grid-column:2}.kuza-resource,.kuza-process{grid-template-columns:1fr;gap:24px}.kuza-section{padding:44px 0}.kuza-contact{padding:28px}.kuza-shell{padding:0 20px}}

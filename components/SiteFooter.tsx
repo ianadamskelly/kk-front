@@ -103,6 +103,7 @@ const SOCIALS = [
 // secondary destinations a visitor might want to jump to from anywhere
 // on the site. Order roughly: most-likely first.
 const QUICK_LINKS = [
+  { href: "/resources", label: "Free resources" },
   { href: "/contact", label: "Contact us" },
   { href: "/about", label: "About" },
   { href: "/about#faq", label: "FAQ" },
@@ -116,12 +117,10 @@ export default function SiteFooter({
 }) {
   const year = new Date().getFullYear();
   const description =
-    settings.footer_description ||
-    settings.tagline ||
-    "Helping growing African brands build their identity, digital presence, and content systems.";
+    "Presentations, documents, graphics and websites. Kenya-based, working remotely.";
 
   return (
-    <footer className="mt-24 bg-[#0b1530] text-white">
+    <footer className="mt-24 bg-[#112C3A] text-white">
       <div className="mx-auto max-w-6xl px-4 py-14">
         {/* Top: 4-column grid. Contact sits in the last cell on desktop
             so it lands on the far right. */}
@@ -129,7 +128,7 @@ export default function SiteFooter({
           {/* Brand + description + social */}
           <div>
             <div className="flex items-center gap-2 text-lg font-semibold">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-brand-500" />
+              <img src="/brand/kuza-mark-white.svg" width="28" height="40" alt="" />
               {SITE_NAME}
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/65">
@@ -140,7 +139,7 @@ export default function SiteFooter({
                 ({ key, label, Icon }) => (
                   <a
                     key={key}
-                    href={settings[key]}
+                    href={(key === "social_facebook" ? "https://www.facebook.com/kuzakizazikreative/" : key === "social_instagram" ? "https://www.instagram.com/kuzakizazikreative/" : settings[key])}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
@@ -191,13 +190,13 @@ export default function SiteFooter({
                 </a>
               </ContactRow>
             )}
-            {settings.contact_email && (
+            {(
               <ContactRow icon={<MailIcon />}>
                 <a
-                  href={`mailto:${settings.contact_email}`}
+                  href={`mailto:${"kizazikuza@gmail.com"}`}
                   className="hover:text-white"
                 >
-                  {settings.contact_email}
+                  {"kizazikuza@gmail.com"}
                 </a>
               </ContactRow>
             )}
