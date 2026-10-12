@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
+import anonymousWork from "@/lib/anonymous-work.json";
 import {
   SITE_URL,
   fetchPosts,
   fetchProducts,
   fetchCourses,
   fetchServices,
-  fetchProjects,
 } from "@/lib/api";
 
 // Revalidate the sitemap every hour. Worth more than the cache-hit
@@ -45,12 +45,11 @@ async function safe<T>(promise: Promise<T>, label: string): Promise<T | []> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  const [posts, products, courses, services, projects] = await Promise.all([
+  const [posts, products, courses, services] = await Promise.all([
     safe(fetchPosts({ perPage: 200 }), "posts"),
     safe(fetchProducts({}), "products"),
     safe(fetchCourses(), "courses"),
     safe(fetchServices(), "services"),
-    safe(fetchProjects(), "projects"),
   ]);
 
   const entries: Entry[] = [];
@@ -99,10 +98,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     });
   }
-  for (const p of projects as Awaited<ReturnType<typeof fetchProjects>>) {
+  for (const p of anonymousWork) {
     entries.push({
       url: `${SITE_URL}/portfolio/${p.slug}`,
-      lastModified: p.updatedAt ? new Date(p.updatedAt) : now,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     });
