@@ -44,7 +44,7 @@ export default function SupportChat() {
   }
 
   return (
-    <div className="fixed bottom-3 right-3 z-[60] flex flex-col items-end sm:bottom-6 sm:right-6">
+    <div className={`fixed z-[60] flex flex-col items-end ${open ? "bottom-3 right-3 sm:bottom-6 sm:right-6" : "bottom-3 right-16 sm:bottom-6 sm:right-20"}`}>
       {open && (
         <section aria-label="Kuza Kizazi chat" className="flex h-[min(600px,calc(100dvh_-_115px))] w-[min(380px,calc(100vw_-_32px))] flex-col overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl">
           <header className="flex items-center justify-between bg-brand-500 px-5 py-4 text-white">
