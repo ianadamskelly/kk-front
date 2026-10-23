@@ -44,7 +44,7 @@ export default function SupportChat() {
   }
 
   return (
-    <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-3 sm:bottom-7 sm:right-7">
+    <div className="fixed bottom-3 right-3 z-[60] flex flex-col items-end sm:bottom-6 sm:right-6">
       {open && (
         <section aria-label="Kuza Kizazi chat" className="flex h-[min(600px,calc(100dvh_-_115px))] w-[min(380px,calc(100vw_-_32px))] flex-col overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl">
           <header className="flex items-center justify-between bg-brand-500 px-5 py-4 text-white">
@@ -67,9 +67,11 @@ export default function SupportChat() {
           <p className="bg-white px-4 pb-3 text-center text-[11px] text-ink/50">This chat answers questions about Kuza Kizazi.</p>
         </section>
       )}
-      <button type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-label={open ? "Close chat" : "Chat with Kuza Kizazi"} className="flex h-14 items-center gap-2 rounded-full bg-brand-500 px-5 font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-brand-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500">
-        <span aria-hidden="true" className="text-lg">{open ? "×" : "✳"}</span><span>{open ? "Close" : "Ask Kuza"}</span>
-      </button>
+      {!open && (
+        <button type="button" onClick={() => setOpen(true)} aria-label="Ask Kuza Kizazi a question" className="flex h-11 items-center gap-1.5 rounded-full bg-brand-500 px-3.5 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-brand-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:h-12 sm:px-4">
+          <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center rounded-full border border-white/70 text-xs">?</span><span>Ask</span>
+        </button>
+      )}
     </div>
   );
 }
