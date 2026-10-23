@@ -4,6 +4,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { CartProvider } from "@/lib/cart";
 import { CustomerProvider } from "@/lib/customer";
 import { fetchSettings } from "@/lib/api";
+import SupportChat from "@/components/SupportChat";
 
 export default async function PublicLayout({
   children,
@@ -18,6 +19,7 @@ export default async function PublicLayout({
         <main className="flex-1">{children}</main>
         <SiteFooter settings={settings} />
         <ScrollToTop />
+        <SupportChat />
       </CartProvider>
     </CustomerProvider>
   );
